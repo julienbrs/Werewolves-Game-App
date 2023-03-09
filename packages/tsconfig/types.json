@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Types",
+  "extends": "./base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "noEmit": true,
+    "target": "ES2022",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "jsx": "preserve"
+  },
+  "include": ["./src"],
+  "exclude": ["node_modules"]
+}

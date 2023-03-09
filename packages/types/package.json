@@ -10,10 +10,8 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "tsconfig": "workspace:*"
-  },
   "devDependencies": {
+    "tsconfig": "workspace:*",
     "typescript": "^4.9.5"
   }
 }

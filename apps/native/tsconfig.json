@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Types",
-  "extends": "tsconfig/types.json",
+  "display": "Native",
+  "extends": "tsconfig/native.json",
   "include": ["./src"],
   "exclude": ["node_modules"]
 }
