@@ -1,6 +1,11 @@
 # CAWEB-loup-garou
 
-add "^db:generate" quand on a mis en place la BDD
+## Acol
+
+- Installer l'extension vscode : Excalidraw
+- Ouvrir les diagrammes qui sont dans `docs/diagrams/`
+- En haut à droite cliquer sur library -> browser libraries -> "UML" -> Add to Excalidraw la première
+
 
 ## Prise en main
 
@@ -8,10 +13,9 @@ add "^db:generate" quand on a mis en place la BDD
 - `pnpm install` (ça va installer les dépendances partout)
 - `pnpm add <package> --filter <workspace>` pour ajouter une dépendance à un workspace (database, native, api)
 
-
 ## root
 
-- pnpm : https://www.youtube.com/watch?v=mpxotS_9Dzc
+- pnpm : [tuto](https://www.youtube.com/watch?v=mpxotS_9Dzc)
 - Turborepo : [tuto](https://youtu.be/vE3LOHU0OV8) - [pour l'histoire](https://youtu.be/9iU_IE6vnJ8)
 
 ## app/api
