@@ -2,7 +2,7 @@
 
 ## Acol
 
-- Installer l'extension vscode : Excalidraw
+- Installer l'extension vscode : drawio
 - Ouvrir les diagrammes qui sont dans `docs/diagrams/`
 - En haut à droite cliquer sur library -> browser libraries -> "UML" -> Add to Excalidraw la première
 

@@ -104,3 +104,6 @@ dist
 .tern-port
 
 .turbo
+
+.DS_Store
+**/.DS_Store
