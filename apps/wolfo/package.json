@@ -1,26 +1,33 @@
 {
   "name": "wolfo",
   "version": "1.0.0",
-  "main": "node_modules/expo/AppEntry.js",
+  "main": "src/_app.tsx",
   "scripts": {
+    "clean": "git clean -xdf .expo .turbo node_modules",
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "lint": "eslint .",
+    "lint:fix": "pnpm lint --fix",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "expo": "~48.0.9",
+    "@expo/webpack-config": "^18.0.1",
+    "@tanstack/react-query": "^4.28.0",
+    "expo": "~48.0.10",
     "expo-status-bar": "~1.4.4",
     "react": "18.2.0",
     "react-dom": "^18.2.0",
-    "react-native": "0.71.4",
-    "react-native-web": "^0.18.12"
+    "react-native": "0.71.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
-    "@types/react": "^18.0.30",
-    "@types/react-native": "^0.71.5",
-    "typescript": "^4.9.5"
+    "@types/react": "~18.0.14",
+    "@types/react-dom": "^18.0.11",
+    "babel-preset-expo": "^9.3.2",
+    "react-native-web": "^0.18.10",
+    "typescript": "^4.9.4"
   },
   "private": true
 }
