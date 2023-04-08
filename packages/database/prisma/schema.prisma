@@ -9,3 +9,150 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id        String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name      String   @unique @db.Char(16)
+  password  String
+  Player    Player[]
+  createdAt DateTime @default(now())
+}
+
+enum StateGame {
+  LOBBY
+  DAY
+  NIGHT
+  END
+}
+
+model Game {
+  id       Int       @id @default(autoincrement())
+  state    StateGame
+  Player   Player[]
+  // par défault 8h
+  startDay DateTime  @default(dbgenerated("time('08:00:00')")) @db.Time()
+  endDay   DateTime  @default(dbgenerated("time('22:00:00')")) @db.Time()
+
+  dayChat          DayChatRoom     @relation(fields: [dayChatRoomId], references: [id])
+  dayChatRoomId    Int             @unique
+  nightChat        NightChatRoom   @relation(fields: [nightChatRoomId], references: [id])
+  nightChatRoomId  Int             @unique
+  spiritChat       SpiritChatRoom? @relation(fields: [spiritChatRoomId], references: [id])
+  spiritChatRoomId Int?            @unique
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+}
+
+enum StatePlayer {
+  ALIVE
+  DEAD
+}
+
+enum Role {
+  WOLF
+  VILLAGER
+}
+
+enum Power {
+  INSOMNIAC // insomniaque
+  SEER // voyante
+  CONTAMINATOR // contaminateur
+  SPIRIT // esprit
+}
+
+model Player {
+  state     StatePlayer?
+  role      Role?
+  power     Power?
+  user      User         @relation(fields: [userId], references: [id])
+  userId    String
+  game      Game         @relation(fields: [gameId], references: [id])
+  gameId    Int
+  vote      Vote[]       @relation("voters")
+  target    Vote[]       @relation("targets")
+  readers   Reader[]
+  writers   Writer[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@id([userId, gameId])
+}
+
+model Election {
+  id    Int      @id @default(autoincrement())
+  votes Vote[]
+  day   DateTime @default(now())
+}
+
+model Vote {
+  voters     Player   @relation(name: "voters", fields: [voterId, gameId], references: [userId, gameId])
+  voterId    String
+  targets    Player   @relation(name: "targets", fields: [targetId, gameId], references: [userId, gameId])
+  targetId   String
+  gameId     Int
+  election   Election @relation(fields: [electionId], references: [id])
+  electionId Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@id([voterId, targetId, electionId])
+}
+
+model ChatRoom {
+  id        Int              @id @default(autoincrement())
+  messages  Message[]
+  readers   Reader[]
+  writers   Writer[]
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  nightChat NightChatRoom[]
+  dayChat   DayChatRoom[]
+  spirit    SpiritChatRoom[]
+}
+
+model NightChatRoom {
+  id       Int      @id @default(autoincrement())
+  game     Game?
+  chatRoom ChatRoom @relation(fields: [id], references: [id])
+}
+
+model DayChatRoom {
+  id       Int      @id @default(autoincrement())
+  game     Game?
+  chatRoom ChatRoom @relation(fields: [id], references: [id])
+}
+
+model SpiritChatRoom {
+  id       Int      @id @default(autoincrement())
+  game     Game?
+  chatRoom ChatRoom @relation(fields: [id], references: [id])
+}
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id])
+  chatRoomId Int
+  content    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Reader {
+  player     Player   @relation(fields: [playerId, gameId], references: [userId, gameId])
+  playerId   String
+  gameId     Int
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id])
+  chatRoomId Int
+
+  @@id([playerId, gameId, chatRoomId])
+}
+
+model Writer {
+  player     Player   @relation(fields: [playerId, gameId], references: [userId, gameId])
+  playerId   String
+  gameId     Int
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id])
+  chatRoomId Int
+
+  @@id([playerId, gameId, chatRoomId])
+}

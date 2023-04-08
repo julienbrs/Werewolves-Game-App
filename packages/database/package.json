@@ -4,7 +4,7 @@
   "types": "./index.ts",
   "devDependencies": {
     "@prisma/client": "^4.11.0",
-    "prisma": "^4.11.0",
+    "prisma": "^4.12.0",
     "tsconfig": "workspace:*"
   },
   "scripts": {
