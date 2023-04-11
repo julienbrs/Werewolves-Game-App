@@ -1,6 +1,6 @@
 # CAWEB-loup-garou
 
-## Acol
+## ACOL
 
 - Installer l'extension vscode : drawio
 - Ouvrir les diagrammes qui sont dans `docs/diagrams/`
@@ -9,9 +9,11 @@
 
 - `npm install -g pnpm`
 - `pnpm install` (ça va installer les dépendances partout)
-- `pnpm add <package> --filter <workspace>` pour ajouter une dépendance à un workspace (database, native, api)
+- Chaque projet à son propre README.md avec les instructions pour le lancer
 
-## root
+## Ressources
+
+### Comprendre les outils "globaux"
 
 - pnpm : [tuto](https://www.youtube.com/watch?v=mpxotS_9Dzc)
 - Turborepo : [tuto](https://youtu.be/vE3LOHU0OV8) - [pour l'histoire](https://youtu.be/9iU_IE6vnJ8)
