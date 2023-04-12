@@ -27,8 +27,19 @@ enum StateGame {
 
 model Game {
   id       Int       @id @default(autoincrement())
+  name     String    @unique
   state    StateGame
   Player   Player[]
+
+  // config
+  deadline DateTime // date du jour où ça commence
+  minPlayer Int      @default(5) // nombre de joueurs
+  maxPlayer Int      @default(20) // nombre de joueurs
+  wolfProp Float      @default(0.3)// default 1/3
+  seerProp Int      @default(0)
+  insomProp Int     @default(0)
+  contProp Int      @default(0)
+  spiritProp Int    @default(0)
   // par défault 8h
   startDay DateTime  @default(dbgenerated("'08:00:00'")) @db.Time()
   endDay   DateTime  @default(dbgenerated("'22:00:00'")) @db.Time()

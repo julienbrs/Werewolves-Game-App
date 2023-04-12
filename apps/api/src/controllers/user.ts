@@ -16,7 +16,8 @@ const userController = {
   async getUsers(req: Request, res: Response) {
     const users = await prisma.user.findMany();
     res.json(users);
-  }
+  },
+
 }
 
 export default userController;
