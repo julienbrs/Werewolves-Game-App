@@ -3,5 +3,6 @@
   "display": "Api",
   "extends": "./base.json",
   "compilerOptions": {
-    }
+    "outDir": "./dist"
+  }
 }

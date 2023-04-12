@@ -1,20 +1,20 @@
 import cors from 'cors'
 import express from 'express'
-
-import { Workspace } from 'types'
+import router from './routes/router';
 
 const app = express()
-const port = 5000
+const port = 3000
 
 app.use(cors({ origin: 'http://localhost:3000' }))
 
-app.get('/workspaces', (_, response) => {
-  const workspaces: Workspace[] = [
-    { name: 'api', version: '1.0.0' },
-    { name: 'types', version: '1.0.0' },
-    { name: 'native', version: '1.0.0' },
-  ]
-  response.json({ data: workspaces })
-})
+// This middleware adds the json header to every response
+app.use("*", (req, res, next) => {
+  res.setHeader("Content-Type", "application/json");
+  next();
+});
+
+
+// Assign Routes
+app.use("/", router);
 
 app.listen(port, () => console.log(`Listening on http://localhost:${port}`))

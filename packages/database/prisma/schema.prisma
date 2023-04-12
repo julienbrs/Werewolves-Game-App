@@ -11,7 +11,7 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id        String   @id @default(uuid())
   name      String   @unique @db.Char(16)
   password  String
   Player    Player[]
@@ -30,8 +30,8 @@ model Game {
   state    StateGame
   Player   Player[]
   // par défault 8h
-  startDay DateTime  @default(dbgenerated("time('08:00:00')")) @db.Time()
-  endDay   DateTime  @default(dbgenerated("time('22:00:00')")) @db.Time()
+  startDay DateTime  @default(dbgenerated("'08:00:00'")) @db.Time()
+  endDay   DateTime  @default(dbgenerated("'22:00:00'")) @db.Time()
 
   dayChat          DayChatRoom     @relation(fields: [dayChatRoomId], references: [id])
   dayChatRoomId    Int             @unique

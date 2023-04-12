@@ -8,4 +8,4 @@ Pour lancer la base de données
 docker-compose up
 ```
 
-Lorsqu'on modifie le model de la base de données, il faut faire un `prisma migrate dev` pour mettre à jour la base de données. (à tester).
+Lorsqu'on modifie le model de la base de données, il faut faire un `prisma migrate dev` pour mettre à jour la base de données.
