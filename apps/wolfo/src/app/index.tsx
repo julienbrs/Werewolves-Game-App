@@ -1,20 +1,24 @@
 import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, Redirect, Stack } from "expo-router";
-import useAuth from "../utils/hooks/useAuth";
+import useAuthQuery from "../utils/hooks/useAuth";
 
-export default function Home() {
-  const { username } = useAuth();
-  if (!username) {
+const Home = () => {
+  const {data, isError, isLoading} = useAuthQuery();
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
+  if (!data) {
     return <Redirect href="/auth" />;
   }
-  console.log("Home");
   return (
     <SafeAreaView>
       <Stack.Screen options={{
         title: "Home",
       }} />
-        <Text>Home test</Text>
+        <Text style={{}}>Home test</Text>
+        <Link href="/game/new">new Game</Link>
     </SafeAreaView>
   );
 };
+export default Home;
