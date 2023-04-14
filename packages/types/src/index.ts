@@ -5,3 +5,4 @@ export type Workspace = {
 
 export * from "./error";
 export * from "./user";
+export * from "./game";

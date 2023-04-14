@@ -1,5 +1,5 @@
 import api from "../api";
-import { User } from "../types/user";
+import { User } from "types";
 
 const user = {
   getUsers: async () => {

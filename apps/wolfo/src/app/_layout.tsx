@@ -12,6 +12,12 @@ const HomeLayout = () => {
             name="auth/index"
             options={{ title: "Authentification" }}
           />
+          <Stack.Screen
+            name="index"
+            options={{
+              title: "Home",
+            }}
+          />
         </Stack>
       </SafeAreaProvider>
     </QueryClientProvider>
