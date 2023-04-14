@@ -4,10 +4,12 @@
     "dev": "pnpm with-env tsx watch src/index.ts",
     "build": "pnpm with-env esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js --external:express --external:cors",
     "start": "pnpm with-env node dist/index.js",
+    "lint": "eslint src",
     "type-check": "tsc",
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
+    "@types/bcrypt": "^5.0.0",
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",

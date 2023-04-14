@@ -1,11 +1,13 @@
-import cors from 'cors'
-import express from 'express'
-import router from './routes/router';
+import cors from "cors";
+import express from "express";
+import router from "./routes/router";
 
-const app = express()
-const port = 3000
+const app = express();
+const port = 3000;
 
-app.use(cors({ origin: 'http://localhost:3000' }))
+app.use(cors({ origin: "http://localhost:3000" }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // This middleware adds the json header to every response
 app.use("*", (req, res, next) => {
@@ -13,8 +15,7 @@ app.use("*", (req, res, next) => {
   next();
 });
 
-
 // Assign Routes
 app.use("/", router);
 
-app.listen(port, () => console.log(`Listening on http://localhost:${port}`))
+app.listen(port, () => console.log(`Listening on http://localhost:${port}`));

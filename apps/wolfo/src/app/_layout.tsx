@@ -1,11 +1,21 @@
 import { Stack } from "expo-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+const queryClient = new QueryClient();
 
 const HomeLayout = () => {
   return (
-    <Stack>
-      <Stack.Screen name="auth" options={{ title: "Authentification"}}  />
-    </Stack>
+    <QueryClientProvider client={queryClient}>
+      <SafeAreaProvider>
+        <Stack>
+          <Stack.Screen
+            name="auth/index"
+            options={{ title: "Authentification" }}
+          />
+        </Stack>
+      </SafeAreaProvider>
+    </QueryClientProvider>
   );
-}
+};
 
 export default HomeLayout;

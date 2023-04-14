@@ -15,6 +15,7 @@
       "outputs": []
     },
     "lint": {},
+    "lint:fix": {},
     "db:generate": {
       "cache": false
     },
