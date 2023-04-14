@@ -4,13 +4,13 @@ import { Tab, Input, TabView, Button, Text } from "@rneui/themed";
 import { useState } from "react";
 import { createUser } from "../../utils/api/user";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Error, User } from "../../utils/types";
+import { Error, User } from "types";
 import * as SecureStore from "expo-secure-store";
 const Register = () => {
   const [name, setName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const { mutate, isSuccess, isError, error } = useMutation<any, Error, User>({
+  const { mutate, isSuccess } = useMutation<any, Error, User>({
     mutationFn: (user) => createUser(user),
     onError: (error) => {
       console.log(error);

@@ -23,7 +23,6 @@ const Auth = () => {
           <Register />
         </TabView.Item>
       </TabView>
-      <Text>test2</Text>
     </>
   );
 };

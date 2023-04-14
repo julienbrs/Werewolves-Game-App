@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import * as SecureStore from "expo-secure-store";
 import { login } from "../../utils/api/user";
-import { Error, User } from "../../utils/types";
+import { Error, User } from "types";
 const Login = () => {
   const [name, setName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
