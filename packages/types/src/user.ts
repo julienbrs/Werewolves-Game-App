@@ -1,7 +1,7 @@
 export interface User {
-  id: number;
+  id: string;
   name: string;
   password: string;
-};
+}
 
 export type NewUser = Omit<User, "id">;

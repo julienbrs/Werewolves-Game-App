@@ -1,14 +1,10 @@
-enum StateGame {
-  LOBBY,
-  DAY,
-  NIGHT,
-  END,
-}
-
+type StateGame = "LOBBY" | "DAY" | "NIGHT" | "END";
+import { Player } from "./player";
 export interface Game {
-  id :number;
+  id: number;
   name: string;
   state: StateGame;
+  players: Player[];
   deadline: Date;
   minPlayer: number;
   maxPlayer: number;
@@ -17,7 +13,7 @@ export interface Game {
   insomProb: number;
   contProb: number;
   spiritProb: number;
-  startDay: number;
-  endDay: number;
+  startDay: Date;
+  endDay: Date;
 }
 export interface NewGame extends Omit<Game, "id"> {}

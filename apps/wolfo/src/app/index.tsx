@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getGames } from "../utils/api/game";
 import { Game } from "types";
 const ListGames = () => {
-  const { data, isLoading} = useQuery<Game[]>({
+  const { data, isLoading } = useQuery<Game[]>({
     queryKey: ["games"],
     queryFn: getGames,
   });
@@ -16,13 +16,13 @@ const ListGames = () => {
   if (isLoading) {
     return <Text>Games loading...</Text>;
   }
-  {data!.map((game: Game) => {
-  <ListItem key={game.id}>
-    <ListItem.Content>
-
-    </ListItem.Content>
-  </ListItem>
-  })}
+  {
+    data!.map((game: Game) => {
+      <ListItem key={game.id}>
+        <ListItem.Content></ListItem.Content>
+      </ListItem>;
+    });
+  }
 };
 
 const Home = () => {
@@ -37,9 +37,8 @@ const Home = () => {
   }
   return (
     <SafeAreaView>
-    <Text style={{}}>Home</Text>
-    <Button onPress={() => router.push("/game/new")}>New game</Button>
-
+      <Text style={{}}>Home</Text>
+      <Button onPress={() => router.push("/game/new")}>New game</Button>
     </SafeAreaView>
   );
 };

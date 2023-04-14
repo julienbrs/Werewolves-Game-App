@@ -61,7 +61,7 @@ const userController = {
         SECRET,
         { expiresIn: "7d" }
       );
-      res.json({token:newToken, message: "User updated"});
+      res.json({ token: newToken, message: "User updated" });
     } catch (error) {
       return res.status(400).json({ message: "Name already exists" });
     }

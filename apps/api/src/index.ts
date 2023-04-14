@@ -1,6 +1,13 @@
 import cors from "cors";
 import express from "express";
 import router from "./routes/router";
+import {
+  NextFunction,
+  Request,
+  Response,
+  Router,
+  ErrorRequestHandler,
+} from "express";
 
 const app = express();
 const port = 3000;
@@ -17,5 +24,12 @@ app.use("*", (req, res, next) => {
 
 // Assign Routes
 app.use("/", router);
+const errorHandler: ErrorRequestHandler = (
+  err: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {};
+app.use(errorHandler);
 
 app.listen(port, () => console.log(`Listening on http://localhost:${port}`));
