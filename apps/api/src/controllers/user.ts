@@ -42,8 +42,8 @@ const userController = {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    try {
-      const user = await prisma.user.update({
+    prisma.user
+      .update({
         where: {
           id,
         },
@@ -51,20 +51,22 @@ const userController = {
           name,
           password: hashedPassword,
         },
+      })
+      .then((user) => {
+        const newToken = jwt.sign(
+          {
+            id: user.id,
+            name: user.name,
+          },
+          SECRET,
+          { expiresIn: "7d" }
+        );
+        res.json({ token: newToken, message: "User updated" });
+      })
+      .catch((error) => {
+        console.log(error);
+        res.status(400).json(error);
       });
-      // vu qu'on a modifié le user, on doit update le token
-      const newToken = jwt.sign(
-        {
-          id: user.id,
-          name: user.name,
-        },
-        SECRET,
-        { expiresIn: "7d" }
-      );
-      res.json({ token: newToken, message: "User updated" });
-    } catch (error) {
-      return res.status(400).json({ message: "Name already exists" });
-    }
   },
   async auth(req: Request, res: Response) {
     const { name, password } = req.body;

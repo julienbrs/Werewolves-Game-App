@@ -29,7 +29,7 @@ model Game {
   id       Int       @id @default(autoincrement())
   name     String    @unique
   state    StateGame
-  Player   Player[]
+  players   Player[]
 
   // config
   deadline DateTime // date du jour où ça commence

@@ -2,8 +2,12 @@ import api from "../api";
 import { Game, NewGame } from "types";
 
 const game = {
-  getGames: async (): Promise<Game[]> => {
-    const { data } = await api.get("/games");
+  getGamesLobby: async (): Promise<Game[]> => {
+    const { data } = await api.get("/games?state=LOBBY");
+    return data;
+  },
+  getMyGames: async (): Promise<Game[]> => {
+    const { data } = await api.get("/games/mygames");
     return data;
   },
   createGame: async (game: NewGame) => {
@@ -24,4 +28,11 @@ const game = {
   },
 };
 
-export const { getGames, createGame, deleteGame, updateGame, login } = game;
+export const {
+  getGamesLobby,
+  getMyGames,
+  createGame,
+  deleteGame,
+  updateGame,
+  login,
+} = game;

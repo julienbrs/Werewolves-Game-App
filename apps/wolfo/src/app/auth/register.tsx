@@ -3,14 +3,14 @@ import { Redirect, Stack, useRouter } from "expo-router";
 import { Tab, Input, TabView, Button, Text } from "@rneui/themed";
 import { useState } from "react";
 import { createUser } from "../../utils/api/user";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Error, User } from "types";
+import { useMutation } from "@tanstack/react-query";
+import { Error, NewUser, User } from "types";
 import * as SecureStore from "expo-secure-store";
-const Register = () => {
+export const Register = () => {
   const [name, setName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const { mutate, isSuccess } = useMutation<any, Error, User>({
+  const { mutate, isSuccess } = useMutation<any, Error, NewUser>({
     mutationFn: (user) => createUser(user),
     onError: (error) => {
       console.log(error);
@@ -22,7 +22,7 @@ const Register = () => {
   });
 
   const handleRegister = () => {
-    const user: User = {
+    const user: NewUser = {
       name,
       password,
     };
@@ -40,5 +40,3 @@ const Register = () => {
     </SafeAreaView>
   );
 };
-
-export default Register;

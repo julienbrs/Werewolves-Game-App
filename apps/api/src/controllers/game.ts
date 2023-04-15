@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import prisma from "../prisma";
 import { NewGame } from "types";
+import { StateGame } from "database";
 const jwt = require("jsonwebtoken");
 const SECRET = process.env.SECRET;
 
@@ -63,8 +64,67 @@ const gameController = {
       });
   },
   async getGames(req: Request, res: Response) {
-    const games = await prisma.game.findMany();
-    res.json(games);
+    const token = req.headers.authorization?.split(" ")[1];
+    const decodedToken = jwt.verify(token, SECRET);
+    const userId = decodedToken.id;
+
+    const state = req.query.state as StateGame;
+    prisma.game
+      .findMany({
+        where: {
+          NOT: {
+            players: {
+              some: {
+                userId,
+              },
+            },
+          },
+          ...(state ? { state } : {}),
+        },
+        select: {
+          id: true,
+          name: true,
+          state: true,
+          deadline: true,
+          players: {
+            select: {
+              userId: true,
+            },
+          },
+        },
+      })
+      .then((games) => {
+        res.json(games);
+      })
+      .catch((error) => {
+        console.log(error);
+        res.status(400).json(error);
+      });
+  },
+  async getMyGames(req: Request, res: Response) {
+    const token = req.headers.authorization?.split(" ")[1];
+    const decodedToken = jwt.verify(token, SECRET);
+    const userId = decodedToken.id;
+    prisma.game
+      .findMany({
+        where: {
+          players: {
+            some: {
+              userId,
+            },
+          },
+        },
+        include: {
+          players: true,
+        },
+      })
+      .then((games) => {
+        res.json(games);
+      })
+      .catch((error) => {
+        console.log(error);
+        res.status(400).json(error);
+      });
   },
 };
 

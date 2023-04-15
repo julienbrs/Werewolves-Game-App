@@ -1,12 +1,12 @@
 import api from "../api";
-import { User } from "types";
+import { NewUser, User } from "types";
 
 const user = {
   getUsers: async () => {
     const { data } = await api.get("/users");
     return data;
   },
-  createUser: async (user: User) => {
+  createUser: async (user: NewUser) => {
     const { data } = await api.post("/users", user);
     return data;
   },
@@ -18,7 +18,7 @@ const user = {
     const { data } = await api.put(`/users/${id}`, user);
     return data;
   },
-  login: async (user: User) => {
+  login: async (user: NewUser) => {
     const { data } = await api.post("/users/login", user);
     return data;
   },

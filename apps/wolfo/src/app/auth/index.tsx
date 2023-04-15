@@ -3,8 +3,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Stack, useRouter } from "expo-router";
 import { Tab, Input, TabView } from "@rneui/themed";
 import { useState } from "react";
-import Register from "./register";
-import Login from "./login";
+import { Register } from "./register";
+import { Login } from "./login";
 
 const Auth = () => {
   const router = useRouter();

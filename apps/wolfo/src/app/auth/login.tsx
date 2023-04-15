@@ -5,12 +5,16 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import * as SecureStore from "expo-secure-store";
 import { login } from "../../utils/api/user";
-import { Error, User } from "types";
-const Login = () => {
+import { Error, NewUser, User } from "types";
+export const Login = () => {
   const [name, setName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const { mutate, isSuccess, isError, error } = useMutation<any, Error, User>({
-    mutationFn: (user: User) => login(user),
+  const { mutate, isSuccess, isError, error } = useMutation<
+    any,
+    Error,
+    NewUser
+  >({
+    mutationFn: (user) => login(user),
     onError: (error: Error) => {
       console.log(error);
     },
@@ -20,7 +24,7 @@ const Login = () => {
     },
   });
   const handleLogin = () => {
-    const user: User = {
+    const user: NewUser = {
       name,
       password,
     };
@@ -39,5 +43,3 @@ const Login = () => {
     </SafeAreaView>
   );
 };
-
-export default Login;

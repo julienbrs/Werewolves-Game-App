@@ -1,45 +1,47 @@
-import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, Redirect, useRouter } from "expo-router";
 import useAuthQuery from "../utils/hooks/useAuth";
-import { Button, ListItem } from "@rneui/themed";
+import { Button, Text, Tab, TabView, SearchBar } from "@rneui/themed";
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getGames } from "../utils/api/game";
-import { Game } from "types";
-const ListGames = () => {
-  const { data, isLoading } = useQuery<Game[]>({
-    queryKey: ["games"],
-    queryFn: getGames,
-  });
-
-  if (isLoading) {
-    return <Text>Games loading...</Text>;
-  }
-  {
-    data!.map((game: Game) => {
-      <ListItem key={game.id}>
-        <ListItem.Content></ListItem.Content>
-      </ListItem>;
-    });
-  }
-};
+import { Platform } from "react-native";
+import Loading from "../components/loading";
+import * as SecureStore from "expo-secure-store";
+import { ListGamesLobby, ListMyGames } from "./games/games";
 
 const Home = () => {
   const router = useRouter();
-  const buttonRef = React.useRef(null);
+  const [search, setSearch] = React.useState<string>("");
+  const [tabIndex, setTabIndex] = React.useState<number>(0);
   const { data, isError, isLoading } = useAuthQuery();
   if (isLoading) {
-    return <Text>Loading...</Text>;
+    return <Loading title="Loading home" message="loading user information" />;
   }
   if (isError) {
     return <Redirect href="/auth" />;
   }
   return (
-    <SafeAreaView>
-      <Text style={{}}>Home</Text>
-      <Button onPress={() => router.push("/game/new")}>New game</Button>
-    </SafeAreaView>
+    <>
+      <Link href="/_sitemap">sitemap</Link>
+      <Button onPress={() => router.push("/games/new")}>New game</Button>
+      <Tab value={tabIndex} onChange={setTabIndex}>
+        <Tab.Item title="Mes parties" />
+        <Tab.Item title="Parties à rejoindre" />
+      </Tab>
+      <SearchBar
+        platform={Platform.OS === "ios" ? "ios" : "android"}
+        placeholder="Search"
+        onChangeText={setSearch}
+        value={search}
+      />
+      <TabView value={tabIndex} onChange={setTabIndex}>
+        <TabView.Item style={{ width: "100%" }}>
+          <ListMyGames search={search} />
+        </TabView.Item>
+        <TabView.Item style={{ width: "100%" }}>
+          <ListGamesLobby search={search} />
+        </TabView.Item>
+      </TabView>
+    </>
   );
 };
 export default Home;
