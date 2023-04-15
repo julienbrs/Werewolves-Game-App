@@ -22,6 +22,10 @@ const game = {
     const { data } = await api.put(`/games/${id}`, game);
     return data;
   },
+  joinGame: async (id: number) => {
+    const { data } = await api.post(`/games/${id}/join`);
+    return data;
+  },
   login: async (game: Game) => {
     const { data } = await api.post("/games/login", game);
     return data;
@@ -34,5 +38,6 @@ export const {
   createGame,
   deleteGame,
   updateGame,
+  joinGame,
   login,
 } = game;

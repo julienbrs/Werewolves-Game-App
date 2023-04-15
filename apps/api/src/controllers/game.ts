@@ -126,6 +126,30 @@ const gameController = {
         res.status(400).json(error);
       });
   },
+  async joinGame(req: Request, res: Response) {
+    const token = req.headers.authorization?.split(" ")[1];
+    const decodedToken = jwt.verify(token, SECRET);
+    const userId = decodedToken.id;
+    const gameId: number = parseInt(req.params.id);
+    if (isNaN(gameId)) {
+      res.status(400).json({ error: "Invalid game id" });
+      return;
+    }
+    prisma.player
+      .create({
+        data: {
+          userId,
+          gameId,
+        },
+      })
+      .then((player) => {
+        res.status(201).json({message: "Game join", player});
+      })
+      .catch((error) => {
+        console.log(error);
+        res.status(400).json(error);
+      });
+  },
 };
 
 export default gameController;
