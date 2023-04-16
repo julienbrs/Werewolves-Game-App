@@ -17,7 +17,7 @@ export default function checkToken(req: Request, res: Response, next: NextFuncti
     return res.status(401).json({ error: "Unauthorized" });
   }
   // Véracité du token
-  jwt.verify(token, SECRET, (err, decodedToken) => {
+  jwt.verify(token, SECRET, (err, _decodedToken) => {
     if (err) {
       res.status(401).json({ message: "Error. Bad token" });
     } else {

@@ -1,10 +1,9 @@
 import { Request, Response, Router } from "express";
-import userController from "../controllers/user";
+import checkToken from "../middleware/checkToken";
+import games from "./games";
+import users from "./users";
 const express = require("express");
 const router: Router = express.Router();
-import checkToken from "../middleware/checkToken";
-import users from "./users";
-import games from "./games";
 
 router.use("/api/users", users);
 router.use("/api/games", checkToken, games);

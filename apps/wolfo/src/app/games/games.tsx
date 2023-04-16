@@ -1,14 +1,11 @@
+import { Dialog, Text } from "@rneui/themed";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getGamesLobby, getMyGames, joinGame, leaveGame } from "../../utils/api/game";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import { RefreshControl, ScrollView } from "react-native-gesture-handler";
 import { Game } from "types";
 import Loading from "../../components/loading";
-import { ListItem, Text, Dialog } from "@rneui/themed";
-import { FontAwesome } from "@expo/vector-icons";
-import { ScrollView, RefreshControl } from "react-native-gesture-handler";
-import React, { useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
-import { parseDeadline } from "../../utils/services/parsedate";
-import { useRouter } from "expo-router";
+import { getGamesLobby, getMyGames, joinGame, leaveGame } from "../../utils/api/game";
 import { GameItemInGame, GameItemLobby, GameItemNotJoined } from "./gameItem";
 interface ListProps {
   search: string;

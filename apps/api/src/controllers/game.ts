@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
-import prisma from "../prisma";
-import { NewGame, Game } from "types";
 import { StateGame } from "database";
+import { Request, Response } from "express";
+import { Game, NewGame } from "types";
+import prisma from "../prisma";
 import { gameStart } from "../utils/scheduler";
 const jwt = require("jsonwebtoken");
 const SECRET = process.env.SECRET;
@@ -14,20 +14,20 @@ const gameController = {
     const userId = decodedToken.id;
 
     await prisma
-      .$transaction(async prisma => {
-        const dayChat = await prisma.dayChatRoom.create({
+      .$transaction(async transaction => {
+        const dayChat = await transaction.dayChatRoom.create({
           data: {
             chatRoom: { create: {} },
           },
         });
         console.log(dayChat);
-        const nightChat = await prisma.nightChatRoom.create({
+        const nightChat = await transaction.nightChatRoom.create({
           data: {
             chatRoom: { create: {} },
           },
         });
 
-        const newGame = await prisma.game.create({
+        const newGame = await transaction.game.create({
           data: {
             ...game,
             dayChatRoomId: dayChat.id,
@@ -36,7 +36,7 @@ const gameController = {
         });
 
         // On ajoute le créateur de la partie à la partie
-        const player = await prisma.player.create({
+        await transaction.player.create({
           data: {
             userId: userId,
             gameId: newGame.id,
@@ -46,7 +46,7 @@ const gameController = {
         return newGame;
       })
       .then(newGame => {
-        gameStart(newGame.deadline, newGame.id)
+        gameStart(newGame.deadline, newGame.id);
         res.status(201).json(newGame);
       })
       .catch(error => {
@@ -55,7 +55,7 @@ const gameController = {
       });
   },
   async getGame(req: Request, res: Response) {
-    const id: number = parseInt(req.params.id);
+    const id: number = parseInt(req.params.id, 10);
     if (isNaN(id)) {
       return res.status(400).json({ message: "Invalid id" });
     }
@@ -160,7 +160,7 @@ const gameController = {
     const token = req.headers.authorization?.split(" ")[1];
     const decodedToken = jwt.verify(token, SECRET);
     const userId = decodedToken.id;
-    const gameId: number = parseInt(req.params.id);
+    const gameId: number = parseInt(req.params.id, 10);
     if (isNaN(gameId)) {
       res.status(400).json({ error: "Invalid game id" });
       return;
@@ -184,7 +184,7 @@ const gameController = {
     const token = req.headers.authorization?.split(" ")[1];
     const decodedToken = jwt.verify(token, SECRET);
     const userId = decodedToken.id;
-    const gameId: number = parseInt(req.params.id);
+    const gameId: number = parseInt(req.params.id, 10);
     if (isNaN(gameId)) {
       res.status(400).json({ error: "Invalid game id" });
       return;
@@ -207,7 +207,7 @@ const gameController = {
       });
   },
   updateGame(req: Request, res: Response) {
-    const id = parseInt(req.params.id);
+    const id = parseInt(req.params.id, 10);
     if (isNaN(id)) {
       return res.status(400).json({ message: "Invalid id" });
     }
@@ -217,8 +217,8 @@ const gameController = {
         where: { id },
         data: game,
       })
-      .then(game => {
-        res.status(201).json(game);
+      .then(gameUpdated => {
+        res.status(201).json(gameUpdated);
       })
       .catch(error => {
         console.log(error);

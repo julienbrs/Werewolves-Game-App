@@ -1,4 +1,4 @@
-import { format, parseISO, getHours, getMinutes } from "date-fns";
+import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 
 export const parseDeadline = (deadline: string, startDay: string): string => {

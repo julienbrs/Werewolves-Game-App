@@ -1,7 +1,7 @@
-import { SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet, ActivityIndicator } from "react-native";
 import { Text } from "@rneui/themed";
 import React from "react";
+import { ActivityIndicator, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface LoadingProps {
   title: string;

@@ -1,7 +1,6 @@
 import cors from "cors";
-import express from "express";
+import express, { ErrorRequestHandler, NextFunction, Request, Response } from "express";
 import router from "./routes/router";
-import { NextFunction, Request, Response, ErrorRequestHandler } from "express";
 import { relaunchGames } from "./utils/scheduler";
 const app = express();
 const port = 3000;
@@ -19,10 +18,10 @@ app.use("*", (req, res, next) => {
 // Assign Routes
 app.use("/", router);
 const errorHandler: ErrorRequestHandler = (
-  err: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction
+  _err: Error,
+  _req: Request,
+  _res: Response,
+  _next: NextFunction
 ) => {};
 app.use(errorHandler);
 relaunchGames();

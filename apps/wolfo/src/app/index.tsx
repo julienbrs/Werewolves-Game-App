@@ -1,27 +1,26 @@
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Button, SearchBar, Tab, TabView } from "@rneui/themed";
 import { Link, Redirect, useRouter } from "expo-router";
-import useAuthQuery from "../utils/hooks/useAuth";
-import { Button, Text, Tab, TabView, SearchBar } from "@rneui/themed";
 import React from "react";
-import { Platform } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import Loading from "../components/loading";
-import * as SecureStore from "expo-secure-store";
+import useAuthQuery from "../utils/hooks/useAuth";
 import { ListGamesLobby, ListMyGames } from "./games/games";
 
 const Home = () => {
   const router = useRouter();
   const [search, setSearch] = React.useState<string>("");
   const [tabIndex, setTabIndex] = React.useState<number>(0);
-  const { data, isError, isLoading } = useAuthQuery();
+  const { isError, isLoading } = useAuthQuery();
   if (isLoading) {
     return <Loading title="Loading home" message="loading user information" />;
   }
   if (isError) {
-    return <Redirect href="/auth" />;
+    return <Redirect href="/user" />;
   }
   return (
     <>
       <Link href="/_sitemap">sitemap</Link>
+      <Link href="/userSettings">sitemap</Link>
       <Button onPress={() => router.push("/games/new")}>New game</Button>
       <Tab value={tabIndex} onChange={setTabIndex}>
         <Tab.Item title="Mes parties" />
@@ -34,10 +33,10 @@ const Home = () => {
         value={search}
       />
       <TabView value={tabIndex} onChange={setTabIndex}>
-        <TabView.Item style={{ width: "100%" }}>
+        <TabView.Item style={styles.tabview}>
           <ListMyGames search={search} />
         </TabView.Item>
-        <TabView.Item style={{ width: "100%" }}>
+        <TabView.Item style={styles.tabview}>
           <ListGamesLobby search={search} />
         </TabView.Item>
       </TabView>
@@ -45,3 +44,9 @@ const Home = () => {
   );
 };
 export default Home;
+
+const styles = StyleSheet.create({
+  tabview: {
+    width: "100%",
+  },
+});

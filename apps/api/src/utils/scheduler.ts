@@ -1,10 +1,11 @@
-
+import cron from "node-cron";
 import prisma from "../prisma";
-import cron  from 'node-cron';
 
 export const gameStart = (dateS: Date, id: number) => {
   const date = new Date(dateS);
-  const dateString = `${date.getUTCSeconds()} ${date.getUTCMinutes()} ${date.getUTCHours()} ${date.getUTCDate()} ${date.getUTCMonth()+1} *`;
+  const dateString = `${date.getUTCSeconds()} ${date.getUTCMinutes()} ${date.getUTCHours()} ${date.getUTCDate()} ${
+    date.getUTCMonth() + 1
+  } *`;
   cron.schedule(dateString, async () => {
     const game = await prisma.game.findUnique({
       where: { id },
@@ -32,14 +33,14 @@ export const gameStart = (dateS: Date, id: number) => {
       await prisma.game.update({
         where: { id },
         data: {
-          state: "IN_GAME"
-        }
+          state: "IN_GAME",
+        },
       });
-    };
+    }
   });
-}
+};
 
-// Fonction qui relance les parties en attente de joueurs dans le cas d'un redémarrage du serveur
+// Fonction qui relance les parties en attente de joueurs dans le cas
 export const relaunchGames = async () => {
   const games = await prisma.game.findMany({
     where: {
@@ -53,4 +54,4 @@ export const relaunchGames = async () => {
   games.forEach(game => {
     gameStart(game.deadline, game.id);
   });
-}
+};

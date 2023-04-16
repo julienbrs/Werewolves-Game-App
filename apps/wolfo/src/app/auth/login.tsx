@@ -1,19 +1,16 @@
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Stack, useRouter, Redirect } from "expo-router";
-import { Tab, Input, TabView, Button, Text } from "@rneui/themed";
-import { useState } from "react";
+import { Button, Input, Text } from "@rneui/themed";
 import { useMutation } from "@tanstack/react-query";
+import { Redirect } from "expo-router";
 import * as SecureStore from "expo-secure-store";
+import React, { useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Error, NewUser } from "types";
 import { login } from "../../utils/api/user";
-import { Error, NewUser, User } from "types";
 export const Login = () => {
   const [name, setName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const { mutate, isSuccess, isError, error } = useMutation<any, Error, NewUser>({
     mutationFn: user => login(user),
-    onError: (error: Error) => {
-      console.log(error);
-    },
     onSuccess: data => {
       console.log(data);
       SecureStore.setItemAsync("token", data.token);

@@ -1,7 +1,7 @@
 import api from "./api";
 import { Game, NewGame } from "types";
 
-const game = {
+const gameApi = {
   getGamesLobby: async (): Promise<Game[]> => {
     const { data } = await api.get("/games?state=LOBBY");
     return data;
@@ -50,4 +50,4 @@ export const {
   joinGame,
   leaveGame,
   login,
-} = game;
+} = gameApi;

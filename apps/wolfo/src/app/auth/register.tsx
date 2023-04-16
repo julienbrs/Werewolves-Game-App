@@ -1,11 +1,11 @@
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Redirect, Stack, useRouter } from "expo-router";
-import { Tab, Input, TabView, Button, Text } from "@rneui/themed";
-import { useState } from "react";
-import { createUser } from "../../utils/api/user";
+import { Button, Input } from "@rneui/themed";
 import { useMutation } from "@tanstack/react-query";
-import { Error, NewUser, User } from "types";
+import { Redirect } from "expo-router";
 import * as SecureStore from "expo-secure-store";
+import React, { useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Error, NewUser } from "types";
+import { createUser } from "../../utils/api/user";
 export const Register = () => {
   const [name, setName] = useState<string>("");
   const [password, setPassword] = useState<string>("");

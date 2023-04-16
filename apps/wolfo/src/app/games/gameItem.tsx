@@ -1,6 +1,7 @@
-import { Game } from "types";
-import { ListItem } from "@rneui/themed";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { ListItem } from "@rneui/themed";
+import React from "react";
+import { Game } from "types";
 import { isDay, parseDeadline } from "../../utils/services/parsedate";
 interface GameItemProps {
   game: Game;

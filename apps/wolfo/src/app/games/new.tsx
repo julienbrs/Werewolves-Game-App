@@ -1,5 +1,4 @@
-import { View, Text, Button } from "react-native";
-import { useRouter, useSearchParams } from "expo-router";
+import React, { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 const NewGame = () => {
   return (
