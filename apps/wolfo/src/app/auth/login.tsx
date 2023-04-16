@@ -9,16 +9,12 @@ import { Error, NewUser, User } from "types";
 export const Login = () => {
   const [name, setName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const { mutate, isSuccess, isError, error } = useMutation<
-    any,
-    Error,
-    NewUser
-  >({
-    mutationFn: (user) => login(user),
+  const { mutate, isSuccess, isError, error } = useMutation<any, Error, NewUser>({
+    mutationFn: user => login(user),
     onError: (error: Error) => {
       console.log(error);
     },
-    onSuccess: (data) => {
+    onSuccess: data => {
       console.log(data);
       SecureStore.setItemAsync("token", data.token);
     },

@@ -33,11 +33,5 @@
       "cache": false
     }
   },
-  "globalEnv": [
-    "SECRET",
-    "DATABASE_URL",
-    "POSTGRES_USER",
-    "POSTGRES_PASSWORD",
-    "POSTGRES_DB"
-  ]
+  "globalEnv": ["SECRET", "DATABASE_URL", "POSTGRES_USER", "POSTGRES_PASSWORD", "POSTGRES_DB"]
 }

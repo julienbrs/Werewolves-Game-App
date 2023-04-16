@@ -1,4 +1,4 @@
-import api from "../api";
+import api from "./api";
 import { Game, NewGame } from "types";
 
 const game = {
@@ -8,6 +8,10 @@ const game = {
   },
   getMyGames: async (): Promise<Game[]> => {
     const { data } = await api.get("/games/mygames");
+    return data;
+  },
+  getGame: async (id: number): Promise<Game> => {
+    const { data } = await api.get(`/games/${id}`);
     return data;
   },
   createGame: async (game: NewGame) => {
@@ -26,6 +30,10 @@ const game = {
     const { data } = await api.post(`/games/${id}/join`);
     return data;
   },
+  leaveGame: async (id: number) => {
+    const { data } = await api.post(`/games/${id}/leave`);
+    return data;
+  },
   login: async (game: Game) => {
     const { data } = await api.post("/games/login", game);
     return data;
@@ -35,9 +43,11 @@ const game = {
 export const {
   getGamesLobby,
   getMyGames,
+  getGame,
   createGame,
   deleteGame,
   updateGame,
   joinGame,
+  leaveGame,
   login,
 } = game;

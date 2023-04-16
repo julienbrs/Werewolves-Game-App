@@ -1,4 +1,4 @@
-import api from "../api";
+import api from "./api";
 import { NewUser, User } from "types";
 
 const user = {

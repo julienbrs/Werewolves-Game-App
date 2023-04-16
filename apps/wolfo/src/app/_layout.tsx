@@ -8,10 +8,7 @@ const HomeLayout = () => {
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
         <Stack>
-          <Stack.Screen
-            name="auth/index"
-            options={{ title: "Authentification" }}
-          />
+          <Stack.Screen name="auth/index" options={{ title: "Authentification" }} />
           <Stack.Screen
             name="index"
             options={{

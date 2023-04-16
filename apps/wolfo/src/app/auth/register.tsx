@@ -11,11 +11,11 @@ export const Register = () => {
   const [password, setPassword] = useState<string>("");
 
   const { mutate, isSuccess } = useMutation<any, Error, NewUser>({
-    mutationFn: (user) => createUser(user),
-    onError: (error) => {
+    mutationFn: user => createUser(user),
+    onError: error => {
       console.log(error);
     },
-    onSuccess: (data) => {
+    onSuccess: data => {
       console.log(data);
       SecureStore.setItemAsync("token", data.token);
     },

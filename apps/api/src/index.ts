@@ -1,13 +1,7 @@
 import cors from "cors";
 import express from "express";
 import router from "./routes/router";
-import {
-  NextFunction,
-  Request,
-  Response,
-  Router,
-  ErrorRequestHandler,
-} from "express";
+import { NextFunction, Request, Response, Router, ErrorRequestHandler } from "express";
 
 const app = express();
 const port = 3000;

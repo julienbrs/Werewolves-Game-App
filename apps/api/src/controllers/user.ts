@@ -52,7 +52,7 @@ const userController = {
           password: hashedPassword,
         },
       })
-      .then((user) => {
+      .then(user => {
         const newToken = jwt.sign(
           {
             id: user.id,
@@ -63,7 +63,7 @@ const userController = {
         );
         res.json({ token: newToken, message: "User updated" });
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
         res.status(400).json(error);
       });

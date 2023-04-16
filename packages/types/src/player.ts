@@ -1,11 +1,13 @@
-export type ROLE = "WOLF" | "VILLAGER";
-export type STATEPLAYER = "ALIVE" | "DEAD";
-export type POWER = "INSOMNIAC" | "SEER" | "CONTAMINATOR" | "SPIRIT";
+export type Role = "WOLF" | "VILLAGER";
+export type StatePlayer = "ALIVE" | "DEAD";
+export type Power = "INSOMNIAC" | "SEER" | "CONTAMINATOR" | "SPIRIT";
 import { User } from "./user";
 
 export interface Player {
-  state?: STATEPLAYER;
-  role?: ROLE;
-  power?: POWER;
+  state?: StatePlayer;
+  role?: Role;
+  power?: Power;
   user: User;
+  createdAt?: string;
+  updatedAt?: string;
 }
