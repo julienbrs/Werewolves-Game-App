@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import prisma from "../prisma";
 import { NewGame, Game } from "types";
 import { StateGame } from "database";
+import { gameStart } from "../utils/scheduler";
 const jwt = require("jsonwebtoken");
 const SECRET = process.env.SECRET;
 
@@ -45,6 +46,7 @@ const gameController = {
         return newGame;
       })
       .then(newGame => {
+        gameStart(newGame.deadline, newGame.id)
         res.status(201).json(newGame);
       })
       .catch(error => {

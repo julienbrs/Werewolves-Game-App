@@ -1,8 +1,8 @@
 import cors from "cors";
 import express from "express";
 import router from "./routes/router";
-import { NextFunction, Request, Response, Router, ErrorRequestHandler } from "express";
-
+import { NextFunction, Request, Response, ErrorRequestHandler } from "express";
+import { relaunchGames } from "./utils/scheduler";
 const app = express();
 const port = 3000;
 
@@ -25,5 +25,5 @@ const errorHandler: ErrorRequestHandler = (
   next: NextFunction
 ) => {};
 app.use(errorHandler);
-
+relaunchGames();
 app.listen(port, () => console.log(`Listening on http://localhost:${port}`));
