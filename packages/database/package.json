@@ -11,7 +11,7 @@
     "tsconfig": "workspace:*"
   },
   "scripts": {
-    "docker:init": "docker-compose up -d",
+    "docker:init": "pnpm with-env docker-compose up -d",
     "db:generate": "pnpm with-env prisma generate",
     "db:push": "pnpm with-env prisma db push --skip-generate",
     "db:migrate": "pnpm with-env prisma migrate dev",
