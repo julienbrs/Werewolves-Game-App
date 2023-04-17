@@ -1,5 +1,4 @@
 import * as SecureStore from "expo-secure-store";
-import { useQuery } from "@tanstack/react-query";
 
 // le fetch original
 const useAuth = async () => {
@@ -10,10 +9,4 @@ const useAuth = async () => {
   return Promise.reject(new Error("No token"));
 };
 
-// on wrap le fetch dans une query de la librairie react-query
-const useAuthQuery = () =>
-  useQuery({
-    queryKey: ["auth"], // clé de cache
-    queryFn: useAuth,
-  });
-export default useAuthQuery;
+export default useAuth;

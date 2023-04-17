@@ -1,52 +1,41 @@
-import { Button, SearchBar, Tab, TabView } from "@rneui/themed";
+import { useQuery } from "@tanstack/react-query";
+import { Button, Input, Tab, TabView } from "@ui-kitten/components";
 import { Link, Redirect, useRouter } from "expo-router";
 import React from "react";
-import { Platform, StyleSheet } from "react-native";
 import Loading from "../components/loading";
-import useAuthQuery from "../utils/hooks/useAuth";
+import useAuth from "../utils/hooks/useAuth";
 import { ListGamesLobby, ListMyGames } from "./games/games";
 
 const Home = () => {
   const router = useRouter();
   const [search, setSearch] = React.useState<string>("");
   const [tabIndex, setTabIndex] = React.useState<number>(0);
-  const { isError, isLoading } = useAuthQuery();
+  const { isError, isLoading } = useQuery({
+    queryKey: ["auth"], // clé de cache
+    queryFn: useAuth,
+    staleTime: 0,
+  });
   if (isLoading) {
     return <Loading title="Loading home" message="loading user information" />;
   }
   if (isError) {
-    return <Redirect href="/user" />;
+    return <Redirect href="/auth" />;
   }
   return (
     <>
       <Link href="/_sitemap">sitemap</Link>
       <Link href="/userSettings">sitemap</Link>
       <Button onPress={() => router.push("/games/new")}>New game</Button>
-      <Tab value={tabIndex} onChange={setTabIndex}>
-        <Tab.Item title="Mes parties" />
-        <Tab.Item title="Parties à rejoindre" />
-      </Tab>
-      <SearchBar
-        platform={Platform.OS === "ios" ? "ios" : "android"}
-        placeholder="Search"
-        onChangeText={setSearch}
-        value={search}
-      />
-      <TabView value={tabIndex} onChange={setTabIndex}>
-        <TabView.Item style={styles.tabview}>
+      <Input placeholder="Recherche" onChangeText={setSearch} value={search} />
+      <TabView selectedIndex={tabIndex} onSelect={setTabIndex}>
+        <Tab title="Mes parties">
           <ListMyGames search={search} />
-        </TabView.Item>
-        <TabView.Item style={styles.tabview}>
+        </Tab>
+        <Tab title="Parties à rejoindre">
           <ListGamesLobby search={search} />
-        </TabView.Item>
+        </Tab>
       </TabView>
     </>
   );
 };
 export default Home;
-
-const styles = StyleSheet.create({
-  tabview: {
-    width: "100%",
-  },
-});

@@ -1,5 +1,5 @@
-import api from "./api";
 import { Game, NewGame } from "types";
+import api from "./api";
 
 const gameApi = {
   getGamesLobby: async (): Promise<Game[]> => {

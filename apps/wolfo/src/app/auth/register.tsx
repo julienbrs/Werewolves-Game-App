@@ -1,5 +1,5 @@
-import { Button, Input } from "@rneui/themed";
 import { useMutation } from "@tanstack/react-query";
+import { Button, Input } from "@ui-kitten/components";
 import { Redirect } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import React, { useState } from "react";
@@ -12,11 +12,7 @@ export const Register = () => {
 
   const { mutate, isSuccess } = useMutation<any, Error, NewUser>({
     mutationFn: user => createUser(user),
-    onError: error => {
-      console.log(error);
-    },
     onSuccess: data => {
-      console.log(data);
       SecureStore.setItemAsync("token", data.token);
     },
   });
@@ -36,7 +32,7 @@ export const Register = () => {
     <SafeAreaView>
       <Input placeholder="Name" onChangeText={setName} />
       <Input placeholder="Password" onChangeText={setPassword} />
-      <Button title={"Register"} onPress={handleRegister} />
+      <Button onPress={handleRegister}>Register</Button>
     </SafeAreaView>
   );
 };

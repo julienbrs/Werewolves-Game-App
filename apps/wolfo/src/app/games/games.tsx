@@ -1,15 +1,17 @@
-import { Dialog, Text } from "@rneui/themed";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Divider, List, Text } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { RefreshControl, ScrollView } from "react-native-gesture-handler";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Game } from "types";
 import Loading from "../../components/loading";
+import { ModalConfirmChoice } from "../../components/modals/modalConfirm";
 import { getGamesLobby, getMyGames, joinGame, leaveGame } from "../../utils/api/game";
 import { GameItemInGame, GameItemLobby, GameItemNotJoined } from "./gameItem";
 interface ListProps {
   search: string;
 }
+
 export const ListGamesLobby: React.FC<ListProps> = ({ search }) => {
   const queryClient = useQueryClient();
   const [visible, setVisible] = useState<boolean>(false);
@@ -41,27 +43,31 @@ export const ListGamesLobby: React.FC<ListProps> = ({ search }) => {
   const filteredGames = games?.filter((game: Game) =>
     game.name.toLowerCase().includes(search.toLowerCase())
   );
+
+  const listGame = ({ item }: { item: Game; index: number }) => (
+    <GameItemNotJoined key={item.id} game={item} handleFunction={handleJoin} />
+  );
   return (
-    <ScrollView refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} />}>
-      <Dialog isVisible={visible} onBackdropPress={toggleVisible}>
-        <Dialog.Title title="Validation" />
-        <Text>Êtes vous sur de rejoindre cette partie ?</Text>
-        <Dialog.Actions>
-          <Dialog.Button
-            title="CONFIRM"
-            onPress={() => {
-              mutate(selectedGame);
-              toggleVisible();
-            }}
-          />
-          <Dialog.Button title="CANCEL" onPress={toggleVisible} />
-        </Dialog.Actions>
-      </Dialog>
-      {games &&
-        filteredGames!.map((game: Game) => (
-          <GameItemNotJoined key={game.id} game={game} handleFunction={handleJoin} />
-        ))}
-    </ScrollView>
+    <SafeAreaView>
+      {games && (
+        <List
+          data={filteredGames}
+          renderItem={listGame}
+          ItemSeparatorComponent={Divider}
+          onRefresh={refetch}
+          refreshing={isLoading}
+        />
+      )}
+      <ModalConfirmChoice
+        title="Validation"
+        description="Êtes vous sur de rejoindre cette partie ?"
+        visible={visible}
+        setVisible={setVisible}
+        confirmFunction={() => {
+          mutate(selectedGame);
+        }}
+      />
+    </SafeAreaView>
   );
 };
 
@@ -104,32 +110,33 @@ export const ListMyGames: React.FC<ListProps> = ({ search }) => {
   const filteredGames = games?.filter((game: Game) =>
     game.name.toLowerCase().includes(search.toLowerCase())
   );
+  const listGame = ({ item }: { item: Game; index: number }) => {
+    return item.state === "LOBBY" ? (
+      <GameItemLobby game={item} handleFunction={handleLeave} />
+    ) : (
+      <GameItemInGame game={item} handleFunction={() => router.push(`/games/${item.id}`)} />
+    );
+  };
   return (
-    <ScrollView refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} />}>
-      <Dialog isVisible={visible} onBackdropPress={toggleVisible}>
-        <Dialog.Title title="Validation" />
-        <Text>Êtes vous sur de quitter cette partie ?</Text>
-        <Dialog.Actions>
-          <Dialog.Button
-            title="CONFIRM"
-            onPress={() => {
-              mutate(selectedGame);
-              toggleVisible();
-            }}
-          />
-          <Dialog.Button title="CANCEL" onPress={toggleVisible} />
-        </Dialog.Actions>
-      </Dialog>
-      {games &&
-        filteredGames!.map((game: Game) => (
-          <React.Fragment key={game.id}>
-            {game.state === "LOBBY" ? (
-              <GameItemLobby game={game} handleFunction={handleLeave} />
-            ) : (
-              <GameItemInGame game={game} handleFunction={() => router.push(`/games/${game.id}`)} />
-            )}
-          </React.Fragment>
-        ))}
-    </ScrollView>
+    <SafeAreaView>
+      {games && (
+        <List
+          data={filteredGames}
+          renderItem={listGame}
+          ItemSeparatorComponent={Divider}
+          onRefresh={refetch}
+          refreshing={isLoading}
+        />
+      )}
+      <ModalConfirmChoice
+        title="Validation"
+        description="Êtes vous sur de rejoindre cette partie ?"
+        visible={visible}
+        setVisible={setVisible}
+        confirmFunction={() => {
+          mutate(selectedGame);
+        }}
+      />
+    </SafeAreaView>
   );
 };

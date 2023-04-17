@@ -1,8 +1,8 @@
+import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import prisma from "../prisma";
 const jwt = require("jsonwebtoken");
 const SECRET = process.env.SECRET;
-import bcrypt from "bcrypt";
 const userController = {
   async create(req: Request, res: Response) {
     const { name, password } = req.body;
@@ -64,8 +64,13 @@ const userController = {
         res.json({ token: newToken, message: "User updated" });
       })
       .catch(error => {
-        console.log(error);
-        res.status(400).json(error);
+        console.log(JSON.stringify(error));
+        if (error.code === "P2002" && error.meta.target.includes("name")) {
+          console.log("Name already exists");
+          res.status(400).json({ message: "Name already exists" });
+        } else {
+          res.status(400).json({ message: "Unknown error" });
+        }
       });
   },
   async auth(req: Request, res: Response) {
@@ -92,6 +97,24 @@ const userController = {
       { expiresIn: "7d" }
     );
     res.json({ token, message: "User logged in" });
+  },
+  async getMe(req: Request, res: Response) {
+    const token = req.headers.authorization?.split(" ")[1];
+    const decodedToken = jwt.verify(token, SECRET);
+    const id = decodedToken.id;
+    prisma.user
+      .findUnique({
+        where: {
+          id,
+        },
+      })
+      .then(user => {
+        res.json(user);
+      })
+      .catch(error => {
+        console.log(error);
+        res.status(400).json(error);
+      });
   },
 };
 

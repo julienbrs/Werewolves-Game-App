@@ -1,4 +1,4 @@
-import { Text } from "@rneui/themed";
+import { Text } from "@ui-kitten/components";
 import React from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -11,9 +11,7 @@ const Loading: React.FC<LoadingProps> = ({ title, message }) => {
   return (
     <SafeAreaView style={styles.container}>
       <SafeAreaView style={styles.content}>
-        <Text h4 style={styles.title}>
-          {title}
-        </Text>
+        <Text style={styles.title}>{title}</Text>
         <Text style={styles.message}>{message}</Text>
         <ActivityIndicator size="large" color="#0000ff" />
       </SafeAreaView>
