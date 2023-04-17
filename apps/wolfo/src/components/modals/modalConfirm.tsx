@@ -1,6 +1,6 @@
 import { Button, Card, Modal, Text } from "@ui-kitten/components";
 import React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 interface ModalConfirmChoiceProps {
   title: string;
@@ -26,18 +26,23 @@ export const ModalConfirmChoice = ({
       <Card disabled={true}>
         <Text>{title}</Text>
         <Text>{description}</Text>
-        <Button onPress={() => setVisible(false)} style={styles.buttons}>
-          Cancel
-        </Button>
-        <Button
-          onPress={() => {
-            setVisible(false);
-            confirmFunction();
-          }}
-          style={styles.buttons}
-        >
-          Confirm
-        </Button>
+        <View style={styles.buttonContainer}>
+          <Button
+            onPress={() => setVisible(false)}
+            style={{ ...styles.button, ...styles.cancelButton }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onPress={() => {
+              setVisible(false);
+              confirmFunction();
+            }}
+            style={styles.button}
+          >
+            Confirm
+          </Button>
+        </View>
       </Card>
     </Modal>
   );
@@ -47,9 +52,19 @@ const styles = StyleSheet.create({
   backdrop: {
     backgroundColor: "green",
   },
-  buttons: {
+  button: {
+    flex: 1,
+    marginLeft: 5,
+    marginRight: 5,
+    width: "20%",
+  },
+  cancelButton: {
+    backgroundColor: "red",
+    borderColor: "red",
+  },
+  buttonContainer: {
+    marginTop: 10,
     flexDirection: "row",
     justifyContent: "flex-end",
-    width: "50%",
   },
 });
