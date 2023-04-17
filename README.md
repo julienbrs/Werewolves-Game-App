@@ -10,6 +10,8 @@
 - `npm install -g pnpm`
 - `pnpm install` (ça va installer les dépendances partout)
 - Chaque projet à son propre README.md avec les instructions pour le lancer
+- Lancer la BDD --> `packages/database/README.md`.
+- Lancer le backend `pnpm dev`
 
 ## Ressources
 
