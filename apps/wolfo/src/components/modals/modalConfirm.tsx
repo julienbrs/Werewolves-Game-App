@@ -1,6 +1,7 @@
 import { Button, Card, Modal, Text } from "@ui-kitten/components";
 import React from "react";
 import { StyleSheet } from "react-native";
+
 interface ModalConfirmChoiceProps {
   title: string;
   description: string;
