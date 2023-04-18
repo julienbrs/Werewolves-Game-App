@@ -13,7 +13,7 @@ const Settings = () => {
   const [name, setName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
-
+  const [enableMe, setEnableMe] = useState<boolean>(true);
   const router = useRouter();
   const queryClient = useQueryClient();
   queryClient.invalidateQueries(["auth"]);
@@ -24,6 +24,7 @@ const Settings = () => {
   } = useQuery<User>({
     queryFn: getMe,
     queryKey: ["user"],
+    enabled: enableMe,
   });
   const { mutate: updateQuery } = useMutation<any, Error, User>({
     mutationFn: userUpdated => updateUser(userUpdated),
@@ -39,8 +40,10 @@ const Settings = () => {
   const { mutate: deleteQuery } = useMutation<any, Error>({
     mutationFn: deleteUser,
     onSuccess: async () => {
+      setEnableMe(false);
       await SecureStore.deleteItemAsync("token");
       await queryClient.invalidateQueries(["user"]);
+      await queryClient.invalidateQueries(["auth"]);
       router.back();
     },
   });
@@ -64,6 +67,7 @@ const Settings = () => {
     updateQuery(modifiedUser);
   };
   const logout = async () => {
+    setEnableMe(false);
     await SecureStore.deleteItemAsync("token");
     await queryClient.invalidateQueries(["user"]);
     await queryClient.invalidateQueries(["auth"]);

@@ -8,6 +8,7 @@ import Loading from "../../components/loading";
 import { ModalConfirmChoice } from "../../components/modals/modalConfirm";
 import { getGamesLobby, getMyGames, joinGame, leaveGame } from "../../utils/api/game";
 import { GameItemInGame, GameItemLobby, GameItemNotJoined } from "./gameItem";
+
 interface ListProps {
   search: string;
 }

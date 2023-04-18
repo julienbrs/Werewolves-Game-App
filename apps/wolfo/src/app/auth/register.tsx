@@ -10,11 +10,8 @@ export const Register = () => {
   const [name, setName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const { mutate, isSuccess } = useMutation<any, Error, NewUser>({
+  const { data, mutate, isSuccess } = useMutation<any, Error, NewUser>({
     mutationFn: user => createUser(user),
-    onSuccess: data => {
-      SecureStore.setItemAsync("token", data.token);
-    },
   });
 
   const handleRegister = () => {
@@ -25,6 +22,7 @@ export const Register = () => {
     mutate(user);
   };
   if (isSuccess) {
+    SecureStore.setItemAsync("token", data.token);
     return <Redirect href="/" />;
   }
 
