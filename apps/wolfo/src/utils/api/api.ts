@@ -2,7 +2,7 @@
 import axios, { AxiosError } from "axios";
 import * as SecureStore from "expo-secure-store";
 const api = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: "http://127.0.0.1:3000/api",
   headers: {
     "Content-type": "application/json",
   },
@@ -24,7 +24,14 @@ api.interceptors.request.use(
 // On intercepte les erreurs pour ne pas avoir à les gérer à chaque fois
 api.interceptors.response.use(
   response => response,
-  (error: AxiosError) => Promise.reject(error.response!.data)
+  (error: AxiosError) => {
+    console.log(JSON.stringify(error.response));
+    if (error.response === undefined) {
+      Promise.reject(error);
+    } else {
+      Promise.reject(error.response.data);
+    }
+  }
 );
 
 export default api;

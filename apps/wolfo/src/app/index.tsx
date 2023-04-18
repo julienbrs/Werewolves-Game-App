@@ -14,6 +14,7 @@ const Home = () => {
     queryKey: ["auth"], // clé de cache
     queryFn: useAuth,
     staleTime: 0,
+    cacheTime: 0,
   });
   if (isLoading) {
     return <Loading title="Loading home" message="loading user information" />;

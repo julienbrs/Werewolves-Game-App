@@ -5,13 +5,15 @@
     "build": "pnpm with-env esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js --external:express --external:cors",
     "start": "pnpm with-env node dist/index.js",
     "lint": "eslint src",
+    "clean": "git clean -xdf .expo .turbo node_modules",
     "type-check": "tsc",
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@types/node-cron": "^3.0.7",
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "@types/node-cron": "^3.0.7",
+    "bcrypt-ts": "^3.0.0",
     "jsonwebtoken": "^9.0.0",
     "node-cron": "^3.0.2"
   },

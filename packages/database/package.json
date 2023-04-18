@@ -11,6 +11,7 @@
     "tsconfig": "workspace:*"
   },
   "scripts": {
+    "clean": "git clean -xdf .expo .turbo node_modules",
     "docker:init": "pnpm with-env docker-compose up -d",
     "db:generate": "pnpm with-env prisma generate",
     "db:push": "pnpm with-env prisma db push --skip-generate",
