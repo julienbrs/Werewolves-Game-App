@@ -2,7 +2,8 @@ import { StateGame } from "database";
 import { Request, Response } from "express";
 import { Game, NewGame } from "types";
 import prisma from "../prisma";
-import { checkDeadline, createDeadlineJob, deleteJob } from "../services/scheduler";
+import createGame from "../services/game/createGame";
+import { deleteJob } from "../services/scheduler";
 import { getTommorow } from "../services/time";
 const jwt = require("jsonwebtoken");
 const SECRET = process.env.SECRET;
@@ -13,43 +14,8 @@ const gameController = {
     const token = req.headers.authorization?.split(" ")[1];
     const decodedToken = jwt.verify(token, SECRET);
     const userId = decodedToken.id;
-    if (!checkDeadline(new Date(game.deadline))) {
-      return res.status(400).json({ message: "Invalid deadline" });
-    }
-    await prisma
-      .$transaction(async transaction => {
-        const dayChat = await transaction.dayChatRoom.create({
-          data: {
-            chatRoom: { create: {} },
-          },
-        });
-        console.log(dayChat);
-        const nightChat = await transaction.nightChatRoom.create({
-          data: {
-            chatRoom: { create: {} },
-          },
-        });
-
-        const newGame = await transaction.game.create({
-          data: {
-            ...game,
-            dayChatRoomId: dayChat.id,
-            nightChatRoomId: nightChat.id,
-          },
-        });
-
-        // On ajoute le créateur de la partie à la partie
-        await transaction.player.create({
-          data: {
-            userId: userId,
-            gameId: newGame.id,
-          },
-        });
-
-        return newGame;
-      })
+    createGame(game, userId)
       .then(newGame => {
-        createDeadlineJob(newGame.deadline, newGame.id, newGame.startDay);
         res.status(201).json(newGame);
       })
       .catch(error => {

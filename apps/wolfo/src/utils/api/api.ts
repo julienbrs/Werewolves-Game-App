@@ -1,16 +1,20 @@
 // ici on utilise axios et react query pour faire des requêtes http
 import axios, { AxiosError } from "axios";
-import * as SecureStore from "expo-secure-store";
 const api = axios.create({
-  baseURL: "http://127.0.0.1:3000/api",
+  baseURL: "http://localhost:3000/api",
   headers: {
     "Content-type": "application/json",
   },
 });
 
+let token: string | null = null;
+
+export const setToken = (newToken: string | null) => {
+  token = newToken;
+};
+
 api.interceptors.request.use(
   async config => {
-    const token = await SecureStore.getItemAsync("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

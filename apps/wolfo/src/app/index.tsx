@@ -2,10 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { Button, Input, Tab, TabView } from "@ui-kitten/components";
 import { Redirect, useRouter } from "expo-router";
 import React from "react";
+import { ListGamesLobby, ListMyGames } from "../components/game/gameList";
 import Loading from "../components/loading";
 import useAuth from "../utils/hooks/useAuth";
-import { ListGamesLobby, ListMyGames } from "./games/gameList";
-
 const Home = () => {
   const router = useRouter();
   const [search, setSearch] = React.useState<string>("");

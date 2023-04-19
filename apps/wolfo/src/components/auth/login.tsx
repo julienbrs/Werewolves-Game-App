@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Error, NewUser } from "types";
 import { login } from "../../utils/api/user";
+import { setToken } from "../../utils/api/api";
 export const Login = () => {
   const [name, setName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -22,6 +23,7 @@ export const Login = () => {
 
   if (isSuccess) {
     SecureStore.setItemAsync("token", data.token);
+    setToken(data.token);
     return <Redirect href="/" />;
   }
   return (

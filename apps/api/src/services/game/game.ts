@@ -1,8 +1,8 @@
 import { Player, Power, Role, StateGame } from "database";
-import prisma from "../prisma";
-import { finishElection } from "./election";
-import { deleteJob } from "./scheduler";
-export const startGame = async (gameId: number) => {
+import prisma from "../../prisma";
+import { deleteJob } from "../scheduler";
+
+const startGame = async (gameId: number) => {
   prisma
     .$transaction(async transaction => {
       const game = await transaction.game.findUnique({
@@ -53,9 +53,21 @@ export const startGame = async (gameId: number) => {
         const seer = players[Math.floor(Math.random() * players.length)];
         if (seer.power === Power.NONE) seer.power = Power.SEER;
       }
-      if (Math.random() < game.spiritProb) {
+      let isSpirit = Math.random() < game.spiritProb;
+      while (isSpirit) {
         const spirit = players[Math.floor(Math.random() * players.length)];
-        if (spirit.power === Power.NONE) spirit.power = Power.SPIRIT;
+        if (spirit.power === Power.NONE) {
+          spirit.power = Power.SPIRIT;
+          isSpirit = false;
+          await prisma.game.update({
+            where: { id: gameId },
+            data: {
+              spiritChat: {
+                create: {},
+              },
+            },
+          });
+        }
       }
       let isInsomniac = Math.random() < game.insomProb;
       while (isInsomniac) {
@@ -97,38 +109,4 @@ export const startGame = async (gameId: number) => {
     });
 };
 
-export const newPeriod = async (day: boolean, gameId: number) => {
-  await prisma.$transaction(async transaction => {
-    const game = await transaction.game.findUniqueOrThrow({
-      where: { id: gameId },
-      select: {
-        curElecId: true,
-        players: {
-          select: {
-            userId: true,
-            state: true,
-            role: true,
-            power: true,
-          },
-        },
-      },
-    });
-    if (game.curElecId !== null) {
-      await finishElection(transaction, game.curElecId, game.players);
-    }
-    await transaction.election.create({
-      data: {
-        game: {
-          connect: { id: gameId },
-        },
-      },
-    });
-
-    transaction.game.update({
-      where: { id: gameId },
-      data: {
-        state: day ? StateGame.DAY : StateGame.NIGHT,
-      },
-    });
-  });
-};
+export default startGame;

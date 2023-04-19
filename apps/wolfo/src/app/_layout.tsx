@@ -48,13 +48,6 @@ const HomeLayout = () => {
                 headerRight: () => null,
               }}
             />
-            <Stack.Screen
-              name="games/new"
-              options={{
-                title: "Game settings",
-                headerRight: () => null,
-              }}
-            />
           </Stack>
         </SafeAreaProvider>
       </QueryClientProvider>

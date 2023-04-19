@@ -1,7 +1,7 @@
 import { Tab, TabView } from "@ui-kitten/components";
 import React, { useState } from "react";
-import { Login } from "./login";
-import { Register } from "./register";
+import { Login } from "../../components/auth/login";
+import { Register } from "../../components/auth/register";
 const Auth = () => {
   const [tabIndex, setTabIndex] = useState<number>(0);
   return (

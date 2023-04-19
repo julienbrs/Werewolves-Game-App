@@ -4,9 +4,9 @@ import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game } from "types";
-import Loading from "../../components/loading";
-import { ModalConfirmChoice } from "../../components/modals/modalConfirm";
 import { getGamesLobby, getMyGames, joinGame, leaveGame } from "../../utils/api/game";
+import Loading from "../loading";
+import { ModalConfirmChoice } from "../modals/modalConfirm";
 import { GameItemInGame, GameItemLobby, GameItemNotJoined } from "./gameItem";
 
 interface ListProps {
