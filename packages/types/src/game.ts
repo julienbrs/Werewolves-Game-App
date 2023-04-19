@@ -1,5 +1,16 @@
-type StateGame = "LOBBY" | "IN_GAME" | "END";
 import { Player } from "./player";
+
+export const StateGame = {
+  LOBBY: "LOBBY",
+  DAY: "DAY",
+  NIGHT: "NIGHT",
+  END: "END",
+} as const;
+
+type ObjectValues<T> = T[keyof T];
+
+export type StateGame = ObjectValues<typeof StateGame>;
+
 export type Game = {
   id: number;
   name: string;

@@ -4,7 +4,7 @@ import { Redirect, useRouter } from "expo-router";
 import React from "react";
 import Loading from "../components/loading";
 import useAuth from "../utils/hooks/useAuth";
-import { ListGamesLobby, ListMyGames } from "./games/games";
+import { ListGamesLobby, ListMyGames } from "./games/gameList";
 
 const Home = () => {
   const router = useRouter();

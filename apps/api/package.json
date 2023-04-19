@@ -5,6 +5,7 @@
     "build": "pnpm with-env esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js --external:express --external:cors",
     "start": "pnpm with-env node dist/index.js",
     "lint": "eslint src",
+    "lint:fix": "pnpm lint --fix",
     "clean": "git clean -xdf .expo .turbo node_modules",
     "type-check": "tsc",
     "with-env": "dotenv -e ../../.env --"

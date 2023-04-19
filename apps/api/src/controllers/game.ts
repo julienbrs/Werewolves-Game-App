@@ -2,7 +2,8 @@ import { StateGame } from "database";
 import { Request, Response } from "express";
 import { Game, NewGame } from "types";
 import prisma from "../prisma";
-import { gameStart } from "../utils/scheduler";
+import { checkDeadline, createDeadlineJob, deleteJob } from "../services/scheduler";
+import { getTommorow } from "../services/time";
 const jwt = require("jsonwebtoken");
 const SECRET = process.env.SECRET;
 
@@ -12,7 +13,9 @@ const gameController = {
     const token = req.headers.authorization?.split(" ")[1];
     const decodedToken = jwt.verify(token, SECRET);
     const userId = decodedToken.id;
-
+    if (!checkDeadline(new Date(game.deadline))) {
+      return res.status(400).json({ message: "Invalid deadline" });
+    }
     await prisma
       .$transaction(async transaction => {
         const dayChat = await transaction.dayChatRoom.create({
@@ -46,7 +49,7 @@ const gameController = {
         return newGame;
       })
       .then(newGame => {
-        gameStart(newGame.deadline, newGame.id);
+        createDeadlineJob(newGame.deadline, newGame.id, newGame.startDay);
         res.status(201).json(newGame);
       })
       .catch(error => {
@@ -99,6 +102,7 @@ const gameController = {
           state: true,
           deadline: true,
           startDay: true,
+          maxPlayer: true,
           players: {
             select: {
               userId: true,
@@ -165,15 +169,38 @@ const gameController = {
       res.status(400).json({ error: "Invalid game id" });
       return;
     }
-    prisma.player
-      .create({
-        data: {
-          userId,
-          gameId,
-        },
+    prisma
+      .$transaction(async transaction => {
+        await transaction.player.create({
+          data: {
+            userId,
+            gameId,
+          },
+        });
+        const game = await transaction.game.findUniqueOrThrow({
+          where: {
+            id: gameId,
+          },
+          select: {
+            maxPlayer: true,
+            players: {
+              select: {
+                userId: true,
+              },
+            },
+          },
+        });
+        if (!game) {
+          throw new Error("Game not found");
+        } else if (game.players.length === game.maxPlayer) {
+          prisma.game.update({
+            where: { id: gameId },
+            data: { deadline: getTommorow() },
+          });
+        }
       })
       .then(player => {
-        res.status(201).json({ message: "Game join", player });
+        res.status(201).json({ message: "Game joined", player });
       })
       .catch(error => {
         console.log(error);
@@ -218,6 +245,27 @@ const gameController = {
         data: game,
       })
       .then(gameUpdated => {
+        res.status(201).json(gameUpdated);
+      })
+      .catch(error => {
+        console.log(error);
+        res.status(400).json(error);
+      });
+  },
+  start(req: Request, res: Response) {
+    const id = parseInt(req.params.id, 10);
+    if (isNaN(id)) {
+      return res.status(400).json({ message: "Invalid id" });
+    }
+    prisma.game
+      .update({
+        where: { id },
+        data: {
+          state: StateGame.DAY,
+        },
+      })
+      .then(gameUpdated => {
+        deleteJob(gameUpdated.id);
         res.status(201).json(gameUpdated);
       })
       .catch(error => {

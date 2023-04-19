@@ -6,4 +6,4 @@ export type Workspace = {
 export * from "./error";
 export * from "./game";
 export * from "./user";
-
+export * from "./player";

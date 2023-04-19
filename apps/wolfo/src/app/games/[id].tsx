@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "expo-router";
 import React from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game } from "types";
+import Loading from "../../components/loading";
 import { getGame } from "../../utils/api/game";
 const GameView = () => {
   const router = useRouter();
@@ -18,7 +19,7 @@ const GameView = () => {
     staleTime: 1000 * 60 * 15, // 15 minutes
   });
   if (isLoading) {
-    return <Text>Loading</Text>;
+    return <Loading title="Game loading" message={"Game " + String(id) + "is loading"} />;
   }
   if (isError) {
     router.back();

@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import checkToken from "../middleware/checkToken";
-import games from "./games";
-import users from "./users";
+import games from "./game";
+import users from "./user";
 const express = require("express");
 const router: Router = express.Router();
 

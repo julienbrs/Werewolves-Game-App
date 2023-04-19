@@ -20,7 +20,8 @@ model User {
 
 enum StateGame {
   LOBBY
-  IN_GAME
+  DAY
+  NIGHT
   END
 }
 
@@ -32,13 +33,13 @@ model Game {
 
   // config
   deadline   DateTime // date du jour où ça commence
-  minPlayer  Int?     @default(5) // nombre de joueurs
-  maxPlayer  Int?     @default(20) // nombre de joueurs
-  wolfProb   Float?   @default(0.3) // default 1/3
-  seerProb   Float?   @default(0)
-  insomProb  Float?   @default(0)
-  contProb   Float?   @default(0)
-  spiritProb Float?   @default(0)
+  minPlayer  Int      @default(5) // nombre de joueurs
+  maxPlayer  Int      @default(20) // nombre de joueurs
+  wolfProb   Float    @default(0.3) // default 1/3
+  seerProb   Float    @default(0)
+  insomProb  Float    @default(0)
+  contProb   Float    @default(0)
+  spiritProb Float    @default(0)
   // par défault 8h
   startDay   DateTime @default(dbgenerated("'08:00:00'")) @db.Time()
   endDay     DateTime @default(dbgenerated("'22:00:00'")) @db.Time()
@@ -49,8 +50,12 @@ model Game {
   nightChatRoomId  Int             @unique
   spiritChat       SpiritChatRoom? @relation(fields: [spiritChatRoomId], references: [id])
   spiritChatRoomId Int?            @unique
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
+
+  elections Election[] @relation("game_elections")
+  curElec   Election?  @relation(name: "current_election", fields: [curElecId], references: [id])
+  curElecId Int?       @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 enum StatePlayer {
@@ -68,6 +73,7 @@ enum Power {
   SEER // voyante
   CONTAMINATOR // contaminateur
   SPIRIT // esprit
+  NONE // aucun
 }
 
 model Player {
@@ -89,9 +95,12 @@ model Player {
 }
 
 model Election {
-  id    Int      @id @default(autoincrement())
-  votes Vote[]
-  day   DateTime @default(now())
+  id              Int      @id @default(autoincrement())
+  votes           Vote[]
+  game            Game     @relation(name: "game_elections", fields: [gameId], references: [id])
+  gameId          Int
+  currentElection Game?    @relation(name: "current_election")
+  day             DateTime @default(now())
 }
 
 model Vote {
