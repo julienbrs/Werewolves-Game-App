@@ -1,7 +1,7 @@
 import express from "express";
 import userController from "../controllers/user";
 import checkToken from "../middleware/checkToken";
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 router.get("/", userController.getUsers);
 router.get("/me", checkToken, userController.getMe);

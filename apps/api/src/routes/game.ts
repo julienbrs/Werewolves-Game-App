@@ -1,6 +1,6 @@
 import express from "express";
 import gameController from "../controllers/game";
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 router.get("/", gameController.getGames);
 router.post("/", gameController.create);
