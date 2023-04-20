@@ -1,25 +1,33 @@
 import { Slider } from "@rneui/themed";
-import { Datepicker, IndexPath, Input, Layout, Select, SelectItem } from "@ui-kitten/components";
-import { Stack } from "expo-router";
+import {
+  Button,
+  Datepicker,
+  IndexPath,
+  Input,
+  Layout,
+  Select,
+  SelectItem
+} from "@ui-kitten/components";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import React, { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const NewGame = () => {
+  const router = useRouter();
   const [gameName, setGameName] = useState("Game name");
   const [gameNameStatus, setGameNameStatus] = useState("basic");
   const [minPlayersIndex, setMinPlayersIndex] = useState<IndexPath | IndexPath[]>(new IndexPath(4));
   const [maxPlayersIndex, setMaxPlayersIndex] = useState<IndexPath | IndexPath[]>(
     new IndexPath(19)
   );
-  const [startDate, setStartDate] = useState<Date>(new Date(Date.now()));
   const [startDateline, setDateline] = useState<Date>(new Date(Date.now()));
-  const [endDate, setEndDate] = useState<Date>(startDate);
-  const [wolfProb, setWolfProb] = useState(50);
-  const [seerProb, setSeerProb] = useState(50);
-  const [insomProb, setInsomProb] = useState(50);
-  const [contProb, setContProb] = useState(50);
-  const [spiritProb, setSpiritProb] = useState(50);
+  const [wolfProb, setWolfProb] = useState(0);
+  const [seerProb, setSeerProb] = useState(0);
+  const [insomProb, setInsomProb] = useState(0);
+  const [contProb, setContProb] = useState(0);
+  const [spiritProb, setSpiritProb] = useState(0);
+
   const styles = StyleSheet.create({
     text: {
       fontWeight: "bold",
@@ -32,13 +40,19 @@ const NewGame = () => {
     input: {
       margin: 2,
     },
+    container: {
+      display: "flex",
+      gap: 20,
+    },
+    view: {
+      paddingHorizontal: 10,
+    },
   });
   return (
     <SafeAreaView>
-      <Stack.Screen />
       {/* Page de création de la partie */}
-      <Layout level="1">
-        <View>
+      <Layout level="1" style={styles.container}>
+        <View style={styles.view}>
           <Text style={styles.text}>Pick the game's name!</Text>
           <Input
             style={styles.input}
@@ -48,44 +62,48 @@ const NewGame = () => {
             onChangeText={setGameName}
           />
         </View>
-        <Text style={styles.text}>Select number of minimum players:</Text>
-        <Select
-          placeholder="Default"
-          value={minPlayersIndex.toString()}
-          selectedIndex={minPlayersIndex}
-          onSelect={index => {
-            setMinPlayersIndex(index);
-            if (Number(maxPlayersIndex.toString()) < Number(minPlayersIndex.toString())) {
-              setMaxPlayersIndex(index);
-            }
-          }}
-        >
-          {Array.from(Array(20).keys())
-            .slice(4)
-            .map(n => (
-              <SelectItem key={n} title={n + 1 + ""} />
-            ))}
-        </Select>
-        <Text style={styles.text}>Select number of maximum players:</Text>
-        <Select
-          placeholder="Default"
-          value={maxPlayersIndex.toString()}
-          selectedIndex={maxPlayersIndex}
-          onSelect={index => setMaxPlayersIndex(index)}
-        >
-          {Array.from(Array(20).keys())
-            .slice(Number(minPlayersIndex.toString()) - 1)
-            .map(n => (
-              <SelectItem key={n} title={n + 1 + ""} />
-            ))}
-        </Select>
-        <View id="dateline">
+        <View style={styles.view}>
+          <Text style={styles.text}>Select number of minimum players:</Text>
+          <Select
+            placeholder="Default"
+            value={minPlayersIndex.toString()}
+            selectedIndex={minPlayersIndex}
+            onSelect={index => {
+              setMinPlayersIndex(index);
+              if (Number(maxPlayersIndex.toString()) < Number(minPlayersIndex.toString())) {
+                setMaxPlayersIndex(index);
+              }
+            }}
+          >
+            {Array.from(Array(20).keys())
+              .slice(4)
+              .map(n => (
+                <SelectItem key={n} title={n + 1 + ""} />
+              ))}
+          </Select>
+        </View>
+        <View style={styles.view}>
+          <Text style={styles.text}>Select number of maximum players:</Text>
+          <Select
+            placeholder="Default"
+            value={maxPlayersIndex.toString()}
+            selectedIndex={maxPlayersIndex}
+            onSelect={index => setMaxPlayersIndex(index)}
+          >
+            {Array.from(Array(20).keys())
+              .slice(Number(minPlayersIndex.toString()) - 1)
+              .map(n => (
+                <SelectItem key={n} title={n + 1 + ""} />
+              ))}
+          </Select>
+        </View>
+        <View id="dateline" style={styles.view}>
           <Text style={styles.text}>Select start date:</Text>
           <Datepicker date={startDateline} min={startDateline} onSelect={setDateline} />
         </View>
 
         {/* Sliders */}
-        <View id="wolfProb">
+        <View id="wolfProb" style={styles.view}>
           <Text style={styles.text}>Wolf probability: {wolfProb}%</Text>
           <Slider
             thumbStyle={styles.thumbSlider}
@@ -98,7 +116,7 @@ const NewGame = () => {
           />
         </View>
         {/* Contamination Prob */}
-        <View id="contProb">
+        <View id="contProb" style={styles.view}>
           <Text style={styles.text}>Contamination probability: {contProb}%</Text>
           <Slider
             thumbStyle={styles.thumbSlider}
@@ -111,7 +129,7 @@ const NewGame = () => {
           />
         </View>
         {/* Seer Prob */}
-        <View id="seerProb">
+        <View id="seerProb" style={styles.view}>
           <Text style={styles.text}>Seer probability: {seerProb}%</Text>
           <Slider
             thumbStyle={styles.thumbSlider}
@@ -124,7 +142,7 @@ const NewGame = () => {
           />
         </View>
         {/* Insomniac Prob */}
-        <View id="insomProb">
+        <View id="insomProb" style={styles.view}>
           <Text style={styles.text}>Insomniac probability: {insomProb}%</Text>
           <Slider
             thumbStyle={styles.thumbSlider}
@@ -137,7 +155,7 @@ const NewGame = () => {
           />
         </View>
         {/* Spirit Prob */}
-        <View id="spiritProb">
+        <View id="spiritProb" style={styles.view}>
           <Text style={styles.text}>Spirit probability: {spiritProb}%</Text>
           <Slider
             thumbStyle={styles.thumbSlider}
@@ -149,7 +167,7 @@ const NewGame = () => {
             step={1}
           />
         </View>
-
+        <Button onPress={() => router.back()}>Create game</Button>
       </Layout>
     </SafeAreaView>
   );
