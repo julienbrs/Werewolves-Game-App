@@ -21,7 +21,7 @@ export const finishElection = async (
   ).length;
 
   const voteArray: number[] = new Array(nbPlayers);
-  const killedPlayerId = null;
+  const killedPlayerId: string = "";
   const nbVictims = 0;
   votes.forEach((vote: Vote) => {
     voteArray[vote.targetId] += 1;
@@ -32,7 +32,8 @@ export const finishElection = async (
   });
   if (killedPlayerId !== null && nbVictims < 2) {
     await transaction.player.update({
-      where: { userId: killedPlayerId },
+      where: { userId_gameId: { userId: killedPlayerId, gameId: game.id}
+        userId: killedPlayerId },
       data: {
         state: StatePlayer.DEAD,
       },

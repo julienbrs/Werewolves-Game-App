@@ -6,7 +6,7 @@ import {
   Input,
   Layout,
   Select,
-  SelectItem
+  SelectItem,
 } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -16,8 +16,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const NewGame = () => {
   const router = useRouter();
-  const [gameName, setGameName] = useState("Game name");
-  const [gameNameStatus, setGameNameStatus] = useState("basic");
+  const [_gameName, setGameName] = useState("Game name");
+  const [gameNameStatus, _setGameNameStatus] = useState("basic");
   const [minPlayersIndex, setMinPlayersIndex] = useState<IndexPath | IndexPath[]>(new IndexPath(4));
   const [maxPlayersIndex, setMaxPlayersIndex] = useState<IndexPath | IndexPath[]>(
     new IndexPath(19)
