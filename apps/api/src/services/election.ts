@@ -30,24 +30,23 @@ export const finishElection = async (
       nbVictims++;
     }
   });
-  const gameId = await transaction.game.findUnique({
+  const gameId = (await transaction.game.findUnique({
     where: { curElecId: electionId },
     select: {
       id: true,
     },
-  });
+  }))!.id;
   if (!gameId) {
     throw Error;
   } else if (killedPlayerId !== null && nbVictims < 2) {
     await transaction.player.update({
-      where: { userId_gameId: { userId: killedPlayerId, gameId: gameId.id }},
+      where: { userId_gameId: { userId: killedPlayerId, gameId } },
       data: {
         state: StatePlayer.DEAD,
-        },
+      },
     });
-    
     const chatsId = await transaction.game.findUnique({
-      where: { id: gameId.id },
+      where: { id: gameId },
       select: {
         dayChatRoomId: true,
         nightChatRoomId: true,
@@ -55,14 +54,17 @@ export const finishElection = async (
     });
     if (!chatsId) {
       throw Error;
-    }
-    else {
+    } else {
       await transaction.chatRoom.update({
         where: { id: chatsId?.dayChatRoomId },
         data: {
           writers: {
             disconnect: {
-              playerId_gameId_chatRoomId: {playerId: killedPlayerId, gameId: gameId, chatRoomId: chatsId?.dayChatRoomId},
+              playerId_gameId_chatRoomId: {
+                playerId: killedPlayerId,
+                gameId,
+                chatRoomId: chatsId?.dayChatRoomId,
+              },
             },
           },
         },
@@ -72,12 +74,15 @@ export const finishElection = async (
         data: {
           writers: {
             disconnect: {
-              playerId_gameId_chatRoomId: {playerId: killedPlayerId, gameId: gameId.id, chatRoomId: chatsId?.nightChatRoomId},
+              playerId_gameId_chatRoomId: {
+                playerId: killedPlayerId,
+                gameId,
+                chatRoomId: chatsId?.nightChatRoomId,
+              },
             },
           },
         },
       });
     }
-    
   }
 };
