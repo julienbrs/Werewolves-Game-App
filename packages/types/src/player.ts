@@ -1,32 +1,31 @@
 type ObjectValues<T> = T[keyof T];
 
 export const Role = {
-  LOBBY: "LOBBY",
-  DAY: "DAY",
-  NIGHT: "NIGHT",
-  END: "END",
+  WOLF: "WOLF",
+  VILLAGER: "VILLAGER",
 } as const;
 export type Role = ObjectValues<typeof Role>;
 
 export const StatePlayer = {
-  LOBBY: "LOBBY",
-  DAY: "DAY",
-  NIGHT: "NIGHT",
-  END: "END",
+  ALIVE: "ALIVE",
+  DEAD: "DEAD",
 } as const;
 export type StatePlayer = ObjectValues<typeof StatePlayer>;
 
 export const Power = {
-  LOBBY: "LOBBY",
-  DAY: "DAY",
-  NIGHT: "NIGHT",
-  END: "END",
+  INSOMNIAC: "INSOMNIAC",
+  SEER: "SEER",
+  CONTAMINATOR: "CONTAMINATOR",
+  SPIRIT: "SPIRIT",
+  NONE: "NONE",
 } as const;
 export type Power = ObjectValues<typeof Power>;
 
 import { User } from "./user";
 
 export interface Player {
+  userId: string;
+  gameId: number;
   state?: StatePlayer;
   role?: Role;
   power?: Power;

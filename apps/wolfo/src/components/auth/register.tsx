@@ -5,6 +5,7 @@ import * as SecureStore from "expo-secure-store";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Error, NewUser } from "types";
+import { setToken } from "../../utils/api/api";
 import { createUser } from "../../utils/api/user";
 export const Register = () => {
   const [name, setName] = useState<string>("");
@@ -23,6 +24,7 @@ export const Register = () => {
   };
   if (isSuccess) {
     SecureStore.setItemAsync("token", data.token);
+    setToken(data.token);
     return <Redirect href="/" />;
   }
 

@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  interactiveTransactions = true
 }
 
 datasource db {
@@ -88,6 +89,7 @@ model Player {
   target    Vote[]       @relation("targets")
   readers   Reader[]
   writers   Writer[]
+  messages  Message[]
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
 
@@ -152,6 +154,9 @@ model Message {
   chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id])
   chatRoomId Int
   content    String
+  author     Player   @relation(fields: [authorId, gameId], references: [userId, gameId])
+  authorId   String
+  gameId     Int
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }

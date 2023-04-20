@@ -1,7 +1,0 @@
-src/frontend/
-node_modules/
-package-lock.json
-turbo.json
-docs/
-apps/*/node_modules/
-packages/*/node_modules/

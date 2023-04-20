@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Error, User } from "types";
 import Loading from "../../components/loading";
+import { setToken } from "../../utils/api/api";
 import { deleteUser, getMe, updateUser } from "../../utils/api/user";
 
 const Settings = () => {
@@ -16,7 +17,7 @@ const Settings = () => {
   const [enableMe, setEnableMe] = useState<boolean>(true);
   const router = useRouter();
   const queryClient = useQueryClient();
-  queryClient.invalidateQueries(["auth"]);
+  queryClient.invalidateQueries(["token"]);
   const {
     data: user,
     isLoading: isLoadingUser,
@@ -31,6 +32,7 @@ const Settings = () => {
     onSuccess: data => {
       SecureStore.setItemAsync("token", data.token);
       queryClient.invalidateQueries(["user"]);
+      setToken(data.token);
       setErrorMessage("");
     },
     onError: (error: Error) => {
@@ -41,9 +43,10 @@ const Settings = () => {
     mutationFn: deleteUser,
     onSuccess: async () => {
       setEnableMe(false);
+      setToken(null);
       await SecureStore.deleteItemAsync("token");
       await queryClient.invalidateQueries(["user"]);
-      await queryClient.invalidateQueries(["auth"]);
+      await queryClient.invalidateQueries(["token"]);
       router.back();
     },
   });
@@ -68,9 +71,10 @@ const Settings = () => {
   };
   const logout = async () => {
     setEnableMe(false);
+    setToken(null);
     await SecureStore.deleteItemAsync("token");
     await queryClient.invalidateQueries(["user"]);
-    await queryClient.invalidateQueries(["auth"]);
+    await queryClient.invalidateQueries(["token"]);
     router.back();
   };
   return (
