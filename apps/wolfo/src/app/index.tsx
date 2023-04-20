@@ -10,10 +10,9 @@ const Home = () => {
   const [search, setSearch] = React.useState<string>("");
   const [tabIndex, setTabIndex] = React.useState<number>(0);
   const { isError, isLoading } = useQuery({
-    queryKey: ["auth"], // clé de cache
+    queryKey: ["token"], // clé de cache
     queryFn: useAuth,
-    staleTime: 0,
-    cacheTime: 0,
+    staleTime: 0, // à chaque fois que la page est chargée, on refait la requête
   });
   if (isLoading) {
     return <Loading title="Loading home" message="loading user information" />;

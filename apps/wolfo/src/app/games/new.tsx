@@ -21,19 +21,7 @@ const NewGame = () => {
   const [insomProb, setInsomProb] = useState(50);
   const [contProb, setContProb] = useState(50);
   const [spiritProb, setSpiritProb] = useState(50);
-  const styles = StyleSheet.create({
-    text: {
-      fontWeight: "bold",
-    },
-    thumbSlider: {
-      height: 28,
-      backgroundColor: "blue",
-      width: 28,
-    },
-    input: {
-      margin: 2,
-    },
-  });
+
   return (
     <SafeAreaView>
       <Stack.Screen />
@@ -46,7 +34,6 @@ const NewGame = () => {
             style={styles.input}
             status={gameNameStatus}
             placeholder={gameName}
-            value={gameName}
             onChangeText={setGameName}
           />
         </View>
@@ -181,4 +168,17 @@ const NewGame = () => {
   );
 };
 
+const styles = StyleSheet.create({
+  text: {
+    fontWeight: "bold",
+  },
+  thumbSlider: {
+    height: 28,
+    backgroundColor: "blue",
+    width: 28,
+  },
+  input: {
+    margin: 2,
+  },
+});
 export default NewGame;

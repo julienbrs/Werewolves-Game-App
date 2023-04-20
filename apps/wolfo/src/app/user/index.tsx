@@ -17,7 +17,7 @@ const Settings = () => {
   const [enableMe, setEnableMe] = useState<boolean>(true);
   const router = useRouter();
   const queryClient = useQueryClient();
-  queryClient.invalidateQueries(["auth"]);
+  queryClient.invalidateQueries(["token"]);
   const {
     data: user,
     isLoading: isLoadingUser,
@@ -46,7 +46,7 @@ const Settings = () => {
       setToken(null);
       await SecureStore.deleteItemAsync("token");
       await queryClient.invalidateQueries(["user"]);
-      await queryClient.invalidateQueries(["auth"]);
+      await queryClient.invalidateQueries(["token"]);
       router.back();
     },
   });
@@ -74,7 +74,7 @@ const Settings = () => {
     setToken(null);
     await SecureStore.deleteItemAsync("token");
     await queryClient.invalidateQueries(["user"]);
-    await queryClient.invalidateQueries(["auth"]);
+    await queryClient.invalidateQueries(["token"]);
     router.back();
   };
   return (
