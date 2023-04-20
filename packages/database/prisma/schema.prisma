@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  interactiveTransactions = true
 }
 
 datasource db {
