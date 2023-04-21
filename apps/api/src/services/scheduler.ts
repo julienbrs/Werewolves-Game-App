@@ -1,7 +1,7 @@
 import { StateGame } from "database";
 import cron from "node-cron";
 import prisma from "../prisma";
-import startGame from "./game/game";
+import startGame from "./game/startGame";
 import newPeriod from "./game/newPeriod";
 interface JobMap {
   [key: number]: cron.ScheduledTask;

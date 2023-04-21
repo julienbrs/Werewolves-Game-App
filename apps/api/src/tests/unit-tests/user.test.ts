@@ -4,7 +4,7 @@ import supertest from "supertest";
 import { app } from "../../index";
 
 const request = supertest(app);
-let token: string;
+let token: string = "";
 
 beforeAll(async () => {
   const response = await request.post("/api/users/").set("Content-Type", "application/json").send({

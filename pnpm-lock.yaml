@@ -20,12 +20,18 @@ importers:
 
   apps/api:
     dependencies:
+      '@types/bcryptjs':
+        specifier: ^2.4.2
+        version: 2.4.2
       '@types/node-cron':
         specifier: ^3.0.7
         version: 3.0.7
       bcrypt-ts:
         specifier: ^3.0.0
         version: 3.0.0
+      bcryptjs:
+        specifier: ^2.4.3
+        version: 2.4.3
       cors:
         specifier: ^2.8.5
         version: 2.8.5
@@ -39,6 +45,9 @@ importers:
         specifier: ^3.0.2
         version: 3.0.2
     devDependencies:
+      '@babel/core':
+        specifier: ^7.20.0
+        version: 7.20.2
       '@types/cors':
         specifier: ^2.8.13
         version: 2.8.13
@@ -54,6 +63,12 @@ importers:
       '@types/supertest':
         specifier: ^2.0.12
         version: 2.0.12
+      babel:
+        specifier: ^6.23.0
+        version: 6.23.0
+      babel-jest:
+        specifier: ^29.5.0
+        version: 29.5.0(@babel/core@7.20.2)
       database:
         specifier: '*'
         version: link:../../packages/database
@@ -74,7 +89,7 @@ importers:
         version: 6.3.3
       ts-jest:
         specifier: ^29.1.0
-        version: 29.1.0(@babel/core@7.20.2)(esbuild@0.17.11)(jest@29.5.0)(typescript@4.9.5)
+        version: 29.1.0(@babel/core@7.20.2)(babel-jest@29.5.0)(esbuild@0.17.11)(jest@29.5.0)(typescript@4.9.5)
       tsconfig:
         specifier: workspace:*
         version: link:../../packages/tsconfig
@@ -3284,6 +3299,10 @@ packages:
       '@babel/types': 7.21.4
     dev: true
 
+  /@types/bcryptjs@2.4.2:
+    resolution: {integrity: sha512-LiMQ6EOPob/4yUL66SZzu6Yh77cbzJFYll+ZfaPiPPFswtIlA/Fs1MzdKYA7JApHU49zQTbJGX3PDmCpIdDBRQ==}
+    dev: false
+
   /@types/body-parser@1.19.2:
     resolution: {integrity: sha512-ALYone6pm6QmwZoAgeyNksccT9Q4AWZQ6PvfwR37GT6r6FWUPguq6sUmNGSMV2Wr761oQoBxwGGa6DR5o1DC9g==}
     dependencies:
@@ -4468,6 +4487,12 @@ packages:
       babel-preset-current-node-syntax: 1.0.1(@babel/core@7.20.2)
     dev: true
 
+  /babel@6.23.0:
+    resolution: {integrity: sha512-ZDcCaI8Vlct8PJ3DvmyqUz+5X2Ylz3ZuuItBe/74yXosk2dwyVo/aN7MCJ8HJzhnnJ+6yP4o+lDgG9MBe91DLA==}
+    deprecated: In 6.x, the babel package has been deprecated in favor of babel-cli. Check https://opencollective.com/babel to support the Babel maintainers
+    hasBin: true
+    dev: true
+
   /balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
 
@@ -4494,6 +4519,10 @@ packages:
 
   /bcrypt-ts@3.0.0:
     resolution: {integrity: sha512-z4pqdPaAuuvBsHCwb77bisxT9qo5hRSbn78FXNhhTywHabqMzcIosDxjnKUrkPQbMyz2curUT+fJRith57rIvg==}
+    dev: false
+
+  /bcryptjs@2.4.3:
+    resolution: {integrity: sha512-V/Hy/X9Vt7f3BbPJEi8BdVFMByHi+jNXrYkW3huaybV/kQ0KJg0Y6PkEMbn+zeT+i+SiKZ/HMqJGIIt4LZDqNQ==}
     dev: false
 
   /better-opn@3.0.2:
@@ -12374,7 +12403,7 @@ packages:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
     dev: false
 
-  /ts-jest@29.1.0(@babel/core@7.20.2)(esbuild@0.17.11)(jest@29.5.0)(typescript@4.9.5):
+  /ts-jest@29.1.0(@babel/core@7.20.2)(babel-jest@29.5.0)(esbuild@0.17.11)(jest@29.5.0)(typescript@4.9.5):
     resolution: {integrity: sha512-ZhNr7Z4PcYa+JjMl62ir+zPiNJfXJN6E8hSLnaUKhOgqcn8vb3e537cpkd0FuAfRK3sR1LSqM1MOhliXNgOFPA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     hasBin: true
@@ -12396,6 +12425,7 @@ packages:
         optional: true
     dependencies:
       '@babel/core': 7.20.2
+      babel-jest: 29.5.0(@babel/core@7.20.2)
       bs-logger: 0.2.6
       esbuild: 0.17.11
       fast-json-stable-stringify: 2.1.0
