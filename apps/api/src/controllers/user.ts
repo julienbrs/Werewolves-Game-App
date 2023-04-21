@@ -1,4 +1,4 @@
-import { compareSync, genSaltSync, hashSync } from "bcrypt-ts";
+import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import prisma from "../prisma";
 const jwt = require("jsonwebtoken");
@@ -6,8 +6,8 @@ const SECRET = process.env.SECRET;
 const userController = {
   async create(req: Request, res: Response) {
     const { name, password } = req.body;
-    const salt = await genSaltSync(10);
-    const hashedPassword = await hashSync(password, salt);
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(password, salt);
     try {
       const user = await prisma.user.create({
         data: {
@@ -39,9 +39,8 @@ const userController = {
     const id = decodedToken.id;
 
     const { name, password } = req.body;
-    const salt = await genSaltSync(10);
-    const hashedPassword = await hashSync(password, salt);
-
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(password, salt);
     prisma.user
       .update({
         where: {
@@ -84,7 +83,7 @@ const userController = {
     if (!user) {
       return res.status(401).json({ message: "Name not found" });
     }
-    const validPassword = await compareSync(password, user.password);
+    const validPassword = bcrypt.compareSync(password, user.password);
     if (!validPassword) {
       return res.status(401).json({ message: "Wrong password" });
     }
