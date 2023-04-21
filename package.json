@@ -15,7 +15,7 @@
     "test:watch": "turbo run test:watch",
     "clean": "turbo run clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\" --ignore-path .gitignore",
-    "prepare": "husky install .config/husky"
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
