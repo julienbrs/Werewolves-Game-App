@@ -2,7 +2,7 @@ import cors from "cors";
 import express, { ErrorRequestHandler, NextFunction, Request, Response } from "express";
 import router from "./routes/router";
 import { relaunchGames } from "./services/scheduler";
-const app = express();
+export const app = express();
 const port = 3000;
 const http = require("http");
 const server = http.createServer(app);
@@ -27,29 +27,6 @@ const errorHandler: ErrorRequestHandler = (
 ) => {};
 app.use(errorHandler);
 relaunchGames();
-
-// Websocket server
-const io = require("socket.io")(http, {
-  cors: {
-    origin: "*", // cors is for cross origin resource sharing, allow all origins
-  },
-});
-
-app.get("/chat", (req, res) => {
-  res.sendFile(__dirname + "/index.html");
-});
-
-// Listen for incoming socket connections
-io.on("connection", socket => {
-  console.log("a user is connected to the chat");
-
-  io.emit("message", "Un nouveau client est connecté");
-
-  socket.on("message", message => {
-    console.log("user sent a message: ", message);
-    io.emit("message", `${socket.id.substr(0, 2)} said: ${message}`);
-  });
-});
 
 server.listen(8080, () => console.log(`Listening websocket on http://localhost:8080}`));
 
