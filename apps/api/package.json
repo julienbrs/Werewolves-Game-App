@@ -13,12 +13,18 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
+    "@expo/react-native-action-sheet": "^4.0.1",
     "@types/node-cron": "^3.0.7",
     "bcrypt-ts": "^3.0.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
-    "node-cron": "^3.0.2"
+    "node-cron": "^3.0.2",
+    "react-native-gifted-chat": "^2.0.1",
+    "react-native-parsed-text": "^0.0.22",
+    "react-native-typing-animation": "^0.1.7",
+    "socket.io": "^4.6.1",
+    "socket.io-client": "^4.6.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",
