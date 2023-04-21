@@ -1,83 +1,57 @@
-import React, { useEffect, useState } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { Text, View } from "react-native";
+import { GiftedChat } from "react-native-gifted-chat";
 import io from "socket.io-client";
-const socketEndpoint = "http://127.0.0.1:3000";
+
+const port = 3000;
+const IP = "192.168.41.139";
+const socketEndpoint = `http://${IP}:${port}`;
+
+let user_id = Math.floor(Math.random() * 10000000);
 
 export function Example() {
+  const [messages, setMessages] = useState([]);
   const [hasConnection, setConnection] = useState(true); // Initialiser à true
+  const socket = io(socketEndpoint);
 
-  useEffect(function didMount() {
-    const socket = io(socketEndpoint, {
-      transports: ["websocket"],
-    });
-
-    socket.on("connect", () => {
-      console.log("Connected to socket.io");
-      setConnection(true);
-    });
-    socket.on("disconnect", () => {
-      console.log("Disconnected from socket.io");
-      setConnection(false);
-    });
-
-    socket.on("test", data => {
-      console.log("test", data);
-    });
-
-    return function didUnmount() {
-      socket.disconnect();
-      socket.removeAllListeners();
-    };
+  useEffect(() => {
+    setMessages([]);
   }, []);
 
-  function handlePress() {
-    const socket = io(socketEndpoint, {
-      transports: ["websocket"],
+  useEffect(() => {
+    socket.on("connect", () => {
+      setConnection(true);
+      socket.emit("ask-for-id");
     });
-    console.log("Click ", { hasConnection });
-    socket.emit("test-front", { msg: "Hello" });
-  }
 
-  return (
-    <View style={styles.container}>
-      {!hasConnection && (
-        <>
-          <Text style={styles.paragraph}>Connecting to {socketEndpoint}...</Text>
-          <Text style={styles.footnote}>Make sure the backend is started and reachable</Text>
-          <Button title="Refresh" onPress={() => handlePress()} />
-        </>
-      )}
+    socket.on("disconnect", () => {
+      setConnection(false);
+    });
+    socket.on("message", message => {
+      setMessages(previousMessages => GiftedChat.append(previousMessages, message));
+    });
+  });
 
-      {hasConnection && (
-        <>
-          <Text style={[styles.paragraph, { fontWeight: "bold" }]}>Server time</Text>
-          <Button
-            title="Refresh"
-            onPress={() => {
-              console.log("has connection = ", { hasConnection });
-              handlePress();
-            }}
-          />
-        </>
-      )}
+  const onSend = useCallback(
+    (messages = []) => {
+      setMessages(previousMessages => GiftedChat.append(previousMessages, messages));
+      socket.emit("message", messages[0]);
+    },
+    [socket]
+  );
+
+  return !hasConnection ? (
+    <View>
+      <Text>Connection not established</Text>
     </View>
+  ) : (
+    <GiftedChat
+      messages={messages}
+      onSend={messages => onSend(messages)}
+      user={{
+        _id: user_id,
+      }}
+    />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  paragraph: {
-    fontSize: 16,
-  },
-  footnote: {
-    fontSize: 14,
-    fontStyle: "italic",
-  },
-});
-
 export default Example;

@@ -4,8 +4,9 @@ import router from "./routes/router";
 import { relaunchGames } from "./services/scheduler";
 const app = express();
 const port = 3000;
+const IP = "192.168.41.139";
 
-app.use(cors({ origin: "http://127.0.0.1:3000" }));
+app.use(cors({ origin: `http://${IP}:${port}` }));
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
@@ -26,9 +27,10 @@ const errorHandler: ErrorRequestHandler = (
 app.use(errorHandler);
 relaunchGames();
 
-const serv = app.listen(port, () => console.log(`Listening on http://127.0.0.1:${port}`));
+const serv = app.listen(port, () => console.log(`Listening on http://${IP}:${port}`));
 
 // Websocket server
+
 const io = require("socket.io")(serv);
 // Listen for incoming socket connections
 io.on("connection", socket => {
@@ -37,11 +39,8 @@ io.on("connection", socket => {
   socket.on("disconnect", () => {
     console.log("user disconnected");
   });
-  socket.emit("test", msg => {
-    console.log("test:", msg);
-  });
 
-  socket.on("test-front", msg => {
-    console.log("test-front:", msg);
+  socket.on("message", data => {
+    console.log("message: " + data.text);
   });
 });
