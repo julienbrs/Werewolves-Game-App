@@ -27,15 +27,30 @@ export function Example() {
     socket.on("disconnect", () => {
       setConnection(false);
     });
-    socket.on("message", message => {
-      setMessages(previousMessages => GiftedChat.append(previousMessages, message));
-    });
   });
 
   const onSend = useCallback(
-    (messages = []) => {
-      setMessages(previousMessages => GiftedChat.append(previousMessages, messages));
-      socket.emit("message", messages[0]);
+    (messagesBDD = []) => {
+      setMessages(previousMessages => GiftedChat.append(previousMessages, messagesBDD));
+      /* model Message {
+  id         Int      @id @default(autoincrement())
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id])
+  chatRoomId Int
+  content    String
+  author     Player   @relation(fields: [authorId, gameId], references: [userId, gameId])
+  authorId   String
+  gameId     Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+} */
+      let newMessage = {
+        id: messagesBDD[0]._id,
+        content: messagesBDD[0].text,
+        authorId: user_id,
+        chatRoomId: 1,
+        gameId: 1,
+      };
+      socket.emit("messagePosted", newMessage);
     },
     [socket]
   );

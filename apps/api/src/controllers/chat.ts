@@ -1,6 +1,18 @@
 import { Request, Response } from "express";
+import { ChatRoom } from "types";
 import prisma from "../prisma";
+
 const chatroomController = {
+  create: async (req: Request, res: Response) => {
+    const chatroom: ChatRoom = req.body;
+    const newChatRoom = await prisma.chatRoom.create({
+      data: {
+        ...chatroom,
+      },
+    });
+
+    res.status(201).json(newChatRoom);
+  },
   getMessages: async (req: Request, res: Response) => {
     const chatRoomId = Number(req.params.id);
     if (isNaN(chatRoomId)) {

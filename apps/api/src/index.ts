@@ -30,7 +30,7 @@ relaunchGames();
 const serv = app.listen(port, () => console.log(`Listening on http://${IP}:${port}`));
 
 // Websocket server
-
+import prisma from "./prisma";
 const io = require("socket.io")(serv);
 // Listen for incoming socket connections
 io.on("connection", socket => {
@@ -40,7 +40,15 @@ io.on("connection", socket => {
     console.log("user disconnected");
   });
 
-  socket.on("message", data => {
-    console.log("message: " + data.text);
+  socket.on("messagePosted", message => {
+    console.log("messagePosted", message);
+    prisma.message.create({
+      data: {
+        content: message.text,
+        chatRoomId: message.chatRoomId,
+        authorId: message.authorId,
+        gameId: message.gameId,
+      },
+    });
   });
 });
