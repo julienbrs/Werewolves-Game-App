@@ -81,6 +81,7 @@ model Player {
   state     StatePlayer?
   role      Role?
   power     Power?
+  usedPower Boolean   @default(false)
   user      User         @relation(fields: [userId], references: [id])
   userId    String
   game      Game         @relation(fields: [gameId], references: [id])
