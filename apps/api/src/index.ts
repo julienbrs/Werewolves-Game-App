@@ -4,8 +4,6 @@ import router from "./routes/router";
 import { relaunchGames } from "./services/scheduler";
 export const app = express();
 const port = 3000;
-const http = require("http");
-const server = http.createServer(app);
 
 app.use(cors({ origin: "http://localhost:3000" }));
 app.use(express.json({ limit: "50mb" }));
@@ -27,7 +25,5 @@ const errorHandler: ErrorRequestHandler = (
 ) => {};
 app.use(errorHandler);
 relaunchGames();
-
-server.listen(8080, () => console.log(`Listening websocket on http://localhost:8080}`));
 
 app.listen(port, () => console.log(`Listening on http://localhost:${port}`));
