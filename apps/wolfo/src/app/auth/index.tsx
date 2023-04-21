@@ -15,7 +15,7 @@ const Auth = () => {
       <Tab title="Register">
         <Register />
       </Tab>
-      <Button title="Go to chat" onPress={() => router.push("/chat")} />
+      <Button title="Go to chat" onPress={() => router.push("/chatroom")} />
     </TabView>
   );
 };
