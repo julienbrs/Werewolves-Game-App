@@ -57,6 +57,36 @@ const chatroomController = {
     });
     res.status(200).json(messages);
   },
+
+  getReaders: async (req: Request, res: Response) => {
+    const chatRoomId = Number(req.params.id);
+    if (isNaN(chatRoomId)) {
+      res.status(400).send("Bad chatroom id");
+      return;
+    }
+    const chatRoom = await prisma.chatRoom.findUnique({
+      where: { id: chatRoomId },
+      select: {
+        readers: true,
+      },
+    });
+    res.status(200).json(chatRoom?.readers);
+  },
+
+  getWriters: async (req: Request, res: Response) => {
+    const chatRoomId = Number(req.params.id);
+    if (isNaN(chatRoomId)) {
+      res.status(400).send("Bad chatroom id");
+      return;
+    }
+    const chatRoom = await prisma.chatRoom.findUnique({
+      where: { id: chatRoomId },
+      select: {
+        writers: true,
+      },
+    });
+    res.status(200).json(chatRoom?.writers);
+  },
 };
 
 export default chatroomController;
