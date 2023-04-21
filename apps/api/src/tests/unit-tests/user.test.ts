@@ -23,21 +23,20 @@ describe("POST /api/users/", () => {
       .post("/api/users/")
       .set("Authorization", `Bearer ${token}`)
       .set("Content-Type", "application/json")
-      .send({ name: "john" , password: "john"});
+      .send({ name: "john", password: "john" });
     expect(response.statusCode).toBe(201);
     expect(response.body.message).toBe("User created");
     expect(response.body).toHaveProperty("token");
-
   });
 });
 
-describe("POST /api/users/", () => {
+describe("POST /api/users/ johndoe", () => {
   test("Test double account creation", async () => {
     const response = await request
       .post("/api/users/")
       .set("Authorization", `Bearer ${token}`)
       .set("Content-Type", "application/json")
-      .send({ name: "john" , password: "johndoe"});
+      .send({ name: "john", password: "johndoe" });
     expect(response.statusCode).toBe(400);
     expect(response.body.message).toBe("Name already exists");
   });
@@ -49,11 +48,10 @@ describe("POST /api/users/login", () => {
       .post("/api/users/login")
       .set("Authorization", `Bearer ${token}`)
       .set("Content-Type", "application/json")
-      .send({ name: "john" , password: "john"});
+      .send({ name: "john", password: "john" });
     expect(response.statusCode).toBe(201);
     expect(response.body.message).toBe("User logged in");
     expect(response.body).toHaveProperty("token");
-
   });
 });
 
@@ -63,7 +61,7 @@ describe("PATCH /api/users/", () => {
       .patch("/api/users/")
       .set("Authorization", `Bearer ${token}`)
       .set("Content-Type", "application/json")
-      .send({ name: "johndoe" , password: "john"});
+      .send({ name: "johndoe", password: "john" });
     expect(response.statusCode).toBe(201);
     expect(response.body.message).toBe("User updated");
     expect(response.body).toHaveProperty("token");
@@ -79,5 +77,3 @@ describe("PATCH /api/users/", () => {
 //    expect(response.statusCode).toBe(201);
 //  });
 //}); Unsure what to expect here
-
-
