@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@types/bcryptjs": "^2.4.2",
-    "@expo/react-native-action-sheet": "^4.0.1",
     "@types/node-cron": "^3.0.7",
     "bcrypt-ts": "^3.0.0",
     "bcryptjs": "^2.4.3",
@@ -22,11 +21,7 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
     "node-cron": "^3.0.2",
-    "react-native-gifted-chat": "^2.0.1",
-    "react-native-parsed-text": "^0.0.22",
-    "react-native-typing-animation": "^0.1.7",
-    "socket.io": "^4.6.1",
-    "socket.io-client": "^4.6.1"
+    "socket.io": "^4.6.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -36,11 +31,10 @@
     "@types/jsonwebtoken": "^9.0.1",
     "@types/supertest": "^2.0.12",
     "babel": "^6.23.0",
-    "babel-jest": "^29.5.0",
     "database": "*",
     "dotenv-cli": "^7.2.1",
     "esbuild": "^0.17.11",
-    "eslint-config-wolfo": "*",
+    "eslint-config-wolfo": "workspace:*",
     "jest": "^29.5.0",
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.0",

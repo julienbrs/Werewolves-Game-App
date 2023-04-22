@@ -1,14 +1,15 @@
-import * as SecureStore from "expo-secure-store";
-import { setToken } from "../api/api";
+import { getToken, setToken } from "../api/api";
 
 // le fetch original
-const useAuth = async (): Promise<string> => {
-  const token = await SecureStore.getItemAsync("token");
+const useAuth = async (): Promise<string | null> => {
+  const token = getToken();
   if (token) {
     setToken(token);
+    console.log("useAuth resolve");
     return Promise.resolve(token);
   }
-  return Promise.reject("No token");
+  console.log("useAuth reject");
+  return Promise.resolve(null);
 };
 
 export default useAuth;

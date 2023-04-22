@@ -20,9 +20,6 @@ importers:
 
   apps/api:
     dependencies:
-      '@expo/react-native-action-sheet':
-        specifier: ^4.0.1
-        version: 4.0.1(react@17.0.2)
       '@types/bcryptjs':
         specifier: ^2.4.2
         version: 2.4.2
@@ -47,19 +44,7 @@ importers:
       node-cron:
         specifier: ^3.0.2
         version: 3.0.2
-      react-native-gifted-chat:
-        specifier: ^2.0.1
-        version: 2.0.1(@expo/react-native-action-sheet@4.0.1)(dayjs@1.11.7)(react-native-communications@2.2.1)(react-native-lightbox@0.8.1)(react-native-parsed-text@0.0.22)(react-native-typing-animation@0.1.7)(react-native@0.71.6)(react@17.0.2)
-      react-native-parsed-text:
-        specifier: ^0.0.22
-        version: 0.0.22(react-native@0.71.6)(react@17.0.2)
-      react-native-typing-animation:
-        specifier: ^0.1.7
-        version: 0.1.7(prop-types@15.8.1)(react-native@0.71.6)(react@17.0.2)
       socket.io:
-        specifier: ^4.6.1
-        version: 4.6.1
-      socket.io-client:
         specifier: ^4.6.1
         version: 4.6.1
     devDependencies:
@@ -84,9 +69,6 @@ importers:
       babel:
         specifier: ^6.23.0
         version: 6.23.0
-      babel-jest:
-        specifier: ^29.5.0
-        version: 29.5.0(@babel/core@7.20.2)
       database:
         specifier: '*'
         version: link:../../packages/database
@@ -97,7 +79,7 @@ importers:
         specifier: ^0.17.11
         version: 0.17.11
       eslint-config-wolfo:
-        specifier: '*'
+        specifier: workspace:*
         version: link:../../packages/eslint-config-wolfo
       jest:
         specifier: ^29.5.0
@@ -107,7 +89,7 @@ importers:
         version: 6.3.3
       ts-jest:
         specifier: ^29.1.0
-        version: 29.1.0(@babel/core@7.20.2)(babel-jest@29.5.0)(esbuild@0.17.11)(jest@29.5.0)(typescript@4.9.5)
+        version: 29.1.0(@babel/core@7.20.2)(esbuild@0.17.11)(jest@29.5.0)(typescript@4.9.5)
       tsconfig:
         specifier: workspace:*
         version: link:../../packages/tsconfig
@@ -129,6 +111,9 @@ importers:
       '@expo/metro-config':
         specifier: ^0.7.1
         version: 0.7.1
+      '@expo/react-native-action-sheet':
+        specifier: ^4.0.1
+        version: 4.0.1(react@18.2.0)
       '@expo/vector-icons':
         specifier: ^13.0.0
         version: 13.0.0
@@ -186,6 +171,12 @@ importers:
       react-native-gesture-handler:
         specifier: ^2.9.0
         version: 2.9.0(react-native@0.71.6)(react@18.2.0)
+      react-native-gifted-chat:
+        specifier: ^2.0.1
+        version: 2.0.1(@expo/react-native-action-sheet@4.0.1)(dayjs@1.11.7)(react-native-communications@2.2.1)(react-native-lightbox@0.8.1)(react-native-parsed-text@0.0.22)(react-native-typing-animation@0.1.7)(react-native@0.71.6)(react@18.2.0)
+      react-native-parsed-text:
+        specifier: ^0.0.22
+        version: 0.0.22(react-native@0.71.6)(react@18.2.0)
       react-native-reanimated:
         specifier: ^2.14.4
         version: 2.14.4(@babel/core@7.20.2)(react-native@0.71.6)(react@18.2.0)
@@ -198,9 +189,15 @@ importers:
       react-native-svg:
         specifier: 13.4.0
         version: 13.4.0(react-native@0.71.6)(react@18.2.0)
+      react-native-typing-animation:
+        specifier: ^0.1.7
+        version: 0.1.7(prop-types@15.8.1)(react-native@0.71.6)(react@18.2.0)
       rneui:
         specifier: 1.0.0-stable.0
         version: 1.0.0-stable.0(react-native-safe-area-context@4.5.0)(react-native-vector-icons@9.2.0)(react-native@0.71.6)(react@18.2.0)
+      socket.io-client:
+        specifier: ^4.6.1
+        version: 4.6.1
     devDependencies:
       '@babel/core':
         specifier: ^7.20.0
@@ -218,7 +215,7 @@ importers:
         specifier: ^9.3.2
         version: 9.3.2(@babel/core@7.20.2)
       eslint-config-wolfo:
-        specifier: '*'
+        specifier: workspace:*
         version: link:../../packages/eslint-config-wolfo
       react-native-vector-icons:
         specifier: ^9.2.0
@@ -227,7 +224,7 @@ importers:
         specifier: ^0.18.10
         version: 0.18.10(react-dom@18.2.0)(react@18.2.0)
       types:
-        specifier: '*'
+        specifier: workspace:*
         version: link:../../packages/types
       typescript:
         specifier: ^4.9.4
@@ -2372,14 +2369,14 @@ packages:
       - supports-color
     dev: false
 
-  /@expo/react-native-action-sheet@4.0.1(react@17.0.2):
+  /@expo/react-native-action-sheet@4.0.1(react@18.2.0):
     resolution: {integrity: sha512-FwCFpjpB6yzrK8CIWssLlh/i6zQFytFBiJfNdz0mJ2ckU4hWk8SrjB37P0Q4kF7w0bnIdYzPgRbdPR9hnfFqPw==}
     peerDependencies:
       react: '>=16.3.0'
     dependencies:
       '@types/hoist-non-react-statics': 3.3.1
       hoist-non-react-statics: 3.3.2
-      react: 17.0.2
+      react: 18.2.0
     dev: false
 
   /@expo/rudder-sdk-node@1.1.1:
@@ -11072,7 +11069,7 @@ packages:
       react-native: 0.71.6(@babel/core@7.20.2)(@babel/preset-env@7.21.4)(react@18.2.0)
     dev: false
 
-  /react-native-gifted-chat@2.0.1(@expo/react-native-action-sheet@4.0.1)(dayjs@1.11.7)(react-native-communications@2.2.1)(react-native-lightbox@0.8.1)(react-native-parsed-text@0.0.22)(react-native-typing-animation@0.1.7)(react-native@0.71.6)(react@17.0.2):
+  /react-native-gifted-chat@2.0.1(@expo/react-native-action-sheet@4.0.1)(dayjs@1.11.7)(react-native-communications@2.2.1)(react-native-lightbox@0.8.1)(react-native-parsed-text@0.0.22)(react-native-typing-animation@0.1.7)(react-native@0.71.6)(react@18.2.0):
     resolution: {integrity: sha512-3cXMmKp4tJ7sbWEz9wKFV3coELkfI8RsK0ZC/hR9S6vJlHyCLwTK0r3UaOX1/aXP3PLG9uvjygpzFe3qeeUUmw==}
     peerDependencies:
       '@expo/react-native-action-sheet': '*'
@@ -11084,18 +11081,18 @@ packages:
       react-native-parsed-text: '*'
       react-native-typing-animation: '*'
     dependencies:
-      '@expo/react-native-action-sheet': 4.0.1(react@17.0.2)
+      '@expo/react-native-action-sheet': 4.0.1(react@18.2.0)
       dayjs: 1.11.7
       prop-types: 15.7.2
-      react: 17.0.2
-      react-native: 0.71.6(@babel/core@7.20.2)(@babel/preset-env@7.21.4)(react@17.0.2)
+      react: 18.2.0
+      react-native: 0.71.6(@babel/core@7.20.2)(@babel/preset-env@7.21.4)(react@18.2.0)
       react-native-communications: 2.2.1
       react-native-iphone-x-helper: 1.3.1(react-native@0.71.6)
       react-native-lightbox: 0.8.1
-      react-native-lightbox-v2: 0.9.0(react-native@0.71.6)(react@17.0.2)
-      react-native-parsed-text: 0.0.22(react-native@0.71.6)(react@17.0.2)
-      react-native-typing-animation: 0.1.7(prop-types@15.8.1)(react-native@0.71.6)(react@17.0.2)
-      use-memo-one: 1.1.2(react@17.0.2)
+      react-native-lightbox-v2: 0.9.0(react-native@0.71.6)(react@18.2.0)
+      react-native-parsed-text: 0.0.22(react-native@0.71.6)(react@18.2.0)
+      react-native-typing-animation: 0.1.7(prop-types@15.8.1)(react-native@0.71.6)(react@18.2.0)
+      use-memo-one: 1.1.2(react@18.2.0)
       uuid: 3.4.0
     dev: false
 
@@ -11108,17 +11105,17 @@ packages:
     peerDependencies:
       react-native: '>=0.42.0'
     dependencies:
-      react-native: 0.71.6(@babel/core@7.20.2)(@babel/preset-env@7.21.4)(react@17.0.2)
+      react-native: 0.71.6(@babel/core@7.20.2)(@babel/preset-env@7.21.4)(react@18.2.0)
     dev: false
 
-  /react-native-lightbox-v2@0.9.0(react-native@0.71.6)(react@17.0.2):
+  /react-native-lightbox-v2@0.9.0(react-native@0.71.6)(react@18.2.0):
     resolution: {integrity: sha512-Fc5VFHFj2vokS+OegyTsANKb1CYoUlOtAv+EBH5wtpJn1b5cey6jVXH7136G5+8OC9JmKWSgKHc5thFwOoZTUg==}
     peerDependencies:
       react: '>=16.8.0'
       react-native: '>=0.61.0'
     dependencies:
-      react: 17.0.2
-      react-native: 0.71.6(@babel/core@7.20.2)(@babel/preset-env@7.21.4)(react@17.0.2)
+      react: 18.2.0
+      react-native: 0.71.6(@babel/core@7.20.2)(@babel/preset-env@7.21.4)(react@18.2.0)
     dev: false
 
   /react-native-lightbox@0.8.1:
@@ -11127,15 +11124,15 @@ packages:
       prop-types: 15.8.1
     dev: false
 
-  /react-native-parsed-text@0.0.22(react-native@0.71.6)(react@17.0.2):
+  /react-native-parsed-text@0.0.22(react-native@0.71.6)(react@18.2.0):
     resolution: {integrity: sha512-hfD83RDXZf9Fvth3DowR7j65fMnlqM9PpxZBGWkzVcUTFtqe6/yPcIoIAgrJbKn6YmtzkivmhWE2MCE4JKBXrQ==}
     peerDependencies:
       react: '*'
       react-native: '*'
     dependencies:
       prop-types: 15.8.1
-      react: 17.0.2
-      react-native: 0.71.6(@babel/core@7.20.2)(@babel/preset-env@7.21.4)(react@17.0.2)
+      react: 18.2.0
+      react-native: 0.71.6(@babel/core@7.20.2)(@babel/preset-env@7.21.4)(react@18.2.0)
     dev: false
 
   /react-native-ratings@8.1.0(react-native@0.71.6)(react@18.2.0):
@@ -11212,7 +11209,7 @@ packages:
       react-native: 0.71.6(@babel/core@7.20.2)(@babel/preset-env@7.21.4)(react@18.2.0)
     dev: false
 
-  /react-native-typing-animation@0.1.7(prop-types@15.8.1)(react-native@0.71.6)(react@17.0.2):
+  /react-native-typing-animation@0.1.7(prop-types@15.8.1)(react-native@0.71.6)(react@18.2.0):
     resolution: {integrity: sha512-4H3rF9M+I2yAZpYJcY0Mb29TXkn98QK12rrKSY6LZj1BQD9NNmRZuNXzwX4XHapsIz+N/J8M3p27FOQPbfzqeg==}
     peerDependencies:
       prop-types: '*'
@@ -11220,8 +11217,8 @@ packages:
       react-native: '*'
     dependencies:
       prop-types: 15.8.1
-      react: 17.0.2
-      react-native: 0.71.6(@babel/core@7.20.2)(@babel/preset-env@7.21.4)(react@17.0.2)
+      react: 18.2.0
+      react-native: 0.71.6(@babel/core@7.20.2)(@babel/preset-env@7.21.4)(react@18.2.0)
     dev: false
 
   /react-native-vector-icons@9.2.0:
@@ -11249,57 +11246,6 @@ packages:
     transitivePeerDependencies:
       - encoding
     dev: true
-
-  /react-native@0.71.6(@babel/core@7.20.2)(@babel/preset-env@7.21.4)(react@17.0.2):
-    resolution: {integrity: sha512-gHrDj7qaAaiE41JwaFCh3AtvOqOLuRgZtHKzNiwxakG/wvPAYmG73ECfWHGxjxIx/QT17Hp37Da3ipCei/CayQ==}
-    engines: {node: '>=14'}
-    hasBin: true
-    peerDependencies:
-      react: 18.2.0
-    dependencies:
-      '@jest/create-cache-key-function': 29.5.0
-      '@react-native-community/cli': 10.2.2(@babel/core@7.20.2)
-      '@react-native-community/cli-platform-android': 10.2.0
-      '@react-native-community/cli-platform-ios': 10.2.1
-      '@react-native/assets': 1.0.0
-      '@react-native/normalize-color': 2.1.0
-      '@react-native/polyfills': 2.0.0
-      abort-controller: 3.0.0
-      anser: 1.4.10
-      base64-js: 1.5.1
-      deprecated-react-native-prop-types: 3.0.1
-      event-target-shim: 5.0.1
-      invariant: 2.2.4
-      jest-environment-node: 29.5.0
-      jsc-android: 250231.0.0
-      memoize-one: 5.2.1
-      metro-react-native-babel-transformer: 0.73.9(@babel/core@7.20.2)
-      metro-runtime: 0.73.9
-      metro-source-map: 0.73.9
-      mkdirp: 0.5.6
-      nullthrows: 1.1.1
-      pretty-format: 26.6.2
-      promise: 8.3.0
-      react: 17.0.2
-      react-devtools-core: 4.27.5
-      react-native-codegen: 0.71.5(@babel/preset-env@7.21.4)
-      react-native-gradle-plugin: 0.71.17
-      react-refresh: 0.4.3
-      react-shallow-renderer: 16.15.0(react@17.0.2)
-      regenerator-runtime: 0.13.11
-      scheduler: 0.23.0
-      stacktrace-parser: 0.1.10
-      use-sync-external-store: 1.2.0(react@17.0.2)
-      whatwg-fetch: 3.6.2
-      ws: 6.2.2
-    transitivePeerDependencies:
-      - '@babel/core'
-      - '@babel/preset-env'
-      - bufferutil
-      - encoding
-      - supports-color
-      - utf-8-validate
-    dev: false
 
   /react-native@0.71.6(@babel/core@7.20.2)(@babel/preset-env@7.21.4)(react@18.2.0):
     resolution: {integrity: sha512-gHrDj7qaAaiE41JwaFCh3AtvOqOLuRgZtHKzNiwxakG/wvPAYmG73ECfWHGxjxIx/QT17Hp37Da3ipCei/CayQ==}
@@ -11356,16 +11302,6 @@ packages:
     resolution: {integrity: sha512-Hwln1VNuGl/6bVwnd0Xdn1e84gT/8T9aYNL+HAKDArLCS7LWjwr7StE30IEYbIkx0Vi3vs+coQxe+SQDbGbbpA==}
     engines: {node: '>=0.10.0'}
 
-  /react-shallow-renderer@16.15.0(react@17.0.2):
-    resolution: {integrity: sha512-oScf2FqQ9LFVQgA73vr86xl2NaOIX73rh+YFqcOp68CWj56tSfgtGKrEbyhCj0rSijyG9M1CYprTh39fBi5hzA==}
-    peerDependencies:
-      react: ^16.0.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      object-assign: 4.1.1
-      react: 17.0.2
-      react-is: 18.2.0
-    dev: false
-
   /react-shallow-renderer@16.15.0(react@18.2.0):
     resolution: {integrity: sha512-oScf2FqQ9LFVQgA73vr86xl2NaOIX73rh+YFqcOp68CWj56tSfgtGKrEbyhCj0rSijyG9M1CYprTh39fBi5hzA==}
     peerDependencies:
@@ -11374,14 +11310,6 @@ packages:
       object-assign: 4.1.1
       react: 18.2.0
       react-is: 18.2.0
-    dev: false
-
-  /react@17.0.2:
-    resolution: {integrity: sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==}
-    engines: {node: '>=0.10.0'}
-    dependencies:
-      loose-envify: 1.4.0
-      object-assign: 4.1.1
     dev: false
 
   /react@18.2.0:
@@ -12698,7 +12626,7 @@ packages:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
     dev: false
 
-  /ts-jest@29.1.0(@babel/core@7.20.2)(babel-jest@29.5.0)(esbuild@0.17.11)(jest@29.5.0)(typescript@4.9.5):
+  /ts-jest@29.1.0(@babel/core@7.20.2)(esbuild@0.17.11)(jest@29.5.0)(typescript@4.9.5):
     resolution: {integrity: sha512-ZhNr7Z4PcYa+JjMl62ir+zPiNJfXJN6E8hSLnaUKhOgqcn8vb3e537cpkd0FuAfRK3sR1LSqM1MOhliXNgOFPA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     hasBin: true
@@ -12720,7 +12648,6 @@ packages:
         optional: true
     dependencies:
       '@babel/core': 7.20.2
-      babel-jest: 29.5.0(@babel/core@7.20.2)
       bs-logger: 0.2.6
       esbuild: 0.17.11
       fast-json-stable-stringify: 2.1.0
@@ -13050,20 +12977,12 @@ packages:
       react: 18.2.0
     dev: false
 
-  /use-memo-one@1.1.2(react@17.0.2):
+  /use-memo-one@1.1.2(react@18.2.0):
     resolution: {integrity: sha512-u2qFKtxLsia/r8qG0ZKkbytbztzRb317XCkT7yP8wxL0tZ/CzK2G+WWie5vWvpyeP7+YoPIwbJoIHJ4Ba4k0oQ==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0
     dependencies:
-      react: 17.0.2
-    dev: false
-
-  /use-sync-external-store@1.2.0(react@17.0.2):
-    resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    dependencies:
-      react: 17.0.2
+      react: 18.2.0
     dev: false
 
   /use-sync-external-store@1.2.0(react@18.2.0):
