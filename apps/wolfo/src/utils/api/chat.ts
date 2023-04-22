@@ -1,4 +1,4 @@
-import { ChatRoom, Message } from "types";
+import { ChatRoom, Message, NewChatroom } from "types";
 import api from "./api";
 
 const chatApi = {
@@ -10,10 +10,14 @@ const chatApi = {
     const { data } = await api.get(`/chatrooms/${chatRoomId}/history`);
     return data;
   },
-  createChatroom: async (chatroom: ChatRoom): Promise<ChatRoom> => {
+  getChatrooms: async (): Promise<ChatRoom[]> => {
+    const { data } = await api.get("/chatrooms");
+    return data;
+  },
+  createChatroom: async (chatroom: NewChatroom): Promise<ChatRoom> => {
     const { data } = await api.post("/chatrooms", chatroom);
     return data;
   },
 };
 
-export const { getMessages, getHistory, createChatroom } = chatApi;
+export const { getMessages, getHistory, createChatroom, getChatrooms } = chatApi;

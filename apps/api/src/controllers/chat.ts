@@ -1,17 +1,21 @@
 import { Request, Response } from "express";
 import { ChatRoom } from "types";
 import prisma from "../prisma";
+import createChatroom from "../services/chat/createChatroom";
 
 const chatroomController = {
-  create: async (req: Request, res: Response) => {
+  async create(req: Request, res: Response) {
     const chatroom: ChatRoom = req.body;
-    const newChatRoom = await prisma.chatRoom.create({
-      data: {
-        ...chatroom,
-      },
-    });
 
-    res.status(201).json(newChatRoom);
+    createChatroom(chatroom)
+      .then(newChatroom => {
+        res.status(201).json(newChatroom);
+      })
+      .catch(error => {
+        console.error("controllers");
+        console.error("Failed to create chatroom:", error);
+        res.status(400).json(error);
+      });
   },
   getMessages: async (req: Request, res: Response) => {
     const chatRoomId = Number(req.params.id);

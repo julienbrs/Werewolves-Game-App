@@ -3,7 +3,7 @@ export type Workspace = {
   version: string;
 };
 
-export * from "./chatroom";
+export * from "./chat";
 export * from "./error";
 export * from "./game";
 export * from "./player";
