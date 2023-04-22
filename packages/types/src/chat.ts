@@ -53,3 +53,11 @@ export type ChatRoom = {
   dayChat: DayChatRoom[];
   spirit: SpiritChatRoom[];
 };
+
+export type NewChatroom = {
+  createdAt: Date;
+  updatedAt: Date;
+  nightChat: Omit<NightChatRoom, "id">[];
+  dayChat: Omit<DayChatRoom, "id">[];
+  spirit: Omit<SpiritChatRoom, "id">[];
+};
