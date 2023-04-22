@@ -1,3 +1,4 @@
+import { Player } from "database";
 import { Request, Response } from "express";
 import prisma from "../prisma";
 const playerController = {
@@ -25,6 +26,18 @@ const playerController = {
       res.status(404).send("Player not found");
       return;
     }
+    res.status(200).json(player);
+  },
+  updatePlayer: async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { gameId } = req.params;
+    const playerInfo: Player = req.body;
+    const player = await prisma.player.update({
+      where: {
+        userId_gameId: { userId: id, gameId: Number(gameId) },
+      },
+      data: playerInfo,
+    });
     res.status(200).json(player);
   },
 };
