@@ -26,4 +26,28 @@ const errorHandler: ErrorRequestHandler = (
 app.use(errorHandler);
 relaunchGames();
 
-app.listen(port, () => console.log(`Listening on http://localhost:${port}`));
+const serv = app.listen(port, () => console.log(`Listening on http://${IP}:${port}`));
+
+// Websocket server
+import prisma from "./prisma";
+const io = require("socket.io")(serv);
+// Listen for incoming socket connections
+io.on("connection", socket => {
+  console.log("a user is connected to the chat");
+
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
+
+  socket.on("messagePosted", message => {
+    console.log("messagePosted", message);
+    prisma.message.create({
+      data: {
+        content: message.text,
+        chatRoomId: message.chatRoomId,
+        authorId: message.authorId,
+        gameId: message.gameId,
+      },
+    });
+  });
+});
