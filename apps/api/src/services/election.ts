@@ -1,19 +1,9 @@
-import { Power, Role, StatePlayer, TransactionType, Vote } from "database";
+import { StatePlayer, TransactionType, Vote } from "database";
 
-export const finishElection = async (
-  transaction: TransactionType,
-  electionId: number,
-  players: {
-    state: StatePlayer | null;
-    userId: string;
-    role: Role | null;
-    power: Power | null;
-  }[]
-) => {
+export const finishElection = async (transaction: TransactionType, electionId: number) => {
   const votes = await transaction.vote.findMany({
     where: { electionId },
   });
-  console.log(players);
   const nbPlayers = (
     await transaction.player.findMany({
       where: { state: StatePlayer.ALIVE },
