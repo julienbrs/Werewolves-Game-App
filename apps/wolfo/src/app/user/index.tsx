@@ -17,7 +17,6 @@ const Settings = () => {
   const [enableMe, setEnableMe] = useState<boolean>(true);
   const router = useRouter();
   const queryClient = useQueryClient();
-  queryClient.invalidateQueries(["token"]);
   const {
     data: user,
     isLoading: isLoadingUser,
@@ -43,10 +42,10 @@ const Settings = () => {
     mutationFn: deleteUser,
     onSuccess: async () => {
       setEnableMe(false);
-      setToken(null);
-      await SecureStore.deleteItemAsync("token");
-      await queryClient.invalidateQueries(["user"]);
       await queryClient.invalidateQueries(["token"]);
+      setToken(null);
+      await queryClient.invalidateQueries(["user"]);
+      await SecureStore.deleteItemAsync("token");
       router.back();
     },
   });
@@ -57,7 +56,7 @@ const Settings = () => {
   if (isError) {
     return <Loading title="Error" message="Error" />;
   }
-  const handleModify = () => {
+  const handleModify = async () => {
     if (password !== confirmPassword) {
       setErrorMessage("Passwords don't match");
       return;
@@ -67,13 +66,12 @@ const Settings = () => {
       name,
       password,
     };
+    await queryClient.invalidateQueries(["token"]);
     updateQuery(modifiedUser);
   };
   const logout = async () => {
     setEnableMe(false);
     setToken(null);
-    await SecureStore.deleteItemAsync("token");
-    await queryClient.invalidateQueries(["user"]);
     await queryClient.invalidateQueries(["token"]);
     router.back();
   };

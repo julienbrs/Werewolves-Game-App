@@ -13,13 +13,16 @@
     "lint:fix": "turbo run lint:fix",
     "test": "turbo run test",
     "test:watch": "turbo run test:watch",
+    "db:generate": "turbo run db:generate",
     "clean": "turbo run clean && rm -rf node_modules",
-    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\" --ignore-path .gitignore"
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\" --ignore-path .gitignore",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "husky": "^8.0.0",
     "turbo": "^1.9.1",
     "typescript": "^5.0.3"
   },

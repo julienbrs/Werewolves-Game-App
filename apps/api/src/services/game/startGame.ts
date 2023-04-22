@@ -1,6 +1,6 @@
 import { Player, Power, Role, StateGame } from "database";
 import prisma from "../../prisma";
-import { deleteJob } from "../scheduler";
+import { JobType, deleteJob } from "../scheduler";
 
 const startGame = async (gameId: number) => {
   prisma
@@ -15,6 +15,8 @@ const startGame = async (gameId: number) => {
           insomProb: true,
           contProb: true,
           spiritProb: true,
+          dayChatRoomId: true,
+          nightChatRoomId: true,
           players: {
             select: {
               userId: true,
@@ -22,16 +24,26 @@ const startGame = async (gameId: number) => {
               state: true,
               role: true,
               power: true,
+              usedPower: true,
               createdAt: true,
               updatedAt: true,
             },
           },
         },
       });
-      if (game === null) {
+      if (!game) {
         return;
       }
+      // Ajout des joueurs dans les salons de discussion
       const players = game.players;
+      const playersChatters = players.map(player => ({
+        gameId: player.gameId,
+        playerId: player.userId,
+        chatRoomId: game.dayChatRoomId,
+      }));
+      await transaction.reader.createMany({ data: playersChatters });
+      await transaction.writer.createMany({ data: playersChatters });
+
       const numWerewolves = Math.max(Math.ceil(game.wolfProb * players.length), 1);
       const werewolves: Player[] = [];
       // attribution des loups garous
@@ -42,6 +54,19 @@ const startGame = async (gameId: number) => {
           werewolves.push(randomPlayer);
         }
       }
+      // Ajout des loups garous dans les salons de discussion
+      const werewolfChatters = werewolves.map(werewolf => ({
+        gameId: werewolf.gameId,
+        playerId: werewolf.userId,
+        chatRoomId: game.nightChatRoomId,
+      }));
+      await transaction.reader.createMany({
+        data: werewolfChatters,
+      });
+      await transaction.writer.createMany({
+        data: werewolfChatters,
+      });
+
       // attribution des villageois
       players.forEach(player => {
         if (player.role !== Role.WOLF) {
@@ -61,11 +86,7 @@ const startGame = async (gameId: number) => {
           isSpirit = false;
           await prisma.game.update({
             where: { id: gameId },
-            data: {
-              spiritChat: {
-                create: {},
-              },
-            },
+            data: { spiritChat: { create: {} } },
           });
         }
       }
@@ -75,6 +96,13 @@ const startGame = async (gameId: number) => {
         if (insomniac.role !== Role.WOLF && insomniac.power === Power.NONE) {
           insomniac.power = Power.INSOMNIAC;
           isInsomniac = false;
+          await transaction.reader.create({
+            data: {
+              gameId,
+              playerId: insomniac.userId,
+              chatRoomId: game.nightChatRoomId,
+            },
+          });
         }
       }
       let isContaminator = Math.random() < game.contProb;
@@ -101,7 +129,7 @@ const startGame = async (gameId: number) => {
       });
     })
     .then(() => {
-      deleteJob(gameId);
+      deleteJob(gameId, JobType.DEADLINE);
       Promise.resolve();
     })
     .catch(error => {

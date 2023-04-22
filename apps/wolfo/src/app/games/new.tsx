@@ -7,7 +7,7 @@ import {
   Input,
   Layout,
   Select,
-  SelectItem
+  SelectItem,
 } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
 import { Dispatch, SetStateAction, useState } from "react";

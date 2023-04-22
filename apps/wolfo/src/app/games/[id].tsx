@@ -11,6 +11,7 @@ import useAuth from "../../utils/hooks/useAuth";
 const GameView = () => {
   const router = useRouter();
   const { id } = useSearchParams();
+  // get game data
   const {
     data: game,
     isLoading,
@@ -20,6 +21,7 @@ const GameView = () => {
     queryFn: () => getGame(Number(id)),
     staleTime: 1000 * 60 * 15, // 15 minutes
   });
+  // get token (cached)
   const {
     data: token,
     isLoading: isLoadingToken,
@@ -28,6 +30,7 @@ const GameView = () => {
     queryKey: ["token"],
     queryFn: useAuth,
   });
+  // get player data
   const {
     data: player,
     isLoading: isLoadingPlayer,
@@ -40,13 +43,12 @@ const GameView = () => {
   if (isLoading && isLoadingPlayer) {
     return <Loading title="Game loading" message={"Game " + String(id) + "is loading"} />;
   }
-  if (isError || isErrorPlayer || isErrorUser) {
-    router.back();
+  if (isError || isErrorPlayer || isErrorUser || !game || !player) {
+    return router.back();
   }
   const redirectChat = () => {
-    if (!game) return;
     const chatId = game.state === StateGame.DAY ? game.dayChatRoomId : game.nightChatRoomId;
-    router.push(`/chatroom/${chatId}`);
+    router.push(`./chatroom/${chatId}`);
   };
   const redirectPower = () => {
     switch (player?.power) {
@@ -68,7 +70,8 @@ const GameView = () => {
   return (
     <SafeAreaView>
       {/* display all informations on the game after fetching data from backend*/}
-      <Text>Game | {game!.name}</Text>
+      <Text>Game | {game.name}</Text>
+      <Text>{game.state === StateGame.DAY ? "C'est le jour" : "C'est la nuit"}</Text>
       <Button onPress={redirectPower}>Power</Button>
       <Button onPress={redirectChat}>Chat</Button>
       <Button onPress={() => router.back()}>Go Back</Button>

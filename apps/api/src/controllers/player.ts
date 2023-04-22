@@ -9,9 +9,10 @@ const playerController = {
         userId_gameId: { userId: id, gameId: Number(gameId) },
       },
       select: {
+        state: true,
         role: true,
         power: true,
-        state: true,
+        usedPower: true,
         user: {
           select: {
             id: true,

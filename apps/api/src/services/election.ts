@@ -1,19 +1,9 @@
-import { Power, Role, StatePlayer, TransactionType, Vote } from "database";
+import { StatePlayer, TransactionType, Vote } from "database";
 
-export const finishElection = async (
-  transaction: TransactionType,
-  electionId: number,
-  players: {
-    state: StatePlayer | null;
-    userId: string;
-    role: Role | null;
-    power: Power | null;
-  }[]
-) => {
+export const finishElection = async (transaction: TransactionType, electionId: number) => {
   const votes = await transaction.vote.findMany({
     where: { electionId },
   });
-  console.log(players);
   const nbPlayers = (
     await transaction.player.findMany({
       where: { state: StatePlayer.ALIVE },
@@ -21,53 +11,68 @@ export const finishElection = async (
   ).length;
 
   const voteArray: number[] = new Array(nbPlayers);
-  const killedPlayerId = null;
-  const nbVictims = 0;
+  let killedPlayerId = null;
+  let nbVictims = 0;
   votes.forEach((vote: Vote) => {
-    voteArray[vote.targetId] += 1;
-    if (voteArray[vote.targetId] >= nbPlayers / 2) {
+    voteArray[+vote.targetId] += 1;
+    if (voteArray[+vote.targetId] >= nbPlayers / 2) {
       killedPlayerId = vote.targetId;
       nbVictims++;
     }
   });
-  if (killedPlayerId !== null && nbVictims < 2) {
+  const gameId = (await transaction.game.findUnique({
+    where: { curElecId: electionId },
+    select: {
+      id: true,
+    },
+  }))!.id;
+  if (!gameId) {
+    throw Error;
+  } else if (killedPlayerId !== null && nbVictims < 2) {
     await transaction.player.update({
-      where: { userId: killedPlayerId },
+      where: { userId_gameId: { userId: killedPlayerId, gameId } },
       data: {
         state: StatePlayer.DEAD,
       },
     });
-    const gameId = await transaction.election.findUnique({
-      where: { electionId },
-    }).gameId;
-    const chats = await transaction.game.findUnique({
+    const chatsId = await transaction.game.findUnique({
       where: { id: gameId },
       select: {
-        dayChat: true,
-        nightChat: true,
+        dayChatRoomId: true,
+        nightChatRoomId: true,
       },
     });
-    const dayId = chats.dayChat.id;
-    const nightId = chats.nightChat.id;
-    await transaction.chatroom.update({
-      where: { id: dayId },
-      data: {
-        writers: {
-          disconnect: {
-            playerId: killedPlayerId,
+    if (!chatsId) {
+      throw Error;
+    } else {
+      await transaction.chatRoom.update({
+        where: { id: chatsId?.dayChatRoomId },
+        data: {
+          writers: {
+            disconnect: {
+              playerId_gameId_chatRoomId: {
+                playerId: killedPlayerId,
+                gameId,
+                chatRoomId: chatsId?.dayChatRoomId,
+              },
+            },
           },
         },
-      },
-    });
-    await transaction.chatroom.update({
-      where: { id: nightId },
-      data: {
-        writers: {
-          disconnect: {
-            playerId: killedPlayerId,
+      });
+      await transaction.chatRoom.update({
+        where: { id: chatsId?.nightChatRoomId },
+        data: {
+          writers: {
+            disconnect: {
+              playerId_gameId_chatRoomId: {
+                playerId: killedPlayerId,
+                gameId,
+                chatRoomId: chatsId?.nightChatRoomId,
+              },
+            },
           },
         },
-      },
-    });
+      });
+    }
   }
 };

@@ -2,7 +2,7 @@ import cors from "cors";
 import express, { ErrorRequestHandler, NextFunction, Request, Response } from "express";
 import router from "./routes/router";
 import { relaunchGames } from "./services/scheduler";
-const app = express();
+export const app = express();
 const port = 3000;
 
 app.use(cors({ origin: "http://localhost:3000" }));
