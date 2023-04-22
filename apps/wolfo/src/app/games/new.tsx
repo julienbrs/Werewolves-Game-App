@@ -1,4 +1,5 @@
 import { Slider } from "@rneui/themed";
+import { useMutation } from "@tanstack/react-query";
 import {
   Button,
   Datepicker,
@@ -9,31 +10,121 @@ import {
   SelectItem,
 } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import React, { StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
-
+import { NewGame as NewGameType } from "types";
+import { createGame } from "../../utils/api/game";
 const NewGame = () => {
   const router = useRouter();
-  const [_gameName, setGameName] = useState("Game name");
-  const [gameNameStatus, _setGameNameStatus] = useState("basic");
-  const [minPlayersIndex, setMinPlayersIndex] = useState<IndexPath | IndexPath[]>(new IndexPath(4));
-  const [maxPlayersIndex, setMaxPlayersIndex] = useState<IndexPath | IndexPath[]>(
-    new IndexPath(19)
-  );
+  /* General settings */
+  const minPlayers = 5;
+  const maxPlayers = 20;
+
+  const [gameName, setGameName] = useState("Game name");
+  const [gameNameStatus, setGameNameStatus] = useState("basic");
+  const [minPlayersIndex, setMinPlayersIndex] = useState<IndexPath | IndexPath[]>(new IndexPath(0));
+  const [maxPlayersIndex, setMaxPlayersIndex] = useState<IndexPath | IndexPath[]>(new IndexPath(0));
+
+  /* Time picking states */
+  const [startDay, setStartDay] = useState<Date>(new Date(1970, 1, 1, 8, 0));
+  const [startDayVisibility, setStartDayVisibility] = useState<boolean>(false);
+
+  const [endDay, setEndDay] = useState<Date>(new Date(1970, 1, 1, 20, 0));
+  const [startEndVisibility, setEndDayVisibility] = useState<boolean>(false);
+
   const [startDateline, setDateline] = useState<Date>(new Date(Date.now()));
+
+  /* Probabilities */
   const [wolfProb, setWolfProb] = useState(0);
   const [seerProb, setSeerProb] = useState(0);
   const [insomProb, setInsomProb] = useState(0);
   const [contProb, setContProb] = useState(0);
   const [spiritProb, setSpiritProb] = useState(0);
 
+  /* Special time callbacks */
+  const confirmStartDay = (date: Date) => {
+    if (
+      endDay.getHours() < date.getHours() ||
+      (endDay.getHours() === date.getHours() && endDay.getMinutes() === date.getMinutes())
+    ) {
+      /* One minute later */
+      console.log("Day's end time should be after start time");
+      return;
+    }
+    setStartDay(date);
+    hideTimePicker(setStartDayVisibility);
+  };
+  const confirmEndDay = (date: Date) => {
+    if (
+      date.getHours() < startDay.getHours() ||
+      (date.getHours() === startDay.getHours() && date.getMinutes() === startDay.getMinutes())
+    ) {
+      /* One minute later */
+      console.log("Day's end time should be after start time");
+      return;
+    }
+    setEndDay(date);
+    hideTimePicker(setEndDayVisibility);
+  };
+  const hideTimePicker = (setter: Dispatch<SetStateAction<boolean>>) => {
+    setter(false);
+  };
+
+  const getTimeString = (hours: number, minutes: number): string => {
+    return ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2);
+  };
+  const getDateString = (date: Date): string => {
+    return (
+      date.getFullYear() +
+      ("0" + "-" + date.getMonth()).slice(-2) +
+      "-" +
+      ("0" + date.getDay()).slice(-2)
+    );
+  };
+  /* Api call */
+  const { mutate, isSuccess, isError, error } = useMutation<any, Error, NewGameType>({
+    mutationFn: game => createGame(game),
+  });
+
+  const newGame = async () => {
+    const startDayString = getTimeString(startDay.getHours(), startDay.getMinutes()) + ":00";
+    const startEndString = getTimeString(endDay.getHours(), endDay.getMinutes()) + ":00";
+    const game: NewGameType = {
+      name: gameName,
+      state: "LOBBY",
+      minPlayer: +minPlayersIndex.toString() + 1,
+      maxPlayer: +maxPlayersIndex.toString() + 1,
+      deadline: getDateString(startDateline) + "T" + startDayString + "000Z",
+      startDay: "1970-01-01T" + startDayString + ".000Z",
+      endDay: "1970-01-01T" + startEndString + ".000Z",
+      wolfProb,
+      seerProb,
+      insomProb,
+      contProb,
+      spiritProb,
+    };
+
+    await mutate(game);
+
+    if (isSuccess) {
+      router.back();
+      return;
+    }
+    if (isError) {
+      console.log("error");
+      console.log(error);
+      setGameNameStatus("danger");
+    }
+  };
+
   return (
     <SafeAreaView>
       <ScrollView>
         {/* Page de création de la partie */}
-        <Layout level="1" style={styles.container}>
+        <Layout level="1" style={[styles.container]}>
           <View style={styles.view}>
             <Text style={styles.text}>Pick the game's name!</Text>
             <Input
@@ -47,17 +138,17 @@ const NewGame = () => {
             <Text style={styles.text}>Select number of minimum players:</Text>
             <Select
               placeholder="Default"
-              value={minPlayersIndex.toString()}
+              value={+minPlayersIndex.toString() + minPlayers - 1}
               selectedIndex={minPlayersIndex}
               onSelect={index => {
                 setMinPlayersIndex(index);
                 if (Number(maxPlayersIndex.toString()) < Number(minPlayersIndex.toString())) {
-                  setMaxPlayersIndex(index);
+                  setMaxPlayersIndex(new IndexPath(0));
                 }
               }}
             >
-              {Array.from(Array(20).keys())
-                .slice(4)
+              {Array.from(Array(maxPlayers).keys())
+                .slice(minPlayers - 1)
                 .map(n => (
                   <SelectItem key={n} title={n + 1 + ""} />
                 ))}
@@ -67,12 +158,12 @@ const NewGame = () => {
             <Text style={styles.text}>Select number of maximum players:</Text>
             <Select
               placeholder="Default"
-              value={maxPlayersIndex.toString()}
+              value={+maxPlayersIndex.toString() + +minPlayersIndex.toString() - 1 + minPlayers - 1}
               selectedIndex={maxPlayersIndex}
               onSelect={index => setMaxPlayersIndex(index)}
             >
-              {Array.from(Array(20).keys())
-                .slice(Number(minPlayersIndex.toString()) - 1)
+              {Array.from(Array(maxPlayers).keys())
+                .slice(Number(minPlayersIndex.toString()) - 1 + minPlayers - 1)
                 .map(n => (
                   <SelectItem key={n} title={n + 1 + ""} />
                 ))}
@@ -82,7 +173,32 @@ const NewGame = () => {
             <Text style={styles.text}>Select start date:</Text>
             <Datepicker date={startDateline} min={startDateline} onSelect={setDateline} />
           </View>
-
+          <View id="startday" style={[styles.view, styles.timepicker]}>
+            <Text style={styles.text}>Pick the day's start time</Text>
+            <Button style={styles.timeButton} onPress={() => setStartDayVisibility(true)}>
+              {getTimeString(startDay.getHours(), startDay.getMinutes())}
+            </Button>
+          </View>
+          <DateTimePickerModal
+            mode="time"
+            is24Hour={true}
+            isVisible={startDayVisibility}
+            onConfirm={confirmStartDay}
+            onCancel={() => hideTimePicker(setStartDayVisibility)}
+          />
+          <View id="endday" style={[styles.view, styles.timepicker]}>
+            <Text style={styles.text}>Pick the day's end time</Text>
+            <Button style={styles.timeButton} onPress={() => setEndDayVisibility(true)}>
+              {getTimeString(endDay.getHours(), endDay.getTime())}
+            </Button>
+          </View>
+          <DateTimePickerModal
+            mode="time"
+            is24Hour={true}
+            isVisible={startEndVisibility}
+            onConfirm={confirmEndDay}
+            onCancel={() => hideTimePicker(setEndDayVisibility)}
+          />
           {/* Sliders */}
           <View id="wolfProb" style={styles.view}>
             <Text style={styles.text}>Wolf probability: {wolfProb}%</Text>
@@ -148,13 +264,17 @@ const NewGame = () => {
               step={1}
             />
           </View>
-          <Button onPress={() => router.back()}>Create game</Button>
+          <Button onPress={newGame}>Create game</Button>
         </Layout>
       </ScrollView>
     </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
+  layout: {
+    margin: "0 0",
+    padding: "10",
+  },
   text: {
     fontWeight: "bold",
   },
@@ -172,6 +292,13 @@ const styles = StyleSheet.create({
   },
   view: {
     paddingHorizontal: 10,
+  },
+  timepicker: {
+    display: "flex",
+  },
+  timeButton: {
+    alignSelf: "flex-end",
+    width: "40%",
   },
 });
 export default NewGame;

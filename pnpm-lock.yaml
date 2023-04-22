@@ -120,6 +120,9 @@ importers:
       '@expo/webpack-config':
         specifier: ^18.0.1
         version: 18.0.1(expo@48.0.10)
+      '@react-native-community/datetimepicker':
+        specifier: 6.7.3
+        version: 6.7.3
       '@tanstack/react-query':
         specifier: ^4.28.0
         version: 4.28.0(react-dom@18.2.0)(react-native@0.71.6)(react@18.2.0)
@@ -174,6 +177,9 @@ importers:
       react-native-gifted-chat:
         specifier: ^2.0.1
         version: 2.0.1(@expo/react-native-action-sheet@4.0.1)(dayjs@1.11.7)(react-native-communications@2.2.1)(react-native-lightbox@0.8.1)(react-native-parsed-text@0.0.22)(react-native-typing-animation@0.1.7)(react-native@0.71.6)(react@18.2.0)
+      react-native-modal-datetime-picker:
+        specifier: ^15.0.0
+        version: 15.0.0(@react-native-community/datetimepicker@6.7.3)(react-native@0.71.6)
       react-native-parsed-text:
         specifier: ^0.0.22
         version: 0.0.22(react-native@0.71.6)(react@18.2.0)
@@ -3064,6 +3070,12 @@ packages:
       - encoding
       - supports-color
       - utf-8-validate
+    dev: false
+
+  /@react-native-community/datetimepicker@6.7.3:
+    resolution: {integrity: sha512-fXWbEdHMLW/e8cts3snEsbOTbnFXfUHeO2pkiDFX3fWpFoDtUrRWvn50xbY13IJUUKHDhoJ+mj24nMRVIXfX1A==}
+    dependencies:
+      invariant: 2.2.4
     dev: false
 
   /@react-native-community/eslint-config@3.2.0(eslint@8.38.0)(prettier@2.8.7)(typescript@4.9.5):
@@ -11122,6 +11134,17 @@ packages:
     resolution: {integrity: sha512-TFZA6iKEEHpAUIXjMTRb6vx0/9rHgEKy3ZBiRAy295PwldYg5c8opwnbyURLIl522ykeqhVx9uGdXjSMIowLvA==}
     dependencies:
       prop-types: 15.8.1
+    dev: false
+
+  /react-native-modal-datetime-picker@15.0.0(@react-native-community/datetimepicker@6.7.3)(react-native@0.71.6):
+    resolution: {integrity: sha512-cHeFEYHUhyIk+Mt9C6RVseg/VMGR4XcxdU9SibF5RMCXiXhrwMkFy7203xg1S331pzCF/Oqhvi4Jh0pYMrTFtQ==}
+    peerDependencies:
+      '@react-native-community/datetimepicker': '>=6.7.0'
+      react-native: '>=0.65.0'
+    dependencies:
+      '@react-native-community/datetimepicker': 6.7.3
+      prop-types: 15.8.1
+      react-native: 0.71.6(@babel/core@7.20.2)(@babel/preset-env@7.21.4)(react@18.2.0)
     dev: false
 
   /react-native-parsed-text@0.0.22(react-native@0.71.6)(react@18.2.0):
