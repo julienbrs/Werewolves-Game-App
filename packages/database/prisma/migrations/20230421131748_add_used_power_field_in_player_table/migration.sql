@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE "Game" ALTER COLUMN "startDay" SET DEFAULT '08:00:00',
+ALTER COLUMN "endDay" SET DEFAULT '22:00:00';
+
+-- AlterTable
+ALTER TABLE "Player" ADD COLUMN     "usedPower" BOOLEAN NOT NULL DEFAULT false;

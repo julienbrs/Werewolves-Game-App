@@ -1,17 +1,42 @@
 import { StateGame } from "database";
 import cron from "node-cron";
 import prisma from "../prisma";
-import startGame from "./game/startGame";
 import newPeriod from "./game/newPeriod";
-interface JobMap {
+import startGame from "./game/startGame";
+interface deadlineJobMap {
   [key: number]: cron.ScheduledTask;
 }
-export const jobs: JobMap = {};
+interface newDayJobMap {
+  [key: number]: cron.ScheduledTask;
+}
+interface newNightJobMap {
+  [key: number]: cron.ScheduledTask;
+}
 
-export const deleteJob = (id: number) => {
-  if (jobs[id]) {
-    jobs[id].stop();
-    delete jobs[id];
+export const JobType = {
+  DEADLINE: "DEADLINE",
+  NEW_DAY: "NEW_DAY",
+  NEW_NIGHT: "NEW_NIGHT",
+} as const;
+
+type ObjectValues<T> = T[keyof T];
+
+export type JobType = ObjectValues<typeof JobType>;
+
+export const deadlineJobs: deadlineJobMap = {};
+export const newDayJobs: newDayJobMap = {};
+export const newNightJobs: newNightJobMap = {};
+
+export const deleteJob = (id: number, jobType: JobType) => {
+  const jobmap =
+    jobType === JobType.DEADLINE
+      ? deadlineJobs
+      : jobType === JobType.NEW_DAY
+      ? newDayJobs
+      : newNightJobs;
+  if (jobmap[id]) {
+    jobmap[id].stop();
+    delete jobmap[id];
   }
 };
 // check if the deadline is passed
@@ -26,15 +51,15 @@ export const createDeadlineJob = (deadline: Date, gameId: number, startDay: Date
   if (!date) {
     return;
   }
-  if (jobs[gameId]) {
-    jobs[gameId].stop();
-    delete jobs[gameId];
+  if (deadlineJobs[gameId]) {
+    deadlineJobs[gameId].stop();
+    delete deadlineJobs[gameId];
   }
   const dateString = `${start.getUTCSeconds()} ${start.getUTCMinutes()} ${start.getUTCHours()} ${date.getUTCDate()} ${
     date.getUTCMonth() + 1
   } *`;
   const job = cron.schedule(dateString, async () => startGame(gameId));
-  jobs[gameId] = job;
+  deadlineJobs[gameId] = job;
 };
 
 export const createNewDayJob = async (startDay: Date, gameId: number) => {

@@ -1,6 +1,7 @@
 import { Role, StateGame } from "database";
 import prisma from "../../prisma";
 import { finishElection } from "../election";
+import { JobType, deleteJob } from "../scheduler";
 
 const newPeriod = async (day: boolean, gameId: number) => {
   prisma
@@ -9,18 +10,20 @@ const newPeriod = async (day: boolean, gameId: number) => {
         where: { id: gameId },
         select: {
           curElecId: true,
+          state: true,
           players: {
             select: {
               userId: true,
               state: true,
               role: true,
               power: true,
+              usedPower: true,
             },
           },
         },
       });
       if (game.curElecId !== null) {
-        await finishElection(transaction, game.curElecId, game.players);
+        await finishElection(transaction, game.curElecId);
       }
       const newElec = await transaction.election.create({
         data: {
@@ -43,6 +46,8 @@ const newPeriod = async (day: boolean, gameId: number) => {
           curElecId: newElec.id,
         },
       });
+      // on supprime le job si la game est fini
+      if (state === StateGame.END) deleteJob(gameId, day ? JobType.NEW_DAY : JobType.NEW_NIGHT);
     })
     .then(() => {
       console.log("New period created");
