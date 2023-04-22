@@ -29,6 +29,7 @@ export interface Player {
   state?: StatePlayer;
   role?: Role;
   power?: Power;
+  usedPower: boolean;
   user: User;
   createdAt?: string;
   updatedAt?: string;

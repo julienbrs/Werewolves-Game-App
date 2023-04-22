@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { Game, NewGame } from "types";
 import prisma from "../prisma";
 import createGame from "../services/game/createGame";
-import { deleteJob } from "../services/scheduler";
+import { JobType, deleteJob } from "../services/scheduler";
 import { getTommorow } from "../services/time";
 const jwt = require("jsonwebtoken");
 const SECRET = process.env.SECRET;
@@ -231,8 +231,25 @@ const gameController = {
         },
       })
       .then(gameUpdated => {
-        deleteJob(gameUpdated.id);
+        deleteJob(gameUpdated.id, JobType.DEADLINE);
         res.status(201).json(gameUpdated);
+      })
+      .catch(error => {
+        console.log(error);
+        res.status(400).json(error);
+      });
+  },
+  deleteGame(req: Request, res: Response) {
+    const id = parseInt(req.params.id, 10);
+    if (isNaN(id)) {
+      return res.status(400).json({ message: "Invalid id" });
+    }
+    prisma.game
+      .delete({
+        where: { id },
+      })
+      .then(game => {
+        res.status(201).json(game);
       })
       .catch(error => {
         console.log(error);

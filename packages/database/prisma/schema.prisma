@@ -28,7 +28,7 @@ enum StateGame {
 
 model Game {
   id      Int       @id @default(autoincrement())
-  name    String    @unique
+  name    String
   state   StateGame
   players Player[]
 
@@ -45,15 +45,15 @@ model Game {
   startDay   DateTime @default(dbgenerated("'08:00:00'")) @db.Time()
   endDay     DateTime @default(dbgenerated("'22:00:00'")) @db.Time()
 
-  dayChat          DayChatRoom     @relation(fields: [dayChatRoomId], references: [id])
+  dayChat          DayChatRoom     @relation(fields: [dayChatRoomId], references: [id], onDelete: Cascade)
   dayChatRoomId    Int             @unique
-  nightChat        NightChatRoom   @relation(fields: [nightChatRoomId], references: [id])
+  nightChat        NightChatRoom   @relation(fields: [nightChatRoomId], references: [id], onDelete: Cascade)
   nightChatRoomId  Int             @unique
-  spiritChat       SpiritChatRoom? @relation(fields: [spiritChatRoomId], references: [id])
+  spiritChat       SpiritChatRoom? @relation(fields: [spiritChatRoomId], references: [id], onDelete: Cascade)
   spiritChatRoomId Int?            @unique
 
   elections Election[] @relation("game_elections")
-  curElec   Election?  @relation(name: "current_election", fields: [curElecId], references: [id])
+  curElec   Election?  @relation(name: "current_election", fields: [curElecId], references: [id], onDelete: Cascade)
   curElecId Int?       @unique
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
@@ -82,9 +82,9 @@ model Player {
   role      Role?
   power     Power?
   usedPower Boolean   @default(false)
-  user      User         @relation(fields: [userId], references: [id])
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  game      Game         @relation(fields: [gameId], references: [id])
+  game      Game         @relation(fields: [gameId], references: [id], onDelete: Cascade)
   gameId    Int
   vote      Vote[]       @relation("voters")
   target    Vote[]       @relation("targets")
@@ -135,19 +135,19 @@ model ChatRoom {
 model NightChatRoom {
   id       Int      @id @default(autoincrement())
   game     Game?
-  chatRoom ChatRoom @relation(fields: [id], references: [id])
+  chatRoom ChatRoom @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
 model DayChatRoom {
   id       Int      @id @default(autoincrement())
   game     Game?
-  chatRoom ChatRoom @relation(fields: [id], references: [id])
+  chatRoom ChatRoom @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
 model SpiritChatRoom {
   id       Int      @id @default(autoincrement())
   game     Game?
-  chatRoom ChatRoom @relation(fields: [id], references: [id])
+  chatRoom ChatRoom @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
 model Message {

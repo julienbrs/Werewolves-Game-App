@@ -3,6 +3,7 @@ import cron from "node-cron";
 import prisma from "../prisma";
 import newPeriod from "./game/newPeriod";
 import startGame from "./game/startGame";
+import { checkDeadline } from "./time";
 interface deadlineJobMap {
   [key: number]: cron.ScheduledTask;
 }
@@ -39,14 +40,12 @@ export const deleteJob = (id: number, jobType: JobType) => {
     delete jobmap[id];
   }
 };
-// check if the deadline is passed
-export const checkDeadline = (date: Date) => {
-  const now = new Date();
-  return date < now && date;
-};
 
 export const createDeadlineJob = (deadline: Date, gameId: number, startDay: Date) => {
-  const date = checkDeadline(deadline);
+  if (!checkDeadline(deadline, startDay)) {
+    return;
+  }
+  const date = new Date(deadline);
   const start = new Date(startDay);
   if (!date) {
     return;
@@ -58,6 +57,7 @@ export const createDeadlineJob = (deadline: Date, gameId: number, startDay: Date
   const dateString = `${start.getUTCSeconds()} ${start.getUTCMinutes()} ${start.getUTCHours()} ${date.getUTCDate()} ${
     date.getUTCMonth() + 1
   } *`;
+  console.log("cron at ", dateString);
   const job = cron.schedule(dateString, async () => startGame(gameId));
   deadlineJobs[gameId] = job;
 };

@@ -3,7 +3,7 @@ import { Button, Text } from "@ui-kitten/components";
 import { useRouter, useSearchParams } from "expo-router";
 import React from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Game, Power, StateGame } from "types";
+import { Game, Player, Power, StateGame } from "types";
 import Loading from "../../components/loading";
 import { getGame } from "../../utils/api/game";
 import { getPlayer } from "../../utils/api/player";
@@ -35,7 +35,7 @@ const GameView = () => {
     data: player,
     isLoading: isLoadingPlayer,
     isError: isErrorPlayer,
-  } = useQuery({
+  } = useQuery<Player, Error>({
     enabled: !isLoadingToken,
     queryKey: ["player", token],
     queryFn: () => getPlayer(game?.id!, token!),
@@ -72,7 +72,9 @@ const GameView = () => {
       {/* display all informations on the game after fetching data from backend*/}
       <Text>Game | {game.name}</Text>
       <Text>{game.state === StateGame.DAY ? "C'est le jour" : "C'est la nuit"}</Text>
-      <Button onPress={redirectPower}>Power</Button>
+      <Button onPress={redirectPower} disabled={!player.usedPower}>
+        Power
+      </Button>
       <Button onPress={redirectChat}>Chat</Button>
       <Button onPress={() => router.back()}>Go Back</Button>
     </SafeAreaView>

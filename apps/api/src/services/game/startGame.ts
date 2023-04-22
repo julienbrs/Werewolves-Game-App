@@ -3,13 +3,16 @@ import prisma from "../../prisma";
 import { JobType, deleteJob } from "../scheduler";
 
 const startGame = async (gameId: number) => {
-  prisma
+  console.log("startGame");
+  return await prisma
     .$transaction(async transaction => {
+      console.log("startGame transaction");
       const game = await transaction.game.findUnique({
         where: { id: gameId },
         select: {
           id: true,
           state: true,
+          minPlayer: true,
           wolfProb: true,
           seerProb: true,
           insomProb: true,
@@ -36,6 +39,10 @@ const startGame = async (gameId: number) => {
       }
       // Ajout des joueurs dans les salons de discussion
       const players = game.players;
+      if (players.length < game.minPlayer) {
+        await transaction.game.delete({ where: { id: gameId } });
+        return Promise.resolve("Not enough players");
+      }
       const playersChatters = players.map(player => ({
         gameId: player.gameId,
         playerId: player.userId,
@@ -133,7 +140,7 @@ const startGame = async (gameId: number) => {
       Promise.resolve();
     })
     .catch(error => {
-      Promise.reject(error);
+      console.error(error);
     });
 };
 

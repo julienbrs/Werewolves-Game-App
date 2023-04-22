@@ -4,7 +4,7 @@ import { finishElection } from "../election";
 import { JobType, deleteJob } from "../scheduler";
 
 const newPeriod = async (day: boolean, gameId: number) => {
-  prisma
+  return await prisma
     .$transaction(async transaction => {
       const game = await transaction.game.findUniqueOrThrow({
         where: { id: gameId },
@@ -55,7 +55,6 @@ const newPeriod = async (day: boolean, gameId: number) => {
     })
     .catch(error => {
       console.log(error);
-      return Promise.reject(error);
     });
 };
 

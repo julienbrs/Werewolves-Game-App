@@ -1,18 +1,19 @@
 import { NewGame } from "types";
 import prisma from "../../prisma";
-import { checkDeadline, createDeadlineJob } from "../../services/scheduler";
+import { createDeadlineJob } from "../../services/scheduler";
+import { checkDeadline } from "../time";
+
 const createGame = async (game: NewGame, userId: string) => {
-  if (!checkDeadline(new Date(game.deadline))) {
+  if (!checkDeadline(new Date(game.deadline), new Date(game.startDay))) {
     return Promise.reject({ message: "Invalid deadline" });
   }
-  await prisma
+  return await prisma
     .$transaction(async transaction => {
       const dayChat = await transaction.dayChatRoom.create({
         data: {
           chatRoom: { create: {} },
         },
       });
-      console.log(dayChat);
       const nightChat = await transaction.nightChatRoom.create({
         data: {
           chatRoom: { create: {} },
@@ -42,8 +43,7 @@ const createGame = async (game: NewGame, userId: string) => {
       return Promise.resolve(newGame);
     })
     .catch(error => {
-      console.log(error);
-      return Promise.reject(error);
+      return Promise.reject(error.message);
     });
 };
 
