@@ -1,49 +1,72 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { Text, View } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
-import { io } from "socket.io-client";
+import io from "socket.io-client";
+
+const port = 3000;
+const IP = "192.168.41.139";
+const socketEndpoint = `http://${IP}:${port}`;
+
+let user_id = Math.floor(Math.random() * 10000000);
 
 export function Example() {
   const [messages, setMessages] = useState([]);
+  const [hasConnection, setConnection] = useState(true); // Initialiser à true
+  const socket = io(socketEndpoint);
 
   useEffect(() => {
-    const socket = io("http://localhost:8080");
+    setMessages([]);
+  }, []);
 
+  useEffect(() => {
     socket.on("connect", () => {
-      console.log("connected to backend WebSocket server");
+      setConnection(true);
+      socket.emit("ask-for-id");
     });
 
-    socket.on("message", message => {
-      console.log("received message from backend:", message);
-      setMessages(previousMessages =>
-        GiftedChat.append(previousMessages, [
-          {
-            _id: Math.random().toString(36).substring(7),
-            text: message,
-            createdAt: new Date(),
-            user: { _id: 2 },
-          },
-        ])
-      );
+    socket.on("disconnect", () => {
+      setConnection(false);
     });
+  });
 
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
+  const onSend = useCallback(
+    (messagesBDD = []) => {
+      setMessages(previousMessages => GiftedChat.append(previousMessages, messagesBDD));
+      /* model Message {
+  id         Int      @id @default(autoincrement())
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id])
+  chatRoomId Int
+  content    String
+  author     Player   @relation(fields: [authorId, gameId], references: [userId, gameId])
+  authorId   String
+  gameId     Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+} */
+      let newMessage = {
+        id: messagesBDD[0]._id,
+        content: messagesBDD[0].text,
+        authorId: user_id,
+        chatRoomId: 1,
+        gameId: 1,
+      };
+      socket.emit("messagePosted", newMessage);
+    },
+    [socket]
+  );
 
-  const onSend = useCallback((messages = []) => {
-    setMessages(previousMessages => GiftedChat.append(previousMessages, messages));
-  }, []);
-
-  return (
+  return !hasConnection ? (
+    <View>
+      <Text>Connection not established</Text>
+    </View>
+  ) : (
     <GiftedChat
       messages={messages}
       onSend={messages => onSend(messages)}
       user={{
-        _id: 1,
+        _id: user_id,
       }}
     />
   );
 }
-
 export default Example;
