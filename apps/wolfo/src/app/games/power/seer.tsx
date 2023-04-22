@@ -3,19 +3,29 @@ import { Button, Text } from "@ui-kitten/components";
 import { useRouter, useSearchParams } from "expo-router";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Player } from "types";
+import { Game, Player } from "types";
+import Loading from "../../../components/loading";
+import { getGame } from "../../../utils/api/game";
 import { getPlayers } from "../../../utils/api/player";
 
 const SeerView = () => {
   const router = useRouter();
-  const { gameId } = useSearchParams();
+  const { id } = useSearchParams();
   const {
-    data: players,
+    data: game,
     isLoading,
     isError,
+  } = useQuery<Game, Error>({
+    queryKey: ["mygames", id],
+    queryFn: () => getGame(Number(id)),
+  });
+  const {
+    data: players,
+    isLoading: isLoadingPlayer,
+    isError: isErrorPlayer,
   } = useQuery({
-    queryKey: ["players", gameId],
-    queryFn: () => getPlayers(Number(gameId)),
+    queryKey: ["players", game?.id],
+    queryFn: () => getPlayers(Number(game?.id)),
   });
   const [selectedPlayer, setSelectedPlayer] = useState<Player | undefined>();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -25,11 +35,11 @@ const SeerView = () => {
     setIsButtonDisabled(true);
   };
 
-  if (isLoading) {
-    return <Text>Loading...</Text>;
+  if (isLoading && isLoadingPlayer) {
+    return <Loading title="Power loading" message={"Loading..."} />;
   }
 
-  if (isError) {
+  if (isError && isErrorPlayer) {
     router.back();
   }
 
@@ -46,7 +56,14 @@ const SeerView = () => {
         </Button>
       ))}
       <Text>Selected player:</Text>
-      {selectedPlayer ? <Text>{selectedPlayer.power}</Text> : <Text>No player selected</Text>}
+      {selectedPlayer ? (
+        <Text>
+          {selectedPlayer.role !== undefined ? selectedPlayer.role : ""}
+          {selectedPlayer.power !== undefined ? `, ${selectedPlayer.power}` : ""}
+        </Text>
+      ) : (
+        <Text>No player selected</Text>
+      )}
     </SafeAreaView>
   );
 };
