@@ -2,6 +2,7 @@
   "name": "wolfo",
   "version": "1.0.0",
   "main": "index.tsx",
+  "resolutions": {},
   "scripts": {
     "clean": "git clean -xdf .expo .turbo node_modules",
     "start": "expo start",

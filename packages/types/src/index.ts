@@ -1,8 +1,3 @@
-export type Workspace = {
-  name: string;
-  version: string;
-};
-
 export * from "./chat";
 export * from "./error";
 export * from "./game";

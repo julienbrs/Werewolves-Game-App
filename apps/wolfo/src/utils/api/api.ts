@@ -1,5 +1,5 @@
 // ici on utilise axios et react query pour faire des requêtes http
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 const api = axios.create({
   baseURL: "http://localhost:3000/api",
   headers: {
@@ -21,6 +21,7 @@ api.interceptors.request.use(
     return config;
   },
   error => {
+    console.log(error);
     return Promise.reject(error);
   }
 );
@@ -28,7 +29,7 @@ api.interceptors.request.use(
 // On intercepte les erreurs pour ne pas avoir à les gérer à chaque fois
 api.interceptors.response.use(
   response => response,
-  (error: AxiosError) => {
+  error => {
     console.log(JSON.stringify(error.response));
     if (error.response === undefined) {
       Promise.reject(error);
