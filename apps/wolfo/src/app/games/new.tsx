@@ -18,15 +18,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { NewGame as NewGameType } from "types";
 import { createGame } from "../../utils/api/game";
 const NewGame = () => {
-  console.log("what is happening");
   const router = useRouter();
   /* General settings */
+  const minPlayers = 5;
+  const maxPlayers = 20;
+
   const [gameName, setGameName] = useState("Game name");
   const [gameNameStatus, setGameNameStatus] = useState("basic");
-  const [minPlayersIndex, setMinPlayersIndex] = useState<IndexPath | IndexPath[]>(new IndexPath(4));
-  const [maxPlayersIndex, setMaxPlayersIndex] = useState<IndexPath | IndexPath[]>(
-    new IndexPath(19)
-  );
+  const [minPlayersIndex, setMinPlayersIndex] = useState<IndexPath | IndexPath[]>(new IndexPath(0));
+  const [maxPlayersIndex, setMaxPlayersIndex] = useState<IndexPath | IndexPath[]>(new IndexPath(0));
 
   /* Time picking states */
   const [startDay, setStartDay] = useState<Date>(new Date(1970, 1, 1, 8, 0));
@@ -138,17 +138,17 @@ const NewGame = () => {
             <Text style={styles.text}>Select number of minimum players:</Text>
             <Select
               placeholder="Default"
-              value={minPlayersIndex.toString()}
+              value={+minPlayersIndex.toString() + minPlayers - 1}
               selectedIndex={minPlayersIndex}
               onSelect={index => {
                 setMinPlayersIndex(index);
                 if (Number(maxPlayersIndex.toString()) < Number(minPlayersIndex.toString())) {
-                  setMaxPlayersIndex(index);
+                  setMaxPlayersIndex(new IndexPath(0));
                 }
               }}
             >
-              {Array.from(Array(20).keys())
-                .slice(4)
+              {Array.from(Array(maxPlayers).keys())
+                .slice(minPlayers - 1)
                 .map(n => (
                   <SelectItem key={n} title={n + 1 + ""} />
                 ))}
@@ -158,12 +158,12 @@ const NewGame = () => {
             <Text style={styles.text}>Select number of maximum players:</Text>
             <Select
               placeholder="Default"
-              value={maxPlayersIndex.toString()}
+              value={+maxPlayersIndex.toString() + +minPlayersIndex.toString() - 1 + minPlayers - 1}
               selectedIndex={maxPlayersIndex}
               onSelect={index => setMaxPlayersIndex(index)}
             >
-              {Array.from(Array(20).keys())
-                .slice(Number(minPlayersIndex.toString()) - 1)
+              {Array.from(Array(maxPlayers).keys())
+                .slice(Number(minPlayersIndex.toString()) - 1 + minPlayers - 1)
                 .map(n => (
                   <SelectItem key={n} title={n + 1 + ""} />
                 ))}
