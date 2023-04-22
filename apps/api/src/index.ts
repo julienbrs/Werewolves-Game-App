@@ -1,11 +1,12 @@
 import cors from "cors";
 import express, { ErrorRequestHandler, NextFunction, Request, Response } from "express";
+import prisma from "./prisma";
 import router from "./routes/router";
 import { relaunchGames } from "./services/scheduler";
 export const app = express();
-const port = 3000;
-
-app.use(cors({ origin: "http://localhost:3000" }));
+const IP = process.env.IP || "localhost";
+const PORT = process.env.PORT || 3000;
+app.use(cors({ origin: `http://${IP}:${PORT}` }));
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
@@ -26,11 +27,12 @@ const errorHandler: ErrorRequestHandler = (
 app.use(errorHandler);
 relaunchGames();
 
-const serv = app.listen(port, () => console.log(`Listening on http://${IP}:${port}`));
+const serv = app.listen(PORT, () => console.log(`Listening on http://${IP}:${PORT}`));
 
 // Websocket server
-import prisma from "./prisma";
-const io = require("socket.io")(serv);
+import { Server } from "socket.io";
+const io = new Server(serv);
+
 // Listen for incoming socket connections
 io.on("connection", socket => {
   console.log("a user is connected to the chat");
