@@ -1,10 +1,14 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Button, Text } from "@ui-kitten/components";
 import { useRouter, useSearchParams } from "expo-router";
 import React from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useQuery } from "react-query";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+
+import { useQuery } from "@tanstack/react-query";
 import { Message } from "types";
 import { getHistory } from "../../utils/api/chat";
+
+const queryClient = new QueryClient();
 
 const ChatRoomView = () => {
   const router = useRouter();
@@ -58,14 +62,16 @@ const ChatRoomView = () => {
   }
 
   return (
-    <SafeAreaView>
-      <Text>ChatRoom | {Number(id)}</Text>
-      {history &&
-        history.map((message: Message, index: number) => (
-          <Text key={index}>{message.content}</Text>
-        ))}
-      <Button onPress={() => router.back()}>Go Back</Button>
-    </SafeAreaView>
+    <QueryClientProvider client={queryClient}>
+      <SafeAreaProvider>
+        <Text>ChatRoom | {Number(id)}</Text>
+        {history &&
+          history.map((message: Message, index: number) => (
+            <Text key={index}>{message.content}</Text>
+          ))}
+        <Button onPress={() => router.back()}>Go Back</Button>
+      </SafeAreaProvider>
+    </QueryClientProvider>
   );
 };
 
