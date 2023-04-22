@@ -38,7 +38,7 @@ const CreateNewChatroom = () => {
         value={value}
         onChangeText={newValue => setValue(newValue)}
       />
-      <Button title="Go to Chatroom" onPress={() => router.push(`/chatrooms/${value}`)} />
+      <Button title="Go to Chatroom" onPress={() => router.push(`/chatroom/${value}`)} />
     </View>
   );
 };
