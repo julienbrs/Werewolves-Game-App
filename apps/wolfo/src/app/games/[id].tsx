@@ -22,7 +22,7 @@ const GameView = () => {
     queryFn: () => getGame(Number(id)),
     staleTime: 1000 * 60 * 15, // 15 minutes
   });
-  const { id: idUser } = useContext(AuthContext);
+  const { id: userId } = useContext(AuthContext);
   // get player data
   const {
     data: player,
@@ -30,8 +30,8 @@ const GameView = () => {
     isError: isErrorPlayer,
   } = useQuery<Player, Error>({
     enabled: Boolean(game),
-    queryKey: ["player", idUser],
-    queryFn: () => getPlayer(game?.id!, idUser),
+    queryKey: ["player", userId],
+    queryFn: () => getPlayer(game?.id!, userId),
   });
   if (isLoading || isLoadingPlayer) {
     return <Loading title="Game loading" message={"Game " + String(id) + "is loading"} />;
@@ -46,16 +46,16 @@ const GameView = () => {
   const redirectPower = () => {
     switch (player?.power) {
       case Power.SEER:
-        router.push(`/power/seer?userId=${player.userId}&gameId=${game?.id}`);
+        router.push({ pathname: "/games/power/seer", params: { gameId: game.id, userId } });
         break;
       case Power.SPIRIT:
-        router.push(`/power/spirit?userId=${player.userId}&gameId=${game?.id}`);
+        router.push({ pathname: "/games/power/spirit", params: { gameId: game.id, userId } });
         break;
       case Power.INSOMNIAC:
-        router.push(`/power/insomniac?userId=${player.userId}&gameId=${game?.id}`);
+        router.push({ pathname: "/games/power/insomniac", params: { gameId: game.id, userId } });
         break;
       case Power.CONTAMINATOR:
-        router.push(`/power/contaminator?userId=${player.userId}&gameId=${game?.id}`);
+        router.push({ pathname: "/games/power/contaminator", params: { gameId: game.id, userId } });
         break;
     }
   };
@@ -65,7 +65,7 @@ const GameView = () => {
       {/* display all informations on the game after fetching data from backend*/}
       <Text>Game | {game.name}</Text>
       <Text>{game.state === StateGame.DAY ? "C'est le jour" : "C'est la nuit"}</Text>
-      <Button onPress={redirectPower} disabled={!player.usedPower}>
+      <Button onPress={redirectPower} disabled={player.usedPower}>
         Power
       </Button>
       <Button onPress={redirectChat}>Chat</Button>
