@@ -38,7 +38,7 @@ export const checkDeadline = (date: Date, startDay: Date): boolean => {
     now.getUTCFullYear() === date.getUTCFullYear()
   ) {
     return (
-      day.getUTCHours() > now.getUTCHours() + 2 ||
+      day.getUTCHours() < now.getUTCHours() + 2 ||
       (day.getUTCHours() === now.getUTCHours() + 2 && day.getUTCMinutes() > now.getUTCMinutes())
     );
   } else {

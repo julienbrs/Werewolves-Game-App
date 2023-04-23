@@ -16,7 +16,7 @@ export type Game = {
   name: string;
   state: StateGame;
   players?: Player[] | any;
-  deadline: Date;
+  deadline: string;
   minPlayer: number;
   maxPlayer: number;
   wolfProb: number;
@@ -24,8 +24,8 @@ export type Game = {
   insomProb: number;
   contProb: number;
   spiritProb: number;
-  startDay: Date;
-  endDay: Date;
+  startDay: string;
+  endDay: string;
   dayChatRoomId: number;
   nightChatRoomId: number;
   spiritChatRoomId?: number;
@@ -35,7 +35,7 @@ export type NewGame = {
   name: string;
   state: StateGame;
   players?: Player[] | any;
-  deadline: Date;
+  deadline: string;
   minPlayer: number;
   maxPlayer: number;
   wolfProb: number;
@@ -43,6 +43,6 @@ export type NewGame = {
   insomProb: number;
   contProb: number;
   spiritProb: number;
-  startDay: Date;
-  endDay: Date;
+  startDay: string;
+  endDay: string;
 };

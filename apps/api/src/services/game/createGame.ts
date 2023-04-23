@@ -4,7 +4,7 @@ import { createDeadlineJob } from "../../services/scheduler";
 import { checkDeadline } from "../time";
 
 const createGame = async (game: NewGame, userId: string) => {
-  if (!checkDeadline(new Date(game.deadline), new Date(game.startDay))) {
+  if (checkDeadline(new Date(game.deadline), new Date(game.startDay))) {
     return Promise.reject({ message: "Invalid deadline" });
   }
   return await prisma
