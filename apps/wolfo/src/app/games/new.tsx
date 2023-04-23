@@ -46,28 +46,32 @@ const NewGame = () => {
 
   /* Special time callbacks */
   const confirmStartDay = (date: Date) => {
+    console.log(endDay);
+    console.log(date);
     if (
-      endDay.getHours() < date.getHours() ||
-      (endDay.getHours() === date.getHours() && endDay.getMinutes() === date.getMinutes())
+      !(
+        endDay.getUTCHours() > date.getUTCHours() ||
+        (endDay.getUTCHours() === date.getUTCHours() &&
+          endDay.getUTCMinutes() > date.getUTCMinutes())
+      )
     ) {
-      /* One minute later */
-      console.log("Day's end time should be after start time");
-      return;
+      console.log("hello?");
+      setStartDay(date);
     }
-    setStartDay(date);
-    hideTimePicker(setStartDayVisibility);
+    setStartDayVisibility(false);
   };
   const confirmEndDay = (date: Date) => {
     if (
-      date.getHours() < startDay.getHours() ||
-      (date.getHours() === startDay.getHours() && date.getMinutes() === startDay.getMinutes())
+      !(
+        date.getUTCHours() > startDay.getUTCHours() ||
+        (date.getUTCHours() === startDay.getUTCHours() &&
+          date.getUTCMinutes() > startDay.getUTCMinutes())
+      )
     ) {
-      /* One minute later */
-      console.log("Day's end time should be after start time");
+      setEndDay(date);
       return;
     }
-    setEndDay(date);
-    hideTimePicker(setEndDayVisibility);
+    setEndDayVisibility(false);
   };
   const hideTimePicker = (setter: Dispatch<SetStateAction<boolean>>) => {
     setter(false);
@@ -78,10 +82,12 @@ const NewGame = () => {
   };
   const getDateString = (date: Date): string => {
     return (
+      "" +
       date.getFullYear() +
-      ("0" + "-" + date.getMonth()).slice(-2) +
       "-" +
-      ("0" + date.getDay()).slice(-2)
+      ("0" + (date.getMonth() + 1)).slice(-2) +
+      "-" +
+      ("0" + date.getDate()).slice(-2)
     );
   };
   /* Api call */
@@ -90,14 +96,15 @@ const NewGame = () => {
   });
 
   const newGame = async () => {
+    console.log("I'm here");
     const startDayString = getTimeString(startDay.getHours(), startDay.getMinutes()) + ":00";
     const startEndString = getTimeString(endDay.getHours(), endDay.getMinutes()) + ":00";
     const game: NewGameType = {
       name: gameName,
       state: "LOBBY",
-      minPlayer: +minPlayersIndex.toString() + 1,
-      maxPlayer: +maxPlayersIndex.toString() + 1,
-      deadline: getDateString(startDateline) + "T" + startDayString + "000Z",
+      minPlayer: +minPlayersIndex.toString() + minPlayers - 1,
+      maxPlayer: +maxPlayersIndex.toString() + +minPlayersIndex.toString() - 1 + minPlayers - 1,
+      deadline: getDateString(startDateline) + "T" + startDayString + ".000Z",
       startDay: "1970-01-01T" + startDayString + ".000Z",
       endDay: "1970-01-01T" + startEndString + ".000Z",
       wolfProb,
@@ -169,10 +176,10 @@ const NewGame = () => {
                 ))}
             </Select>
           </View>
-          <View id="dateline" style={styles.view}>
+          <View style={styles.view}>
             <Text style={styles.text}>Select start date:</Text>
-            <Datepicker date={startDateline} min={startDateline} onSelect={setDateline} />
           </View>
+          <Datepicker date={startDateline} min={new Date()} onSelect={setDateline} />
           <View id="startday" style={[styles.view, styles.timepicker]}>
             <Text style={styles.text}>Pick the day's start time</Text>
             <Button style={styles.timeButton} onPress={() => setStartDayVisibility(true)}>
@@ -182,6 +189,7 @@ const NewGame = () => {
           <DateTimePickerModal
             mode="time"
             is24Hour={true}
+            minuteInterval={5}
             isVisible={startDayVisibility}
             onConfirm={confirmStartDay}
             onCancel={() => hideTimePicker(setStartDayVisibility)}
@@ -189,12 +197,13 @@ const NewGame = () => {
           <View id="endday" style={[styles.view, styles.timepicker]}>
             <Text style={styles.text}>Pick the day's end time</Text>
             <Button style={styles.timeButton} onPress={() => setEndDayVisibility(true)}>
-              {getTimeString(endDay.getHours(), endDay.getTime())}
+              {getTimeString(endDay.getHours(), endDay.getMinutes())}
             </Button>
           </View>
           <DateTimePickerModal
             mode="time"
             is24Hour={true}
+            minuteInterval={5}
             isVisible={startEndVisibility}
             onConfirm={confirmEndDay}
             onCancel={() => hideTimePicker(setEndDayVisibility)}
@@ -264,7 +273,7 @@ const NewGame = () => {
               step={1}
             />
           </View>
-          <Button onPress={newGame}>Create game</Button>
+          <Button onPress={async () => await newGame()}>Create game</Button>
         </Layout>
       </ScrollView>
     </SafeAreaView>
