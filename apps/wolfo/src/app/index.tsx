@@ -6,7 +6,6 @@ import { ListGamesLobby, ListMyGames } from "../components/game/gameList";
 import Loading from "../components/loading";
 import useAuth from "../utils/hooks/useAuth";
 const Home = () => {
-  console.log("home load");
   const router = useRouter();
   const [search, setSearch] = React.useState<string>("");
   const [tabIndex, setTabIndex] = React.useState<number>(0);
@@ -19,7 +18,6 @@ const Home = () => {
     return <Loading title="Loading home" message="loading user information" />;
   }
   if (data === null) {
-    console.log("redirect to auth");
     return <Redirect href="/auth" />;
   }
   return (

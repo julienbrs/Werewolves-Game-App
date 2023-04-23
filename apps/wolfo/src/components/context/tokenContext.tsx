@@ -1,21 +1,38 @@
+import jwtDecode from "jwt-decode";
 import React, { createContext, useState } from "react";
 
-interface TokenContextType {
+interface AuthContextType {
   token: string;
-  setToken: (token: string) => void;
+  name: string;
+  id: string;
+  handleSetToken: (token: string) => void;
 }
 
-export const TokenContext = createContext<TokenContextType>({
+export const AuthContext = createContext<AuthContextType>({
   token: "",
-  setToken: () => {},
+  name: "",
+  id: "",
+  handleSetToken: () => {},
 });
 
-interface TokenProviderProps {
+interface AuthProviderProps {
   children: React.ReactNode;
 }
 
-export const TokenProvider = ({ children }: TokenProviderProps) => {
+export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [token, setToken] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const [id, setId] = useState<string>("");
 
-  return <TokenContext.Provider value={{ token, setToken }}>{children}</TokenContext.Provider>;
+  const handleSetToken = (newToken: string) => {
+    setToken(newToken);
+    const decodedToken: any = jwtDecode(newToken);
+    setName(decodedToken.name);
+    setId(decodedToken.id);
+  };
+  return (
+    <AuthContext.Provider value={{ token, name, id, handleSetToken }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

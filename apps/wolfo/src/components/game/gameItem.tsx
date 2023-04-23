@@ -47,9 +47,7 @@ export const GameItemInGame = ({ game, handleFunction }: GameItemProps) => {
           <FontAwesome name="moon-o" size={24} color="black" />
         )
       }
-    >
-      Test
-    </ListItem>
+    />
   );
 };
 

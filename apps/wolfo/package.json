@@ -2,6 +2,7 @@
   "name": "wolfo",
   "version": "1.0.0",
   "main": "index.tsx",
+  "resolutions": {},
   "scripts": {
     "clean": "git clean -xdf .expo .turbo node_modules",
     "start": "expo start",
@@ -32,6 +33,7 @@
     "expo-router": "^1.5.3",
     "expo-secure-store": "^12.1.1",
     "expo-status-bar": "~1.4.4",
+    "jwt-decode": "^3.1.2",
     "react": "18.2.0",
     "react-dom": "^18.2.0",
     "react-native": "0.71.6",

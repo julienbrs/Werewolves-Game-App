@@ -6,7 +6,7 @@ import { relaunchGames } from "./services/scheduler";
 export const app = express();
 const IP = process.env.IP || "localhost";
 const PORT = process.env.PORT || 3000;
-app.use(cors({ origin: `http://${IP}:${PORT}` }));
+app.use(cors());
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
