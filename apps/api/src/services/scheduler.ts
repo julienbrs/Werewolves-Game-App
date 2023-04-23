@@ -42,7 +42,7 @@ export const deleteJob = (id: number, jobType: JobType) => {
 };
 
 export const createDeadlineJob = (deadline: Date, gameId: number, startDay: Date) => {
-  if (!checkDeadline(deadline, startDay)) {
+  if (checkDeadline(deadline, startDay)) {
     return;
   }
   const date = new Date(deadline);
