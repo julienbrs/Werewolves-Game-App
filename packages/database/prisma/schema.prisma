@@ -16,6 +16,7 @@ model User {
   name      String   @unique
   password  String
   Player    Player[]
+  Notification Notification[]
   createdAt DateTime @default(now())
 }
 
@@ -180,4 +181,16 @@ model Writer {
   chatRoomId Int
 
   @@id([playerId, gameId, chatRoomId])
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  link      String
+  readed    Boolean  @default(false)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

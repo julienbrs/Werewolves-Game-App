@@ -34,7 +34,15 @@ const gameController = {
           id,
         },
         include: {
-          players: true,
+          players: {
+            include: {
+              user: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
         },
       })
       .then(game => {

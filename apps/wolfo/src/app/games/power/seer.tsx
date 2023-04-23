@@ -6,26 +6,17 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, Player } from "types";
 import Loading from "../../../components/loading";
 import { getGame } from "../../../utils/api/game";
-import { getPlayers } from "../../../utils/api/player";
-
 const SeerView = () => {
   const router = useRouter();
-  const { id } = useSearchParams();
+  const { gameId, userId } = useSearchParams();
+  console.log(userId);
   const {
     data: game,
     isLoading,
     isError,
   } = useQuery<Game, Error>({
-    queryKey: ["mygames", id],
-    queryFn: () => getGame(Number(id)),
-  });
-  const {
-    data: players,
-    isLoading: isLoadingPlayer,
-    isError: isErrorPlayer,
-  } = useQuery({
-    queryKey: ["players", game?.id],
-    queryFn: () => getPlayers(Number(game?.id)),
+    queryKey: ["mygames", gameId],
+    queryFn: () => getGame(Number(gameId)),
   });
   const [selectedPlayer, setSelectedPlayer] = useState<Player | undefined>();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
@@ -35,26 +26,26 @@ const SeerView = () => {
     setIsButtonDisabled(true);
   };
 
-  if (isLoading && isLoadingPlayer) {
+  if (isLoading) {
     return <Loading title="Power loading" message={"Loading..."} />;
   }
-
-  if (isError && isErrorPlayer) {
-    router.back();
+  if (isError || !game) {
+    return router.back();
   }
 
   return (
     <SafeAreaView>
       <Text>Players:</Text>
-      {players.map((player: Player) => (
-        <Button
-          key={player.userId}
-          onPress={() => handlePlayerClick(player)}
-          disabled={isButtonDisabled}
-        >
-          {player.user.name}
-        </Button>
-      ))}
+      {game.players &&
+        game.players.map((player: Player) => (
+          <Button
+            key={player.userId}
+            onPress={() => handlePlayerClick(player)}
+            disabled={isButtonDisabled}
+          >
+            {player.user.name}
+          </Button>
+        ))}
       <Text>Selected player:</Text>
       {selectedPlayer ? (
         <Text>

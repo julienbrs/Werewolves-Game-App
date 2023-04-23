@@ -2,6 +2,20 @@ import { Player } from "database";
 import { Request, Response } from "express";
 import prisma from "../prisma";
 const playerController = {
+  getPlayers: async (req: Request, res: Response) => {
+    const { gameId } = req.params;
+    const players = await prisma.player.findMany({
+      where: {
+        gameId: Number(gameId),
+      },
+    });
+    if (!players) {
+      res.status(404).send("Players not found");
+      return;
+    }
+    console.log(players);
+    res.status(200).json(players);
+  },
   getPlayer: async (req: Request, res: Response) => {
     const { id } = req.params;
     const { gameId } = req.params;

@@ -1,4 +1,11 @@
-
+import { useQuery } from "@tanstack/react-query";
+import { Button, Text } from "@ui-kitten/components";
+import { useRouter, useSearchParams } from "expo-router";
+import React, { useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Game, Player } from "types";
+import Loading from "../../../components/loading";
+import { getGame } from "../../../utils/api/game";
 
 const ContaminatorView = () => {
   // const { userId } = useSearchParams();
@@ -18,22 +25,15 @@ const ContaminatorView = () => {
   const handlePlayerClick = (player: Player) => {
     const updatedPlayer = { ...player, role: "WOLF", power: "NONE" };
     setSelectedPlayer(updatedPlayer);
-    const {
-      data: player,
-      isLoading: isLoadingPlayer,
-      isError: isErrorPlayer,
-    } = useQuery({
-      queryKey: ["mygames", id],
-      queryFn: () => updatedPlayer(Number(id),player.id,updatedPlayer),
-    });
+    //requete update
     setIsButtonDisabled(true);
   };
 
-  if (isLoading && isLoadingPlayer) {
+  if (isLoading) {
     return <Loading title="Power loading" message={"Loading..."} />;
   }
 
-  if (isError && isErrorPlayer) {
+  if (isError) {
     router.back();
   }
 
@@ -50,15 +50,10 @@ const ContaminatorView = () => {
         </Button>
       ))}
       <Text>Selected player:</Text>
-      {selectedPlayer ? (
-        <Text>Contaminated player</Text>
-      ) : (
-        <Text>No player selected</Text>
-      )}
+      {selectedPlayer ? <Text>Contaminated player</Text> : <Text>No player selected</Text>}
     </SafeAreaView>
   );
 };
-
 
 export default ContaminatorView;
 
@@ -71,6 +66,3 @@ import { Game, Player } from "types";
 import Loading from "../../../components/loading";
 import { getGame } from "../../../utils/api/game";
 import { getPlayers } from "../../../utils/api/player";
-
-  
-
