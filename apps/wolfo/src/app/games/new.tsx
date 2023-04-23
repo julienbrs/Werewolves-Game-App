@@ -19,15 +19,14 @@ const NewGame = () => {
   const [gameName, setGameName] = useState("");
   const [gameNameStatus, setGameNameStatus] = useState("basic");
   const [minPlayersIndex, setMinPlayersIndex] = useState<IndexPath | IndexPath[]>(new IndexPath(0));
-  const [maxPlayersIndex, setMaxPlayersIndex] = useState<IndexPath | IndexPath[]>(new IndexPath(0));
-
+  const [maxPlayersIndex, setMaxPlayersIndex] = useState<IndexPath | IndexPath[]>(
+    new IndexPath(maxPlayers - minPlayers)
+  );
   /* Time picking states */
-  const [startDay, setStartDay] = useState<Date>(new Date(new Date()));
-  startDay.setHours(8, 0, 0, 0);
+  const [startDay, setStartDay] = useState<Date>(new Date(1970, 0, 1, 8, 0, 0, 0));
   const [startDayVisibility, setStartDayVisibility] = useState<boolean>(false);
 
-  const [endDay, setEndDay] = useState<Date>(new Date());
-  endDay.setHours(20, 0, 0, 0);
+  const [endDay, setEndDay] = useState<Date>(new Date(1970, 0, 1, 20, 0, 0, 0));
   const [startEndVisibility, setEndDayVisibility] = useState<boolean>(false);
 
   const [startDateline, setDateline] = useState<Date>(new Date(Date.now()));
@@ -42,12 +41,10 @@ const NewGame = () => {
 
   /* Special time callbacks */
   const confirmStartDay = (date: Date) => {
-    console.log(endDay.getHours());
     if (
       endDay.getHours() > date.getHours() ||
       (endDay.getHours() === date.getHours() && endDay.getMinutes() > date.getMinutes())
     ) {
-      console.log("hello?");
       setStartDay(new Date(date.getTime()));
     }
     setStartDayVisibility(false);
@@ -84,7 +81,6 @@ const NewGame = () => {
   });
 
   const newGame = async () => {
-    console.log("I'm here");
     if (gameName.trim() === "") {
       setGameNameStatus("danger");
       return;
@@ -92,12 +88,11 @@ const NewGame = () => {
     const startDayString = getTimeString(startDay.getHours(), startDay.getMinutes()) + ":00";
     const endDayString = getTimeString(endDay.getHours(), endDay.getMinutes()) + ":00";
 
-    console.log(startDayString + " " + endDayString + getDateString(startDateline));
     const game: NewGameType = {
       name: gameName,
       state: "LOBBY",
       minPlayer: +minPlayersIndex.toString() + minPlayers - 1,
-      maxPlayer: +maxPlayersIndex.toString() + +minPlayersIndex.toString() - 1 + minPlayers - 1,
+      maxPlayer: +maxPlayersIndex.toString() + minPlayers - 1,
       deadline: getDateString(startDateline) + "T" + startDayString + ".000Z",
       startDay: "1970-01-01T" + startDayString + ".000Z",
       endDay: "1970-01-01T" + endDayString + ".000Z",
@@ -107,7 +102,6 @@ const NewGame = () => {
       contProb,
       spiritProb,
     };
-
     await mutateAsync(game);
 
     if (isError) {
@@ -138,8 +132,8 @@ const NewGame = () => {
             selectedIndex={minPlayersIndex}
             onSelect={index => {
               setMinPlayersIndex(index);
-              if (Number(maxPlayersIndex.toString()) < Number(minPlayersIndex.toString())) {
-                setMaxPlayersIndex(new IndexPath(0));
+              if (Number(maxPlayersIndex.toString()) < Number(index.toString())) {
+                setMaxPlayersIndex(index);
               }
             }}
           >
@@ -151,15 +145,19 @@ const NewGame = () => {
           </Select>
           <Text style={styles.text}>Select number of maximum players:</Text>
           <Select
-            placeholder="Default"
-            value={+maxPlayersIndex.toString() + +minPlayersIndex.toString() - 1 + minPlayers - 1}
+            placeholder={maxPlayers}
+            value={Number(maxPlayersIndex.toString()) + minPlayers - 1}
             selectedIndex={maxPlayersIndex}
             onSelect={index => setMaxPlayersIndex(index)}
           >
             {Array.from(Array(maxPlayers).keys())
-              .slice(Number(minPlayersIndex.toString()) - 1 + minPlayers - 1)
+              .slice(minPlayers - 1)
               .map(n => (
-                <SelectItem key={n} title={n + 1 + ""} />
+                <SelectItem
+                  key={n}
+                  disabled={n < Number(minPlayersIndex.toString()) - 1 + minPlayers - 1}
+                  title={n + 1 + ""}
+                />
               ))}
           </Select>
           <View id="dateline" style={styles.timepicker}>
