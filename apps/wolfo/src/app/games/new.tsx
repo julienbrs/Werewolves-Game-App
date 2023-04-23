@@ -18,15 +18,14 @@ const NewGame = () => {
   const [gameName, setGameName] = useState("Game name");
   const [gameNameStatus, setGameNameStatus] = useState("basic");
   const [minPlayersIndex, setMinPlayersIndex] = useState<IndexPath | IndexPath[]>(new IndexPath(0));
-  const [maxPlayersIndex, setMaxPlayersIndex] = useState<IndexPath | IndexPath[]>(new IndexPath(0));
-
+  const [maxPlayersIndex, setMaxPlayersIndex] = useState<IndexPath | IndexPath[]>(
+    new IndexPath(maxPlayers - minPlayers)
+  );
   /* Time picking states */
-  const [startDay, setStartDay] = useState<Date>(new Date(new Date()));
-  startDay.setHours(8, 0, 0, 0);
+  const [startDay, setStartDay] = useState<Date>(new Date(1970, 0, 1, 8, 0, 0, 0));
   const [startDayVisibility, setStartDayVisibility] = useState<boolean>(false);
 
-  const [endDay, setEndDay] = useState<Date>(new Date());
-  endDay.setHours(20, 0, 0, 0);
+  const [endDay, setEndDay] = useState<Date>(new Date(1970, 0, 1, 20, 0, 0, 0));
   const [startEndVisibility, setEndDayVisibility] = useState<boolean>(false);
 
   const [deadline, setDeadline] = useState<Date>(new Date(Date.now()));
@@ -41,7 +40,6 @@ const NewGame = () => {
 
   /* Special time callbacks */
   const confirmStartDay = (date: Date) => {
-    console.log(endDay.getHours());
     if (
       endDay.getHours() > date.getHours() ||
       (endDay.getHours() === date.getHours() && endDay.getMinutes() > date.getMinutes())
@@ -102,7 +100,7 @@ const NewGame = () => {
       name: gameName,
       state: StateGame.LOBBY,
       minPlayer: +minPlayersIndex.toString() + minPlayers - 1,
-      maxPlayer: +maxPlayersIndex.toString() + +minPlayersIndex.toString() - 1 + minPlayers - 1,
+      maxPlayer: +maxPlayersIndex.toString() + minPlayers - 1,
       deadline: getDateString(deadline) + "T" + startDayString + ".000Z",
       startDay: "1970-01-01T" + startDayString + ".000Z",
       endDay: "1970-01-01T" + endDayString + ".000Z",
@@ -133,8 +131,8 @@ const NewGame = () => {
             selectedIndex={minPlayersIndex}
             onSelect={index => {
               setMinPlayersIndex(index);
-              if (Number(maxPlayersIndex.toString()) < Number(minPlayersIndex.toString())) {
-                setMaxPlayersIndex(new IndexPath(0));
+              if (Number(maxPlayersIndex.toString()) < Number(index.toString())) {
+                setMaxPlayersIndex(index);
               }
             }}
           >
@@ -146,15 +144,19 @@ const NewGame = () => {
           </Select>
           <Text style={styles.text}>Select number of maximum players:</Text>
           <Select
-            placeholder="Default"
-            value={+maxPlayersIndex.toString() + +minPlayersIndex.toString() - 1 + minPlayers - 1}
+            placeholder={maxPlayers}
+            value={Number(maxPlayersIndex.toString()) + minPlayers - 1}
             selectedIndex={maxPlayersIndex}
             onSelect={index => setMaxPlayersIndex(index)}
           >
             {Array.from(Array(maxPlayers).keys())
-              .slice(Number(minPlayersIndex.toString()) - 1 + minPlayers - 1)
+              .slice(minPlayers - 1)
               .map(n => (
-                <SelectItem key={n} title={n + 1 + ""} />
+                <SelectItem
+                  key={n}
+                  disabled={n < Number(minPlayersIndex.toString()) - 1 + minPlayers - 1}
+                  title={n + 1 + ""}
+                />
               ))}
           </Select>
           <View id="dateline" style={styles.timepicker}>

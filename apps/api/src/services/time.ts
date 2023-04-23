@@ -1,3 +1,7 @@
+import { format } from "date-fns";
+
+import { fr } from "date-fns/locale";
+
 export const getTommorow = () => {
   const date = new Date();
   date.setDate(date.getDate() + 1);
@@ -24,21 +28,20 @@ export const SecondsToCron = (seconds: number): string => {
 
 // check if the deadline is correct (from backend startDay sera du type "HH:mm:ss")
 export const checkDeadline = (date: Date, startDay: Date): boolean => {
-  const now = new Date();
-  const day = new Date(startDay);
-  if (date > now) {
-    return true;
-  }
-  if (
-    now.getUTCDate() === date.getUTCDate() &&
-    now.getUTCMonth() === date.getUTCMonth() &&
-    now.getUTCFullYear() === date.getUTCFullYear()
-  ) {
+  const nowDateFr = format(new Date(), "dd/MM/yyyy", { locale: fr });
+  const nowTimeFr = format(new Date(), "HH:mm:ss", { locale: fr });
+  const dateFr = format(new Date(date), "dd/MM/yyyy", { locale: fr });
+  if (nowDateFr === dateFr) {
+    const [hours, minutes, seconds] = nowTimeFr.split(":").map(Number);
+    const hoursDeadline = startDay.getUTCHours();
+    const minutesDeadline = startDay.getUTCMinutes();
+    const secondsDeadline = startDay.getUTCSeconds();
     return (
-      day.getUTCHours() > now.getUTCHours() + 2 ||
-      (day.getUTCHours() === now.getUTCHours() + 2 && day.getUTCMinutes() > now.getUTCMinutes())
+      hours < hoursDeadline ||
+      (hours === hoursDeadline && minutes < minutesDeadline) ||
+      (hours === hoursDeadline && minutes === minutesDeadline && seconds < secondsDeadline)
     );
   } else {
-    return false;
+    return date > new Date();
   }
 };
