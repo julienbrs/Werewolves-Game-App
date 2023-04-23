@@ -26,7 +26,7 @@ export const SecondsToCron = (seconds: number): string => {
 export const checkDeadline = (date: Date, startDay: Date): boolean => {
   const now = new Date();
   const day = new Date(startDay);
-  if (date > now) {
+  if (date < now) {
     return true;
   }
   if (
