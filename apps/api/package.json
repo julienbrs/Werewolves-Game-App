@@ -7,7 +7,7 @@
     "lint": "eslint src",
     "lint:fix": "pnpm lint --fix",
     "test": "pnpm with-env jest --coverage",
-    "test:watch": "jest --watch",
+    "test:watch": "pnpm with-env jest --watch",
     "clean": "git clean -xdf .expo .turbo node_modules",
     "type-check": "tsc",
     "with-env": "dotenv -e ../../.env --"

@@ -20,21 +20,23 @@ beforeAll(async () => {
 describe("POST /api/games/", () => {
   test("Test game creation", async () => {
     const response = await request
-        .post("/api/games/")
-        .set("Authorization", `Bearer ${token}`)
-        .set("Content-Type", "application/json")
-        .send({ name: "game1",
-          deadline: "16:30:00",
-          minPlayer: 5,
-          maxPlayer: 5,
-          wolfProb: 0.4,
-          seerProb: 0.5,
-          insomProb: 0.6,
-          contProb: 0.4,
-          spiritProb: 0.6,
-          startDay: "08:00:00",
-          endDay: "20:00:00", });
-          
+      .post("/api/games/")
+      .set("Authorization", `Bearer ${token}`)
+      .set("Content-Type", "application/json")
+      .send({
+        name: "game1",
+        deadline: "16:30:00",
+        minPlayer: 5,
+        maxPlayer: 5,
+        wolfProb: 0.4,
+        seerProb: 0.5,
+        insomProb: 0.6,
+        contProb: 0.4,
+        spiritProb: 0.6,
+        startDay: "08:00:00",
+        endDay: "20:00:00",
+      });
+    expect(response.statusCode).toBe(201);
   });
 });
 

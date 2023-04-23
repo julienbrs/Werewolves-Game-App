@@ -36,14 +36,14 @@ const NewGame = () => {
   const [endDay, setEndDay] = useState<Date>(new Date(1970, 1, 1, 20, 0));
   const [startEndVisibility, setEndDayVisibility] = useState<boolean>(false);
 
-  const [startDateline, setDateline] = useState<Date>(new Date(Date.now()));
+  const [startDateline, setDateline] = useState<Date>(new Date());
 
   /* Probabilities */
-  const [wolfProb, setWolfProb] = useState(0);
-  const [seerProb, setSeerProb] = useState(0);
-  const [insomProb, setInsomProb] = useState(0);
-  const [contProb, setContProb] = useState(0);
-  const [spiritProb, setSpiritProb] = useState(0);
+  const [wolfProb, setWolfProb] = useState<number>(33);
+  const [seerProb, setSeerProb] = useState<number>(0);
+  const [insomProb, setInsomProb] = useState<number>(0);
+  const [contProb, setContProb] = useState<number>(0);
+  const [spiritProb, setSpiritProb] = useState<number>(0);
 
   /* Special time callbacks */
   const confirmStartDay = (date: Date) => {
@@ -77,14 +77,6 @@ const NewGame = () => {
   const getTimeString = (hours: number, minutes: number): string => {
     return ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2);
   };
-  const getDateString = (date: Date): string => {
-    return (
-      date.getFullYear() +
-      ("0" + "-" + date.getMonth()).slice(-2) +
-      "-" +
-      ("0" + date.getDay()).slice(-2)
-    );
-  };
   /* Api call */
   const { mutate, isSuccess, isError, error } = useMutation<any, Error, NewGameType>({
     mutationFn: game => createGame(game),
@@ -98,14 +90,14 @@ const NewGame = () => {
       state: "LOBBY",
       minPlayer: +minPlayersIndex.toString() + 1,
       maxPlayer: +maxPlayersIndex.toString() + 1,
-      deadline: getDateString(startDateline) + "T" + startDayString,
-      startDay: "1970-01-01T" + startDayString,
-      endDay: "1970-01-01T" + startEndString,
-      wolfProb,
-      seerProb,
-      insomProb,
-      contProb,
-      spiritProb,
+      deadline: startDateline,
+      startDay: new Date("1970-01-01T" + startDayString),
+      endDay: new Date("1970-01-01T" + startEndString),
+      wolfProb: wolfProb / 100,
+      seerProb: seerProb / 100,
+      insomProb: insomProb / 100,
+      contProb: contProb / 100,
+      spiritProb: spiritProb / 100,
     };
 
     await mutate(game);

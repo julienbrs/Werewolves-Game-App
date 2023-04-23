@@ -11,6 +11,7 @@ const SECRET = process.env.SECRET;
 const gameController = {
   async create(req: Request, res: Response) {
     const game: NewGame = req.body;
+    console.log(game);
     const token = req.headers.authorization?.split(" ")[1];
     const decodedToken = jwt.verify(token, SECRET);
     const userId = decodedToken.id;
@@ -23,7 +24,7 @@ const gameController = {
         res.status(400).json(error);
       });
   },
-  async getGame(req: Request, res: Response) {
+  async get(req: Request, res: Response) {
     const id: number = parseInt(req.params.id, 10);
     if (isNaN(id)) {
       return res.status(400).json({ message: "Invalid id" });
@@ -53,7 +54,7 @@ const gameController = {
         res.status(400).json(error);
       });
   },
-  async getGames(req: Request, res: Response) {
+  async getAllNotJoinByState(req: Request, res: Response) {
     const token = req.headers.authorization?.split(" ")[1];
     const decodedToken = jwt.verify(token, SECRET);
     const userId = decodedToken.id;
