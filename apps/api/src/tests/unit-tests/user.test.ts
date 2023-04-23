@@ -20,9 +20,7 @@ beforeAll(async () => {
 describe("Scénario création de deux comptes avec meme nom", () => {
   describe("POST /api/users/ johnny", () => {
     test("Test account creation", async () => {
-      const response = await request
-        .post("/api/users/")
-        .send({ name: "johnny", password: "john" });
+      const response = await request.post("/api/users/").send({ name: "johnny", password: "john" });
       expect(response.statusCode).toBe(201);
       expect(response.body.message).toBe("User created");
       expect(response.body).toHaveProperty("token");
@@ -38,7 +36,8 @@ describe("Scénario création de deux comptes avec meme nom", () => {
       expect(response.body.message).toBe("Name already exists");
     });
   });
-  test("now delete first account", async () => {const response = await request
+  test("now delete first account", async () => {
+    const response = await request
       .delete("/api/users/")
       .set("Authorization", `Bearer ${token}`)
       .set("Content-Type", "application/json");
@@ -46,8 +45,6 @@ describe("Scénario création de deux comptes avec meme nom", () => {
     expect(response.body.message).toBe("User Deleted");
   });
 });
-
-
 
 describe("Test scénario login -> update account", () => {
   describe("POST /api/users/login", () => {
@@ -77,12 +74,11 @@ describe("Test scénario login -> update account", () => {
   });
 });
 
-
 afterAll(async () => {
   const response = await request
-      .delete("/api/users/")
-      .set("Authorization", `Bearer ${token}`)
-      .set("Content-Type", "application/json");
-    expect(response.statusCode).toBe(200);
-    expect(response.body.message).toBe("User Deleted");
+    .delete("/api/users/")
+    .set("Authorization", `Bearer ${token}`)
+    .set("Content-Type", "application/json");
+  expect(response.statusCode).toBe(200);
+  expect(response.body.message).toBe("User Deleted");
 });
