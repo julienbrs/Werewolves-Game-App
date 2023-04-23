@@ -10,6 +10,10 @@ const playerApi = {
     const { data } = await api.get(`games/${gameId}/players/${userId}`);
     return data;
   },
+  updatePlayer: async (gameId: number, userId: string, player: Player) => {
+    const { data } = await api.put(`games/${gameId}/players/${userId}`, player);
+    return data;
+  },
 };
 
-export const { getPlayer, getPlayers } = playerApi;
+export const { getPlayer, getPlayers, updatePlayer } = playerApi;
