@@ -1,16 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { Button, Text } from "@ui-kitten/components";
 import { useRouter, useSearchParams } from "expo-router";
+import { useContext } from "react";
 import React from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, Player, Power, StateGame } from "types";
+import { AuthContext } from "../../components/context/tokenContext";
 import Loading from "../../components/loading";
 import { getGame } from "../../utils/api/game";
 import { getPlayer } from "../../utils/api/player";
-import useAuth from "../../utils/hooks/useAuth";
 const GameView = () => {
   const router = useRouter();
-  const { id } = useSearchParams();
+  const { id } = useSearchParams(); // idGame
   // get game data
   const {
     data: game,
@@ -21,29 +22,21 @@ const GameView = () => {
     queryFn: () => getGame(Number(id)),
     staleTime: 1000 * 60 * 15, // 15 minutes
   });
-  // get token (cached)
-  const {
-    data: token,
-    isLoading: isLoadingToken,
-    isError: isErrorUser,
-  } = useQuery({
-    queryKey: ["token"],
-    queryFn: useAuth,
-  });
+  const { id: idUser } = useContext(AuthContext);
   // get player data
   const {
     data: player,
     isLoading: isLoadingPlayer,
     isError: isErrorPlayer,
   } = useQuery<Player, Error>({
-    enabled: !isLoadingToken,
-    queryKey: ["player", token],
-    queryFn: () => getPlayer(game?.id!, token!),
+    enabled: Boolean(game),
+    queryKey: ["player", idUser],
+    queryFn: () => getPlayer(game?.id!, idUser),
   });
-  if (isLoading && isLoadingPlayer) {
+  if (isLoading || isLoadingPlayer) {
     return <Loading title="Game loading" message={"Game " + String(id) + "is loading"} />;
   }
-  if (isError || isErrorPlayer || isErrorUser || !game || !player) {
+  if (isError || isErrorPlayer || !game || !player) {
     return router.back();
   }
   const redirectChat = () => {

@@ -7,6 +7,7 @@ const playerApi = {
     return data;
   },
   getPlayer: async (gameId: number, userId: string): Promise<Player> => {
+    console.log("request at " + `games/${gameId}/players/${userId}`);
     const { data } = await api.get(`games/${gameId}/players/${userId}`);
     return data;
   },

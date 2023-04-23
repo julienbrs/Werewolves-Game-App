@@ -11,12 +11,13 @@ import {
 } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
 import { Dispatch, SetStateAction, useState } from "react";
-import React, { StyleSheet, Text, View } from "react-native";
+import React, { Platform, StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NewGame as NewGameType } from "types";
 import { createGame } from "../../utils/api/game";
+
 const NewGame = () => {
   const router = useRouter();
   /* General settings */
@@ -97,9 +98,9 @@ const NewGame = () => {
       state: "LOBBY",
       minPlayer: +minPlayersIndex.toString() + 1,
       maxPlayer: +maxPlayersIndex.toString() + 1,
-      deadline: getDateString(startDateline) + "T" + startDayString + "000Z",
-      startDay: "1970-01-01T" + startDayString + ".000Z",
-      endDay: "1970-01-01T" + startEndString + ".000Z",
+      deadline: getDateString(startDateline) + "T" + startDayString,
+      startDay: "1970-01-01T" + startDayString,
+      endDay: "1970-01-01T" + startEndString,
       wolfProb,
       seerProb,
       insomProb,
@@ -175,9 +176,17 @@ const NewGame = () => {
           </View>
           <View id="startday" style={[styles.view, styles.timepicker]}>
             <Text style={styles.text}>Pick the day's start time</Text>
-            <Button style={styles.timeButton} onPress={() => setStartDayVisibility(true)}>
-              {getTimeString(startDay.getHours(), startDay.getMinutes())}
-            </Button>
+            {Platform.OS === "web" ? (
+              <Input
+                style={styles.timeButton}
+                onChangeText={text => setEndDay(new Date(text))}
+                placeholder="HH:MM"
+              />
+            ) : (
+              <Button style={styles.timeButton} onPress={() => setStartDayVisibility(true)}>
+                {getTimeString(startDay.getHours(), startDay.getMinutes())}
+              </Button>
+            )}
           </View>
           <DateTimePickerModal
             mode="time"
@@ -188,9 +197,17 @@ const NewGame = () => {
           />
           <View id="endday" style={[styles.view, styles.timepicker]}>
             <Text style={styles.text}>Pick the day's end time</Text>
-            <Button style={styles.timeButton} onPress={() => setEndDayVisibility(true)}>
-              {getTimeString(endDay.getHours(), endDay.getTime())}
-            </Button>
+            {Platform.OS === "web" ? (
+              <Input
+                style={styles.timeButton}
+                onChangeText={text => setEndDay(new Date(text))}
+                placeholder="HH:MM"
+              />
+            ) : (
+              <Button style={styles.timeButton} onPress={() => setEndDayVisibility(true)}>
+                {getTimeString(endDay.getHours(), endDay.getTime())}
+              </Button>
+            )}
           </View>
           <DateTimePickerModal
             mode="time"
@@ -199,6 +216,7 @@ const NewGame = () => {
             onConfirm={confirmEndDay}
             onCancel={() => hideTimePicker(setEndDayVisibility)}
           />
+
           {/* Sliders */}
           <View id="wolfProb" style={styles.view}>
             <Text style={styles.text}>Wolf probability: {wolfProb}%</Text>

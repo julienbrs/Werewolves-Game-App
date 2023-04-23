@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import prisma from "../prisma";
 const playerController = {
   getPlayer: async (req: Request, res: Response) => {
+    console.log("getPlayer");
     const { id } = req.params;
     const { gameId } = req.params;
     const player = await prisma.player.findUnique({
