@@ -6,8 +6,8 @@
     "start": "pnpm with-env node dist/index.js",
     "lint": "eslint src",
     "lint:fix": "pnpm lint --fix",
-    "test": "pnpm with-env jest --coverage",
-    "test:watch": "pnpm with-env jest --watch",
+    "test": "pnpm with-env jest --coverage --detectOpenHandles",
+    "test:watch": "jest --watch",
     "clean": "git clean -xdf .expo .turbo node_modules",
     "type-check": "tsc",
     "with-env": "dotenv -e ../../.env --"

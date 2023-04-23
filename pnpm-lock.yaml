@@ -144,6 +144,9 @@ importers:
       date-fns:
         specifier: ^2.29.3
         version: 2.29.3
+      date-fns-tz:
+        specifier: ^2.0.0
+        version: 2.0.0(date-fns@2.29.3)
       eslint:
         specifier: ^8.38.0
         version: 8.38.0
@@ -5533,6 +5536,14 @@ packages:
 
   /dag-map@1.0.2:
     resolution: {integrity: sha512-+LSAiGFwQ9dRnRdOeaj7g47ZFJcOUPukAP8J3A3fuZ1g9Y44BG+P1sgApjLXTQPOzC4+7S9Wr8kXsfpINM4jpw==}
+    dev: false
+
+  /date-fns-tz@2.0.0(date-fns@2.29.3):
+    resolution: {integrity: sha512-OAtcLdB9vxSXTWHdT8b398ARImVwQMyjfYGkKD2zaGpHseG2UPHbHjXELReErZFxWdSLph3c2zOaaTyHfOhERQ==}
+    peerDependencies:
+      date-fns: '>=2.0.0'
+    dependencies:
+      date-fns: 2.29.3
     dev: false
 
   /date-fns@2.29.3:

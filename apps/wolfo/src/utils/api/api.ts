@@ -6,7 +6,6 @@ const api = axios.create({
     "Content-type": "application/json",
   },
 });
-console.log("ip", process.env.IP);
 let token: string | null = null;
 
 export const setToken = (newToken: string | null) => {

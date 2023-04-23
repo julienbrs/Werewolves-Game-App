@@ -15,15 +15,15 @@ import React, { Platform, StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { NewGame as NewGameType } from "types";
+import { NewGame as NewGameType, StateGame } from "types";
 import { createGame } from "../../utils/api/game";
-
+import { useQueryClient } from "@tanstack/react-query";
 const NewGame = () => {
   const router = useRouter();
   /* General settings */
   const minPlayers = 5;
   const maxPlayers = 20;
-
+  const queryClient = useQueryClient();
   const [gameName, setGameName] = useState("Game name");
   const [gameNameStatus, setGameNameStatus] = useState("basic");
   const [minPlayersIndex, setMinPlayersIndex] = useState<IndexPath | IndexPath[]>(new IndexPath(0));
@@ -102,32 +102,31 @@ const NewGame = () => {
     const startEndString = getTimeString(endDay.getHours(), endDay.getMinutes()) + ":00";
     const game: NewGameType = {
       name: gameName,
-      state: "LOBBY",
+      state: StateGame.LOBBY,
       minPlayer: +minPlayersIndex.toString() + minPlayers - 1,
       maxPlayer: +maxPlayersIndex.toString() + +minPlayersIndex.toString() - 1 + minPlayers - 1,
       deadline: getDateString(startDateline) + "T" + startDayString + ".000Z",
       startDay: "1970-01-01T" + startDayString + ".000Z",
       endDay: "1970-01-01T" + startEndString + ".000Z",
-      wolfProb,
-      seerProb,
-      insomProb,
-      contProb,
-      spiritProb,
+      wolfProb: wolfProb / 100,
+      seerProb: seerProb / 100,
+      insomProb: insomProb / 100,
+      contProb: contProb / 100,
+      spiritProb: spiritProb / 100,
     };
-
-    await mutate(game);
-
-    if (isSuccess) {
-      router.back();
-      return;
-    }
-    if (isError) {
-      console.log("error");
-      console.log(error);
-      setGameNameStatus("danger");
-    }
+    console.log(game);
+    mutate(game);
   };
-
+  if (isSuccess) {
+    queryClient.invalidateQueries(["mygames"]);
+    router.back();
+    return;
+  }
+  if (isError) {
+    console.log("error");
+    console.log(error);
+    setGameNameStatus("danger");
+  }
   return (
     <SafeAreaView>
       <ScrollView>
