@@ -18,6 +18,22 @@ const chatApi = {
     const { data } = await api.post("/chatrooms", chatroom);
     return data;
   },
+  postMessage: async (
+    chatRoomId: string,
+    content: string,
+    authorId: string,
+    gameId: number
+  ): Promise<void> => {
+    const response = await api.post(`/chatrooms/${chatRoomId}/messages`, {
+      content,
+      authorId,
+      gameId,
+    });
+
+    if (response.status === 201) {
+      throw new Error("Failed to send message");
+    }
+  },
 };
 
-export const { getMessages, getHistory, createChatroom, getChatrooms } = chatApi;
+export const { getMessages, getHistory, createChatroom, getChatrooms, postMessage } = chatApi;

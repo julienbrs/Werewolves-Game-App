@@ -2,9 +2,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Input, Text } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Error, User } from "types";
+import { AuthContext } from "../../components/context/tokenContext";
 import Loading from "../../components/loading";
 import { setToken } from "../../utils/api/api";
 import { deleteUser, getMe, updateUser } from "../../utils/api/user";
@@ -16,6 +17,7 @@ const Settings = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [enableMe, setEnableMe] = useState<boolean>(true);
   const router = useRouter();
+  const { token } = useContext(AuthContext);
   const queryClient = useQueryClient();
   const {
     data: user,
@@ -86,6 +88,7 @@ const Settings = () => {
       <Button onPress={() => deleteQuery()}>Supprimer le compte</Button>
       <Button onPress={() => logout()}>Se déconnecter</Button>
       {errorMessage && <Text>{errorMessage}</Text>}
+      <Text>Token: {token}</Text>
     </SafeAreaView>
   );
 };

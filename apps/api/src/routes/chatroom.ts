@@ -6,6 +6,7 @@ router.get("/:id/messages", chatroomController.getMessages);
 router.get("/:id/history", chatroomController.getHistory);
 router.get("/:id/readers", chatroomController.getReaders);
 router.get("/:id/writers", chatroomController.getWriters);
+router.post("/:id/messages", chatroomController.sendMessage);
 router.post("/", chatroomController.create);
 
 export default router;
