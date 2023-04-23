@@ -51,7 +51,7 @@ export const ListGamesLobby: React.FC<ListProps> = ({ search }) => {
   );
   return (
     <SafeAreaView>
-      {games && games.length === 0 ? (
+      {games ? (
         <List
           data={filteredGames}
           renderItem={listGame}
@@ -125,7 +125,7 @@ export const ListMyGames: React.FC<ListProps> = ({ search }) => {
   };
   return (
     <SafeAreaView>
-      {games && games.length === 0 ? (
+      {games ? (
         <List
           data={filteredGames}
           renderItem={listGame}
@@ -134,7 +134,7 @@ export const ListMyGames: React.FC<ListProps> = ({ search }) => {
           refreshing={isLoading}
         />
       ) : (
-        <Button onPress={() => refetch()}>
+        <Button onPress={refetch}>
           <AntDesign name="reload1" size={24} color="black" />
         </Button>
       )}

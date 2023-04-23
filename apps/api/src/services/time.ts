@@ -22,7 +22,7 @@ export const SecondsToCron = (seconds: number): string => {
   return cron;
 };
 
-// check if the deadline is passed (from backend startDay sera du type "HH:mm:ss")
+// check if the deadline is correct (from backend startDay sera du type "HH:mm:ss")
 export const checkDeadline = (date: Date, startDay: Date): boolean => {
   const now = new Date();
   const day = new Date(startDay);
@@ -35,7 +35,7 @@ export const checkDeadline = (date: Date, startDay: Date): boolean => {
     now.getUTCFullYear() === date.getUTCFullYear()
   ) {
     return (
-      day.getUTCHours() < now.getUTCHours() + 2 ||
+      day.getUTCHours() > now.getUTCHours() + 2 ||
       (day.getUTCHours() === now.getUTCHours() + 2 && day.getUTCMinutes() > now.getUTCMinutes())
     );
   } else {

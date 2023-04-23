@@ -11,11 +11,13 @@ const SECRET = process.env.SECRET;
 const gameController = {
   async create(req: Request, res: Response) {
     const game: NewGame = req.body;
+    console.log(game);
     const token = req.headers.authorization?.split(" ")[1];
     const decodedToken = jwt.verify(token, SECRET);
     const userId = decodedToken.id;
     createGame(game, userId)
       .then(newGame => {
+        console.log("newGame", newGame);
         res.status(201).json(newGame);
       })
       .catch(error => {
