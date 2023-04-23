@@ -1,7 +1,7 @@
 /* eslint-env jest */
 import "jest";
 import supertest from "supertest";
-import { app } from "../../index";
+import { app } from "../../app";
 
 const request = supertest(app);
 let token: string = "";
