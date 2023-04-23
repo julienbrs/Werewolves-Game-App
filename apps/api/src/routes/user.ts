@@ -8,5 +8,6 @@ router.get("/me", checkToken, userController.getMe);
 router.post("/", userController.create);
 router.post("/login", userController.auth);
 router.patch("/", checkToken, userController.updateUser);
+router.delete("/", checkToken, userController.deleteUser);
 
 export default router;
