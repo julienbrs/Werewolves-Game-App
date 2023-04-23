@@ -17,7 +17,7 @@ beforeAll(async () => {
   console.log(token);
 });
 
-describe ("Scénario création de deux comptes avec meme nom", () => {
+describe("Scénario création de deux comptes avec meme nom", () => {
   describe("POST /api/users/", () => {
     test("Test account creation", async () => {
       const response = await request
@@ -41,8 +41,7 @@ describe ("Scénario création de deux comptes avec meme nom", () => {
       expect(response.body.message).toBe("Name already exists");
     });
   });
-})
-
+});
 
 describe("POST /api/users/login", () => {
   test("Test login", async () => {
@@ -75,7 +74,7 @@ describe("DELETE /api/users/", () => {
     const response = await request
       .delete("/api/users/")
       .set("Authorization", `Bearer ${token}`)
-      .set("Content-Type", "application/json")
+      .set("Content-Type", "application/json");
     expect(response.statusCode).toBe(201);
   });
 });
