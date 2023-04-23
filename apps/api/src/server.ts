@@ -29,3 +29,16 @@ io.on("connection", socket => {
     });
   });
 });
+
+  socket.on("messagePosted", message => {
+    console.log("messagePosted", message);
+    prisma.message.create({
+      data: {
+        content: message.text,
+        chatRoomId: message.chatRoomId,
+        authorId: message.authorId,
+        gameId: message.gameId,
+      },
+    });
+  });
+});
