@@ -34,11 +34,13 @@ export const checkDeadline = (date: Date, startDay: Date): boolean => {
     now.getUTCMonth() === date.getUTCMonth() &&
     now.getUTCFullYear() === date.getUTCFullYear()
   ) {
+    console.log("what");
     return (
-      day.getUTCHours() > now.getUTCHours() + 2 ||
+      day.getUTCHours() < now.getUTCHours() + 2 ||
       (day.getUTCHours() === now.getUTCHours() + 2 && day.getUTCMinutes() > now.getUTCMinutes())
     );
   } else {
+    console.log("else");
     return false;
   }
 };
