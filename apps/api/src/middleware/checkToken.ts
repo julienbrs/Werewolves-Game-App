@@ -12,6 +12,7 @@ const extractBearerToken = (headerValue: string) => {
 };
 
 export default function checkToken(req: Request, res: Response, next: NextFunction) {
+  console.log("checkToken");
   const token = req.headers.authorization && extractBearerToken(req.headers.authorization);
   if (!token) {
     return res.status(401).json({ message: "Unauthorized", route: req.originalUrl });

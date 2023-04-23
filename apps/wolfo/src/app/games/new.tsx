@@ -1,5 +1,5 @@
 import { Slider } from "@rneui/themed";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
   Datepicker,
@@ -17,7 +17,6 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NewGame as NewGameType, StateGame } from "types";
 import { createGame } from "../../utils/api/game";
-import { useQueryClient } from "@tanstack/react-query";
 const NewGame = () => {
   const router = useRouter();
   /* General settings */
@@ -36,7 +35,7 @@ const NewGame = () => {
   const [endDay, setEndDay] = useState<Date>(new Date(1970, 1, 1, 20, 0));
   const [startEndVisibility, setEndDayVisibility] = useState<boolean>(false);
 
-  const [startDateline, setDateline] = useState<Date>(new Date());
+  const [deadline, setDeadline] = useState<Date>(new Date());
 
   /* Probabilities */
   const [wolfProb, setWolfProb] = useState<number>(33);
@@ -105,7 +104,7 @@ const NewGame = () => {
       state: StateGame.LOBBY,
       minPlayer: +minPlayersIndex.toString() + minPlayers - 1,
       maxPlayer: +maxPlayersIndex.toString() + +minPlayersIndex.toString() - 1 + minPlayers - 1,
-      deadline: getDateString(startDateline) + "T" + startDayString + ".000Z",
+      deadline: getDateString(deadline) + "T" + startDayString + ".000Z",
       startDay: "1970-01-01T" + startDayString + ".000Z",
       endDay: "1970-01-01T" + startEndString + ".000Z",
       wolfProb: wolfProb / 100,
@@ -123,7 +122,6 @@ const NewGame = () => {
     return;
   }
   if (isError) {
-    console.log("error");
     console.log(error);
     setGameNameStatus("danger");
   }
@@ -141,6 +139,16 @@ const NewGame = () => {
               onChangeText={setGameName}
             />
           </View>
+          <View style={styles.view}>
+            <Text style={styles.text}>Select start date:</Text>
+          </View>
+          <Datepicker
+            date={deadline}
+            min={new Date()}
+            onSelect={setDeadline}
+            size="small"
+            placement="top"
+          />
           <View style={styles.view}>
             <Text style={styles.text}>Select number of minimum players:</Text>
             <Select
@@ -176,10 +184,6 @@ const NewGame = () => {
                 ))}
             </Select>
           </View>
-          <View style={styles.view}>
-            <Text style={styles.text}>Select start date:</Text>
-          </View>
-          <Datepicker date={startDateline} min={new Date()} onSelect={setDateline} />
           <View id="startday" style={[styles.view, styles.timepicker]}>
             <Text style={styles.text}>Pick the day's start time</Text>
             {Platform.OS === "web" ? (

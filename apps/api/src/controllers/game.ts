@@ -11,7 +11,6 @@ const SECRET = process.env.SECRET;
 const gameController = {
   async create(req: Request, res: Response) {
     const game: NewGame = req.body;
-    console.log(game);
     const token = req.headers.authorization?.split(" ")[1];
     const decodedToken = jwt.verify(token, SECRET);
     const userId = decodedToken.id;
@@ -135,7 +134,7 @@ const gameController = {
         res.status(400).json(error);
       });
   },
-  async joinGame(req: Request, res: Response) {
+  async join(req: Request, res: Response) {
     const token = req.headers.authorization?.split(" ")[1];
     const decodedToken = jwt.verify(token, SECRET);
     const userId = decodedToken.id;
@@ -182,7 +181,7 @@ const gameController = {
         res.status(400).json(error);
       });
   },
-  async leaveGame(req: Request, res: Response) {
+  async leave(req: Request, res: Response) {
     const token = req.headers.authorization?.split(" ")[1];
     const decodedToken = jwt.verify(token, SECRET);
     const userId = decodedToken.id;
@@ -208,7 +207,7 @@ const gameController = {
         res.status(400).json(error);
       });
   },
-  updateGame(req: Request, res: Response) {
+  update(req: Request, res: Response) {
     const id = parseInt(req.params.id, 10);
     if (isNaN(id)) {
       return res.status(400).json({ message: "Invalid id" });
@@ -248,7 +247,7 @@ const gameController = {
         res.status(400).json(error);
       });
   },
-  deleteGame(req: Request, res: Response) {
+  delete(req: Request, res: Response) {
     const id = parseInt(req.params.id, 10);
     if (isNaN(id)) {
       return res.status(400).json({ message: "Invalid id" });

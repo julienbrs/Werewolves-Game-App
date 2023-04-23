@@ -26,9 +26,6 @@ importers:
       '@types/node-cron':
         specifier: ^3.0.7
         version: 3.0.7
-      bcrypt-ts:
-        specifier: ^3.0.0
-        version: 3.0.0
       bcryptjs:
         specifier: ^2.4.3
         version: 2.4.3
@@ -71,7 +68,7 @@ importers:
         version: 6.23.0
       database:
         specifier: '*'
-        version: link:../../packages/database
+        version: 0.0.2
       dotenv-cli:
         specifier: ^7.2.1
         version: 7.2.1
@@ -98,7 +95,7 @@ importers:
         version: 3.12.3
       types:
         specifier: '*'
-        version: link:../../packages/types
+        version: 0.1.1
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
@@ -4579,10 +4576,6 @@ packages:
     resolution: {integrity: sha512-x+VAiMRL6UPkx+kudNvxTl6hB2XNNCG2r+7wixVfIYwu/2HKRXimwQyaumLjMveWvT2Hkd/cAJw+QBMfJ/EKVw==}
     dev: false
 
-  /bcrypt-ts@3.0.0:
-    resolution: {integrity: sha512-z4pqdPaAuuvBsHCwb77bisxT9qo5hRSbn78FXNhhTywHabqMzcIosDxjnKUrkPQbMyz2curUT+fJRith57rIvg==}
-    dev: false
-
   /bcryptjs@2.4.3:
     resolution: {integrity: sha512-V/Hy/X9Vt7f3BbPJEi8BdVFMByHi+jNXrYkW3huaybV/kQ0KJg0Y6PkEMbn+zeT+i+SiKZ/HMqJGIIt4LZDqNQ==}
     dev: false
@@ -5537,6 +5530,10 @@ packages:
   /dag-map@1.0.2:
     resolution: {integrity: sha512-+LSAiGFwQ9dRnRdOeaj7g47ZFJcOUPukAP8J3A3fuZ1g9Y44BG+P1sgApjLXTQPOzC4+7S9Wr8kXsfpINM4jpw==}
     dev: false
+
+  /database@0.0.2:
+    resolution: {integrity: sha512-lrqvU32firrb2TBjn4Iv9V1Mh90rqUtyyLAvdSqdGP2w7IrNy+oI5IqGNowHq8o+/WVnQtKNfNIpLYd6uWZLHw==}
+    dev: true
 
   /date-fns-tz@2.0.0(date-fns@2.29.3):
     resolution: {integrity: sha512-OAtcLdB9vxSXTWHdT8b398ARImVwQMyjfYGkKD2zaGpHseG2UPHbHjXELReErZFxWdSLph3c2zOaaTyHfOhERQ==}
@@ -12847,6 +12844,11 @@ packages:
       for-each: 0.3.3
       is-typed-array: 1.1.10
     dev: false
+
+  /types@0.1.1:
+    resolution: {integrity: sha512-JuntZtJj4MKLE9x/XBs7IjsznYhzETwr34pw3XJTKvgYtAMdeMG+o8x8U85E5Lm6eCPa1DdOdGVsHMwq4ZnZAg==}
+    engines: {node: '>= 0.6.0'}
+    dev: true
 
   /typescript@4.9.5:
     resolution: {integrity: sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==}

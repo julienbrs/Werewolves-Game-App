@@ -17,7 +17,7 @@ const chatroomController = {
         res.status(400).json(error);
       });
   },
-  getMessages: async (req: Request, res: Response) => {
+  getTodayMessages: async (req: Request, res: Response) => {
     const chatRoomId = Number(req.params.id);
     if (isNaN(chatRoomId)) {
       res.status(400).send("Bad chatroom id");

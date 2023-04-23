@@ -1,8 +1,8 @@
 {
   "name": "api",
   "scripts": {
-    "dev": "pnpm with-env tsx watch src/index.ts",
-    "build": "pnpm with-env esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js --external:express --external:cors",
+    "dev": "pnpm with-env tsx watch src/server.ts",
+    "build": "pnpm with-env esbuild src/server.ts --bundle --platform=node --outfile=dist/index.js --external:express --external:cors",
     "start": "pnpm with-env node dist/index.js",
     "lint": "eslint src",
     "lint:fix": "pnpm lint --fix",
@@ -15,7 +15,6 @@
   "dependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/node-cron": "^3.0.7",
-    "bcrypt-ts": "^3.0.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "express": "^4.18.2",
