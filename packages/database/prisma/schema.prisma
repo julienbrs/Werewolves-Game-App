@@ -6,6 +6,11 @@ generator client {
   interactiveTransactions = true
 }
 
+generator build {
+  provider = "prisma-client-js"
+  output   = "../../../apps/api/dist"
+  interactiveTransactions = true
+}
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")

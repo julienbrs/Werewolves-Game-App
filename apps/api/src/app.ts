@@ -15,6 +15,7 @@ app.use("*", (req, res, next) => {
 
 // Assign Routes
 app.use("/", router);
+
 const errorHandler: ErrorRequestHandler = (
   _err: Error,
   _req: Request,

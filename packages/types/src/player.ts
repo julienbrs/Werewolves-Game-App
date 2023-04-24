@@ -21,16 +21,14 @@ export const Power = {
 } as const;
 export type Power = ObjectValues<typeof Power>;
 
-import { User } from "./user";
 
-export interface Player {
+export type Player = {
   userId: string;
   gameId: number;
   state?: StatePlayer;
   role?: Role;
   power?: Power;
   usedPower: boolean;
-  user: User;
   createdAt?: string;
   updatedAt?: string;
-}
+};

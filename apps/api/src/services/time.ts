@@ -1,5 +1,4 @@
 import { format } from "date-fns";
-
 import { fr } from "date-fns/locale";
 
 export const getTommorow = () => {
@@ -20,6 +19,9 @@ export const isDay = (startDay: string, endDay: string): boolean => {
 };
 
 export const SecondsToCron = (seconds: number): string => {
+  if (seconds < 0) {
+    throw new Error("Seconds cannot be negative");
+  }
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
   const cron = `${seconds % 60} ${minutes % 60} ${hours % 24} * * *`;
@@ -28,14 +30,16 @@ export const SecondsToCron = (seconds: number): string => {
 
 // check if the deadline is correct (from backend startDay sera du type "HH:mm:ss")
 export const checkDeadline = (date: Date, startDay: Date): boolean => {
-  const nowDateFr = format(new Date(), "dd/MM/yyyy", { locale: fr });
-  const nowTimeFr = format(new Date(), "HH:mm:ss", { locale: fr });
-  const dateFr = format(new Date(date), "dd/MM/yyyy", { locale: fr });
+  const nowDateFr: string = format(new Date(), "dd/MM/yyyy", { locale: fr });
+  const nowTimeFr: string = format(new Date(), "HH:mm:ss", { locale: fr });
+  const dateFr: string = format(new Date(date), "dd/MM/yyyy", { locale: fr });
+
   if (nowDateFr === dateFr) {
     const [hours, minutes, seconds] = nowTimeFr.split(":").map(Number);
-    const hoursDeadline = startDay.getUTCHours();
-    const minutesDeadline = startDay.getUTCMinutes();
-    const secondsDeadline = startDay.getUTCSeconds();
+    const hoursDeadline: number = startDay.getUTCHours();
+    const minutesDeadline: number = startDay.getUTCMinutes();
+    const secondsDeadline: number = startDay.getUTCSeconds();
+
     return (
       hours < hoursDeadline ||
       (hours === hoursDeadline && minutes < minutesDeadline) ||

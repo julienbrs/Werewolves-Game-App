@@ -6,7 +6,6 @@ import createChatroom from "../services/chat/createChatroom";
 const chatroomController = {
   async create(req: Request, res: Response) {
     const chatroom: ChatRoom = req.body;
-
     createChatroom(chatroom)
       .then(newChatroom => {
         res.status(201).json(newChatroom);
