@@ -35,8 +35,9 @@ install:
       when: on_success
       policy: pull-push
   script:
+    - ls
     - pnpm install --frozen-lockfile
-    - mv .env.example .env
+    - mv .env.exemple .env
     - mkdir public
   artifacts:
     paths:
