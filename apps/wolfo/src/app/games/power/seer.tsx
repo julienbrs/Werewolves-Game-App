@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Text } from "@ui-kitten/components";
 import { useRouter, useSearchParams } from "expo-router";
 import React, { useState } from "react";
@@ -6,10 +6,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, Player } from "types";
 import Loading from "../../../components/loading";
 import { getGame } from "../../../utils/api/game";
+import { getPlayer, updatePlayer } from "../../../utils/api/player";
+
 const SeerView = () => {
   const router = useRouter();
   const { gameId, userId } = useSearchParams();
-  console.log(userId);
+  const queryClient = useQueryClient();
   const {
     data: game,
     isLoading,
@@ -18,18 +20,35 @@ const SeerView = () => {
     queryKey: ["mygames", gameId],
     queryFn: () => getGame(Number(gameId)),
   });
+  const {
+    data: currentPlayer,
+    isLoading: isLoadingPlayer,
+    isError: isErrorPlayer,
+  } = useQuery<Player, Error>({
+    enabled: Boolean(game),
+    queryKey: ["player", userId],
+    queryFn: () => getPlayer(game?.id!, Array.isArray(userId) ? userId[0] : userId!),
+  });
+
   const [selectedPlayer, setSelectedPlayer] = useState<Player | undefined>();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
-  const handlePlayerClick = (player: Player) => {
+  const handlePlayerClick = async (player: Player) => {
     setSelectedPlayer(player);
     setIsButtonDisabled(true);
+    // Update the seer's power usage
+    const updatedContaminator: Player = {
+      ...currentPlayer!,
+      usedPower: true,
+    };
+    await updatePlayer(updatedContaminator);
   };
 
-  if (isLoading) {
+  if (isLoading || isLoadingPlayer) {
     return <Loading title="Power loading" message={"Loading..."} />;
   }
-  if (isError || !game) {
+  if (isError || isErrorPlayer || !game) {
+    queryClient.invalidateQueries(["players", gameId]);
     return router.back();
   }
 
@@ -43,12 +62,13 @@ const SeerView = () => {
             onPress={() => handlePlayerClick(player)}
             disabled={isButtonDisabled}
           >
-            {player.user.name}
+            {player.user?.name}
           </Button>
         ))}
       <Text>Selected player:</Text>
       {selectedPlayer ? (
         <Text>
+          {`${selectedPlayer.user?.name} is a `}
           {selectedPlayer.role !== undefined ? selectedPlayer.role : ""}
           {selectedPlayer.power !== undefined ? `, ${selectedPlayer.power}` : ""}
         </Text>

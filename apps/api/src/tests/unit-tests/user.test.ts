@@ -1,8 +1,7 @@
 /* eslint-env jest */
 import "jest";
 import supertest from "supertest";
-import { app } from "../../app";
-
+import app from "../../app";
 const request = supertest(app);
 let token: string = "";
 
@@ -14,7 +13,6 @@ beforeAll(async () => {
   expect(response.status).toBe(201);
   expect(response.body).toHaveProperty("token");
   token = response.body.token;
-  console.log(token);
 });
 
 describe("Scénario création de deux comptes avec meme nom", () => {

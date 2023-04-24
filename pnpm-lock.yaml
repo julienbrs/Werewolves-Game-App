@@ -26,15 +26,18 @@ importers:
       '@types/node-cron':
         specifier: ^3.0.7
         version: 3.0.7
-      bcrypt-ts:
-        specifier: ^3.0.0
-        version: 3.0.0
+      '@types/swagger-ui-express':
+        specifier: ^4.1.3
+        version: 4.1.3
       bcryptjs:
         specifier: ^2.4.3
         version: 2.4.3
       cors:
         specifier: ^2.8.5
         version: 2.8.5
+      date-fns:
+        specifier: ^2.29.3
+        version: 2.29.3
       express:
         specifier: ^4.18.2
         version: 4.18.2
@@ -47,6 +50,12 @@ importers:
       socket.io:
         specifier: ^4.6.1
         version: 4.6.1
+      swagger-autogen:
+        specifier: ^2.23.1
+        version: 2.23.1
+      swagger-ui-express:
+        specifier: ^4.6.2
+        version: 4.6.2(express@4.18.2)
     devDependencies:
       '@babel/core':
         specifier: ^7.20.0
@@ -144,6 +153,9 @@ importers:
       date-fns:
         specifier: ^2.29.3
         version: 2.29.3
+      date-fns-tz:
+        specifier: ^2.0.0
+        version: 2.0.0(date-fns@2.29.3)
       eslint:
         specifier: ^8.38.0
         version: 8.38.0
@@ -3604,6 +3616,13 @@ packages:
       '@types/superagent': 4.1.16
     dev: true
 
+  /@types/swagger-ui-express@4.1.3:
+    resolution: {integrity: sha512-jqCjGU/tGEaqIplPy3WyQg+Nrp6y80DCFnDEAvVKWkJyv0VivSSDCChkppHRHAablvInZe6pijDFMnavtN0vqA==}
+    dependencies:
+      '@types/express': 4.17.17
+      '@types/serve-static': 1.15.1
+    dev: false
+
   /@types/webpack-env@1.18.0:
     resolution: {integrity: sha512-56/MAlX5WMsPVbOg7tAxnYvNYMMWr/QJiIp6BxVSW3JJXUVzzOn64qW8TzQyMSqSUFM2+PVI4aUHcHOzIz/1tg==}
     dev: false
@@ -4035,6 +4054,12 @@ packages:
       acorn: ^6.0.0 || ^7.0.0 || ^8.0.0
     dependencies:
       acorn: 8.8.2
+    dev: false
+
+  /acorn@7.4.1:
+    resolution: {integrity: sha512-nQyp0o1/mNdbTO1PO6kHkwSrmgZ0MT/jCCpNiwbUjGoRN4dlBhqJtoQuCnEOKzgTVwg0ZWiCoQy6SxMebQVh8A==}
+    engines: {node: '>=0.4.0'}
+    hasBin: true
     dev: false
 
   /acorn@8.8.2:
@@ -4574,10 +4599,6 @@ packages:
 
   /batch@0.6.1:
     resolution: {integrity: sha512-x+VAiMRL6UPkx+kudNvxTl6hB2XNNCG2r+7wixVfIYwu/2HKRXimwQyaumLjMveWvT2Hkd/cAJw+QBMfJ/EKVw==}
-    dev: false
-
-  /bcrypt-ts@3.0.0:
-    resolution: {integrity: sha512-z4pqdPaAuuvBsHCwb77bisxT9qo5hRSbn78FXNhhTywHabqMzcIosDxjnKUrkPQbMyz2curUT+fJRith57rIvg==}
     dev: false
 
   /bcryptjs@2.4.3:
@@ -5533,6 +5554,14 @@ packages:
 
   /dag-map@1.0.2:
     resolution: {integrity: sha512-+LSAiGFwQ9dRnRdOeaj7g47ZFJcOUPukAP8J3A3fuZ1g9Y44BG+P1sgApjLXTQPOzC4+7S9Wr8kXsfpINM4jpw==}
+    dev: false
+
+  /date-fns-tz@2.0.0(date-fns@2.29.3):
+    resolution: {integrity: sha512-OAtcLdB9vxSXTWHdT8b398ARImVwQMyjfYGkKD2zaGpHseG2UPHbHjXELReErZFxWdSLph3c2zOaaTyHfOhERQ==}
+    peerDependencies:
+      date-fns: '>=2.0.0'
+    dependencies:
+      date-fns: 2.29.3
     dev: false
 
   /date-fns@2.29.3:
@@ -12443,6 +12472,29 @@ packages:
       csso: 4.2.0
       picocolors: 1.0.0
       stable: 0.1.8
+    dev: false
+
+  /swagger-autogen@2.23.1:
+    resolution: {integrity: sha512-tOAb5cOGNPduIHKoOxndCRy2Mrg7xV3O1RerrWExrDxeSTjXhA350pyJd7VUDY6ZO9gbZ34Bjlc5CXkleUgvAQ==}
+    dependencies:
+      acorn: 7.4.1
+      deepmerge: 4.3.1
+      glob: 7.2.3
+      json5: 2.2.3
+    dev: false
+
+  /swagger-ui-dist@4.18.2:
+    resolution: {integrity: sha512-oVBoBl9Dg+VJw8uRWDxlyUyHoNEDC0c1ysT6+Boy6CTgr2rUcLcfPon4RvxgS2/taNW6O0+US+Z/dlAsWFjOAQ==}
+    dev: false
+
+  /swagger-ui-express@4.6.2(express@4.18.2):
+    resolution: {integrity: sha512-MHIOaq9JrTTB3ygUJD+08PbjM5Tt/q7x80yz9VTFIatw8j5uIWKcr90S0h5NLMzFEDC6+eVprtoeA5MDZXCUKQ==}
+    engines: {node: '>= v0.10.32'}
+    peerDependencies:
+      express: '>=4.0.0'
+    dependencies:
+      express: 4.18.2
+      swagger-ui-dist: 4.18.2
     dev: false
 
   /tapable@2.2.1:

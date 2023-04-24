@@ -4,10 +4,12 @@ import { NewMessage } from "types";
 import { app } from "./app";
 import prisma from "./prisma";
 
+import { relaunchGames } from "./services/scheduler";
 const IP = process.env.IP || "localhost";
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
+relaunchGames();
 
 const serv = app.listen(PORT, () => console.log(`Listening on http://${IP}:${PORT}`));
 

@@ -1,10 +1,9 @@
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-
 export const parseDeadline = (deadline: string, startDay: string): string => {
   const deadlineDate = format(new Date(deadline), "dd/MM/yyyy", { locale: fr });
-  const deadlineTime = format(new Date(startDay), "HH:mm", { locale: fr });
-  return deadlineDate + " à " + deadlineTime;
+  const [hours, minutes] = startDay.split("T")[1].split(":").map(String);
+  return deadlineDate + " à " + hours + "h" + minutes;
 };
 
 export const isDay = (startDay: string, endDay: string): boolean => {

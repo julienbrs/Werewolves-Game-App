@@ -6,7 +6,6 @@ import createChatroom from "../services/chat/createChatroom";
 const chatroomController = {
   async create(req: Request, res: Response) {
     const chatroom: ChatRoom = req.body;
-
     createChatroom(chatroom)
       .then(newChatroom => {
         res.status(201).json(newChatroom);
@@ -17,7 +16,7 @@ const chatroomController = {
         res.status(400).json(error);
       });
   },
-  getMessages: async (req: Request, res: Response) => {
+  getTodayMessages: async (req: Request, res: Response) => {
     const chatRoomId = Number(req.params.id);
     if (isNaN(chatRoomId)) {
       res.status(400).send("Bad chatroom id");

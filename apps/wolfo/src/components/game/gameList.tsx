@@ -1,9 +1,10 @@
+import { AntDesign } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Divider, List, Text } from "@ui-kitten/components";
+import { Button, Divider, List, Text } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Game } from "types";
+import { Game, StateGame } from "types";
 import { getGamesLobby, getMyGames, joinGame, leaveGame } from "../../utils/api/game";
 import Loading from "../loading";
 import { ModalConfirmChoice } from "../modals/modalConfirm";
@@ -50,7 +51,7 @@ export const ListGamesLobby: React.FC<ListProps> = ({ search }) => {
   );
   return (
     <SafeAreaView>
-      {games && (
+      {games ? (
         <List
           data={filteredGames}
           renderItem={listGame}
@@ -58,6 +59,10 @@ export const ListGamesLobby: React.FC<ListProps> = ({ search }) => {
           onRefresh={refetch}
           refreshing={isLoading}
         />
+      ) : (
+        <Button onPress={() => refetch()}>
+          <AntDesign name="reload1" size={24} color="black" />
+        </Button>
       )}
       <ModalConfirmChoice
         title="Validation"
@@ -112,7 +117,7 @@ export const ListMyGames: React.FC<ListProps> = ({ search }) => {
     game.name.toLowerCase().includes(search.toLowerCase())
   );
   const listGame = ({ item }: { item: Game; index: number }) => {
-    return item.state === "LOBBY" ? (
+    return item.state === StateGame.LOBBY ? (
       <GameItemLobby game={item} handleFunction={handleLeave} />
     ) : (
       <GameItemInGame game={item} handleFunction={() => router.push(`/games/${item.id}`)} />
@@ -120,7 +125,7 @@ export const ListMyGames: React.FC<ListProps> = ({ search }) => {
   };
   return (
     <SafeAreaView>
-      {games && (
+      {games ? (
         <List
           data={filteredGames}
           renderItem={listGame}
@@ -128,6 +133,10 @@ export const ListMyGames: React.FC<ListProps> = ({ search }) => {
           onRefresh={refetch}
           refreshing={isLoading}
         />
+      ) : (
+        <Button onPress={refetch}>
+          <AntDesign name="reload1" size={24} color="black" />
+        </Button>
       )}
       <ModalConfirmChoice
         title="Validation"

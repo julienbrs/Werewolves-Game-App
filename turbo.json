@@ -26,7 +26,6 @@
       "cache": false
     },
     "test": {
-      "dependsOn": ["build"],
       "inputs": ["src/**", "test/**"]
     },
     "test:watch": {

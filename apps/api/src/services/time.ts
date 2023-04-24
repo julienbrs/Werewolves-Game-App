@@ -1,3 +1,6 @@
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
+
 export const getTommorow = () => {
   const date = new Date();
   date.setDate(date.getDate() + 1);
@@ -16,31 +19,33 @@ export const isDay = (startDay: string, endDay: string): boolean => {
 };
 
 export const SecondsToCron = (seconds: number): string => {
+  if (seconds < 0) {
+    throw new Error("Seconds cannot be negative");
+  }
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
   const cron = `${seconds % 60} ${minutes % 60} ${hours % 24} * * *`;
   return cron;
 };
 
-// check if the deadline is passed (from backend startDay sera du type "HH:mm:ss")
+// check if the deadline is correct (from backend startDay sera du type "HH:mm:ss")
 export const checkDeadline = (date: Date, startDay: Date): boolean => {
-  const now = new Date();
-  const day = new Date(startDay);
-  if (date > now) {
-    return true;
-  }
-  if (
-    now.getUTCDate() === date.getUTCDate() &&
-    now.getUTCMonth() === date.getUTCMonth() &&
-    now.getUTCFullYear() === date.getUTCFullYear()
-  ) {
-    console.log("what");
+  const nowDateFr: string = format(new Date(), "dd/MM/yyyy", { locale: fr });
+  const nowTimeFr: string = format(new Date(), "HH:mm:ss", { locale: fr });
+  const dateFr: string = format(new Date(date), "dd/MM/yyyy", { locale: fr });
+
+  if (nowDateFr === dateFr) {
+    const [hours, minutes, seconds] = nowTimeFr.split(":").map(Number);
+    const hoursDeadline: number = startDay.getUTCHours();
+    const minutesDeadline: number = startDay.getUTCMinutes();
+    const secondsDeadline: number = startDay.getUTCSeconds();
+
     return (
-      day.getUTCHours() < now.getUTCHours() + 2 ||
-      (day.getUTCHours() === now.getUTCHours() + 2 && day.getUTCMinutes() > now.getUTCMinutes())
+      hours < hoursDeadline ||
+      (hours === hoursDeadline && minutes < minutesDeadline) ||
+      (hours === hoursDeadline && minutes === minutesDeadline && seconds < secondsDeadline)
     );
   } else {
-    console.log("else");
-    return false;
+    return date > new Date();
   }
 };

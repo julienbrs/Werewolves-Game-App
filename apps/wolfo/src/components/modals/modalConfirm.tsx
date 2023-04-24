@@ -18,12 +18,12 @@ export const ModalConfirmChoice = ({
 }: ModalConfirmChoiceProps) => {
   return (
     <Modal
+      backdropStyle={styles.backdrop}
       visible={visible}
       onBackdropPress={() => setVisible(false)}
-      style={styles.backdrop}
       animationType="fade"
     >
-      <Card disabled={true}>
+      <Card>
         <Text>{title}</Text>
         <Text>{description}</Text>
         <View style={styles.buttonContainer}>
@@ -50,7 +50,7 @@ export const ModalConfirmChoice = ({
 
 const styles = StyleSheet.create({
   backdrop: {
-    backgroundColor: "green",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   button: {
     flex: 1,

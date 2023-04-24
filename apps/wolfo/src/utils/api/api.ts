@@ -6,7 +6,6 @@ const api = axios.create({
     "Content-type": "application/json",
   },
 });
-
 let token: string | null = null;
 
 export const setToken = (newToken: string | null) => {
@@ -31,13 +30,15 @@ api.interceptors.response.use(
   response => response,
   error => {
     console.error(error);
-    console.error(JSON.stringify(error));
+    //console.error(JSON.stringify(error));
     if (error.data === "Endpoint not found") {
-      Promise.reject({ message: "Endpoint not found at " + error.config.url });
+      return Promise.reject({ message: "Endpoint not found at " + error.config.url });
+    } else if (error.message === "Network Error") {
+      return Promise.reject({ message: "Network Error" });
     } else if (error.response === undefined) {
-      Promise.reject(error);
+      return Promise.reject(error);
     } else {
-      Promise.reject(error.response.data);
+      return Promise.reject(error.response.data);
     }
   }
 );
