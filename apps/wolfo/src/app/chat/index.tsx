@@ -32,17 +32,6 @@ export function Example() {
   const onSend = useCallback(
     (messagesBDD = []) => {
       setMessages(previousMessages => GiftedChat.append(previousMessages, messagesBDD));
-      /* model Message {
-  id         Int      @id @default(autoincrement())
-  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id])
-  chatRoomId Int
-  content    String
-  author     Player   @relation(fields: [authorId, gameId], references: [userId, gameId])
-  authorId   String
-  gameId     Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-} */
       let newMessage = {
         id: messagesBDD[0]._id,
         content: messagesBDD[0].text,
