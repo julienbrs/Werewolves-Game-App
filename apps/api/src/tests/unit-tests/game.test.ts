@@ -1,8 +1,7 @@
 /* eslint-env jest */
 import "jest";
 import supertest from "supertest";
-import { app } from "../../app";
-
+import app from "../../app";
 const request = supertest(app);
 let token: string = "";
 let gameId: number = -1;

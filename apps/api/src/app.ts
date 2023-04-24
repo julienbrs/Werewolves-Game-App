@@ -1,8 +1,7 @@
 import cors from "cors";
 import express, { ErrorRequestHandler, NextFunction, Request, Response } from "express";
 import router from "./routes/router";
-import { relaunchGames } from "./services/scheduler";
-export const app = express();
+const app = express();
 app.use(cors());
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
@@ -23,4 +22,5 @@ const errorHandler: ErrorRequestHandler = (
   _next: NextFunction
 ) => {};
 app.use(errorHandler);
-relaunchGames();
+
+export default app;

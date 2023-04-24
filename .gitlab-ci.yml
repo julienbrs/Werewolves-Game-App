@@ -1,0 +1,74 @@
+image: node:latest
+
+stages:                 # Les étapes associées au projet.
+  - lint                # Pour la vérification statique du code
+  - test                # Test de l'application
+  - deploy              # Deploiement
+
+variables:
+  npm_config_cache: '$CI_PROJECT_DIR/.npm'
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/   # Cache des dépendances
+    - .pnpm-store/ # Moves pnpm cache inside project per GitLab restrictions
+  policy: pull
+
+before_script:
+  - npm i -g pnpm
+  - pnpm config set store-dir .pnpm-store
+
+install:
+  stage: .pre
+  cache:
+    - key: ${CI_COMMIT_REF_SLUG}
+      paths:
+        - node_modules/
+        - .pnpm-store/
+      when: on_success
+      policy: pull-push
+  script:
+    - pnpm install --frozen-lockfile
+    - mkdir public
+  artifacts:
+    paths:
+      - public
+
+
+lint:                # Vérification de la qualité du code javascript
+  stage: lint           # Pas de lint css et html parce que c'est le code donné par le prof et j'ai pas à corriger son code
+  script:
+    - pnpm lint      # vérifie la qualité du code javascript (js/*.js) et typescript (src/*.ts) + écrit le rapport dans lintes_report.txt
+                     # turborepo va se charger de faire le lint dans les api/, wolfo/ et database/
+
+
+test:
+  stage: test
+  script:
+    - pnpm test # pareil que lint
+
+
+
+scalingo:
+  stage: deploy
+  variables:
+    # SCALINGO_API_TOKEN # variable à ne pas définir en clair ici (cf instructions à la fin du .gitlab-ci.yml ci-dessous)
+    SCALINGO_APP_NAME: wolfo-backend # le nom de votre appli chez scalingo
+    SCALINGO_REGION: osc-fr1 # l'instance de scalingo sur laquelle votre appli est déployée
+    PROJECT_DIR: apps/api
+    GIT_DEPTH: 0
+  image: ruby:3.1.3 # car dpl est codé en Ruby
+  before_script: []
+  only:
+    changes:
+      - "src/**/*"
+      - "Procfile"
+  script:
+    - gem install dpl --pre # gem est le gestionnaire de paquets pour Ruby
+    - curl -O https://cli-dl.scalingo.com/install && bash install # scalingo CLI est installé
+    - scalingo --app=$SCALINGO_APP_NAME env-set PROJECT_DIR=$PROJECT_DIR # Pour indiquer sur le dépôt distant où est le backend (s'il est à la racine du projet ceci est facultatif, et il est possible de le faire une fois pour toute directement dans l'interface web de scalingo)
+    - dpl --provider=scalingo --app=$SCALINGO_APP_NAME --api-token=$SCALINGO_API_TOKEN --region=$SCALINGO_REGION --branch=refs/heads/main
+  rules:
+    - if: $CI_COMMIT_BRANCH == "scalingo"
+      when: always
