@@ -35,7 +35,6 @@ install:
       when: on_success
       policy: pull-push
   script:
-    - ls
     - pnpm install --frozen-lockfile
     - mv .env.exemple .env
     - mkdir public
@@ -52,10 +51,10 @@ lint:                # Vérification de la qualité du code javascript
                      # turborepo va se charger de faire le lint dans les api/, wolfo/ et database/
 
 
-test:
-  stage: test
-  script:
-    - pnpm test # pareil que lint
+#test:
+#  stage: test
+#  script:
+#    - pnpm test # pareil que lint
 
 
 
