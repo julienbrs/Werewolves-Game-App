@@ -3,6 +3,7 @@ import { useRouter, useSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import io from "socket.io-client";
+import { getMessages } from "../../utils/api/chat";
 
 import { Message, NewMessage } from "types";
 
@@ -18,6 +19,17 @@ const ChatRoomView = () => {
   const socket = io(socketEndpoint);
 
   useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const messages = await getMessages(Number(id));
+        setMessages(messages);
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      }
+    };
+
+    fetchMessages();
+
     socket.on("connect", () => {
       console.log("Connected to socket server");
       socket.emit("joinChatRoom", { chatRoomId: id, userId });
@@ -27,14 +39,17 @@ const ChatRoomView = () => {
       console.log("Disconnected from socket server");
     });
 
-    socket.on("newMessage", (msg: Message) => {
+    const handleNewMessage = (msg: Message) => {
       setMessages(prevMessages => [...prevMessages, msg]);
-    });
+    };
+
+    socket.on("newMessage", handleNewMessage);
 
     return () => {
+      socket.off("newMessage", handleNewMessage); // désactive l'écoute de l'événement lors du nettoyage de l'effet.
       socket.disconnect();
     };
-  }, [id, userId, socket]);
+  }, [id, userId, socket, messages]);
 
   const sendMessage = () => {
     try {

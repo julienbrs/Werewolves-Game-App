@@ -2,8 +2,8 @@ import { ChatRoom, Message, NewChatroom } from "types";
 import api from "./api";
 
 const chatApi = {
-  getMessages: async (): Promise<Message[]> => {
-    const { data } = await api.get("/chatrooms/:id/messages");
+  getMessages: async (chatRoomId: number): Promise<Message[]> => {
+    const { data } = await api.get(`/chatrooms/${chatRoomId}/messages`);
     return data;
   },
   getHistory: async (chatRoomId: string): Promise<Message[]> => {
