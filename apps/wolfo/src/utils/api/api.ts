@@ -1,7 +1,7 @@
 // ici on utilise axios et react query pour faire des requêtes http
 import axios from "axios";
 const api = axios.create({
-  baseURL: "http://192.168.1.13:3000/api",
+  baseURL: "http://localhost:3000/api",
   headers: {
     "Content-type": "application/json",
   },

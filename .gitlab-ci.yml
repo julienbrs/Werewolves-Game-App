@@ -12,6 +12,9 @@ cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
     - node_modules/   # Cache des dépendances
+    - apps/api/node_modules/
+    - apps/wolfo/node_modules/
+    - apps/database/node_modules/
     - .pnpm-store/ # Moves pnpm cache inside project per GitLab restrictions
   policy: pull
 
@@ -25,6 +28,9 @@ install:
     - key: ${CI_COMMIT_REF_SLUG}
       paths:
         - node_modules/
+        - apps/api/node_modules/
+        - apps/wolfo/node_modules/
+        - apps/database/node_modules/
         - .pnpm-store/
       when: on_success
       policy: pull-push
