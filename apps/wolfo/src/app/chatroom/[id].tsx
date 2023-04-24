@@ -14,9 +14,7 @@ const ChatRoomView = () => {
   const [messageInput, setMessageInput] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
   const router = useRouter();
-  const { id } = useSearchParams(); // id du chatroom
-  const userId = "512daa49-a394-4afc-99b3-1e6a0e7daf88";
-  const gameId = "1";
+  const { id, userId, gameId } = useSearchParams();
 
   // Create a state for the socket instance
   const [socket, setSocket] = useState<Socket | null>(null);
