@@ -27,13 +27,15 @@ const playerController = {
         state: true,
         role: true,
         power: true,
+        gameId: true,
+        userId: true,
         usedPower: true,
-        user: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
+        // user: {
+        //   select: {
+        //     id: true,
+        //     name: true,
+        //   },
+        // },
       },
     });
     if (!player) {
@@ -45,7 +47,9 @@ const playerController = {
   updatePlayer: async (req: Request, res: Response) => {
     const { id } = req.params;
     const { gameId } = req.params;
-    const playerInfo: Player = req.body;
+    const playerInfo: Player = { ...req.body };
+    console.log(playerInfo);
+    // delete playerInfo.user;
     const player = await prisma.player.update({
       where: {
         userId_gameId: { userId: id, gameId: Number(gameId) },

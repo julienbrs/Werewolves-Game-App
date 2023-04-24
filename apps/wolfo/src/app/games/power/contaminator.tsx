@@ -1,68 +1,98 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Text } from "@ui-kitten/components";
 import { useRouter, useSearchParams } from "expo-router";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, Player } from "types";
+
 import Loading from "../../../components/loading";
 import { getGame } from "../../../utils/api/game";
+import { getPlayer, updatePlayer } from "../../../utils/api/player";
 
 const ContaminatorView = () => {
-  // const { userId } = useSearchParams();
   const router = useRouter();
-  const { id } = useSearchParams();
+  const { gameId, userId } = useSearchParams();
+  const queryClient = useQueryClient();
+  console.log(gameId);
   const {
     data: game,
     isLoading,
     isError,
   } = useQuery<Game, Error>({
-    queryKey: ["mygames", id],
-    queryFn: () => getGame(Number(id)),
+    queryKey: ["mygames", gameId],
+    queryFn: () => getGame(Number(gameId)),
   });
+  console.log(game);
+  const {
+    data: currentPlayer,
+    isLoading: isLoadingPlayer,
+    isError: isErrorPlayer,
+  } = useQuery<Player, Error>({
+    enabled: Boolean(game),
+    queryKey: ["player", userId],
+    queryFn: () => getPlayer(game?.id!, Array.isArray(userId) ? userId[0] : userId!),
+  });
+
   const [selectedPlayer, setSelectedPlayer] = useState<Player | undefined>();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
-  const handlePlayerClick = (player: Player) => {
-    const updatedPlayer = { ...player, role: "WOLF", power: "NONE" };
-    setSelectedPlayer(updatedPlayer);
-    //requete update
+  const handlePlayerClick = async (contaminatedPlayer: Player) => {
+    setSelectedPlayer(contaminatedPlayer);
     setIsButtonDisabled(true);
+
+    // Update the contaminated player's role and power
+    const updatedPlayer: Player = {
+      ...contaminatedPlayer,
+      role: "WOLF",
+      power: "NONE",
+    };
+    console.log(updatedPlayer);
+    await updatePlayer(updatedPlayer);
+
+    // Update the contaminator's power usage
+    const updatedContaminator: Player = {
+      ...currentPlayer!,
+      usedPower: true,
+    };
+    await updatePlayer(updatedContaminator);
   };
 
-  if (isLoading) {
-    return <Loading title="Power loading" message={"Loading..."} />;
+  if (isError || isErrorPlayer || !game) {
+    queryClient.invalidateQueries(["players", gameId]);
+    router.back();
+    console.log("erreur");
   }
 
-  if (isError) {
-    router.back();
+  if (isLoading || isLoadingPlayer) {
+    return <Loading title="Power loading" message={"Loading..."} />;
   }
 
   return (
     <SafeAreaView>
       <Text>Players:</Text>
-      {game.players.map((player: Player) => (
-        <Button
-          key={player.userId}
-          onPress={() => handlePlayerClick(player)}
-          disabled={isButtonDisabled}
-        >
-          {player.user.name}
-        </Button>
-      ))}
+      {game?.players &&
+        game.players.map((player: Player) => (
+          <Button
+            key={player.userId}
+            onPress={async () => {
+              handlePlayerClick(player);
+            }}
+            disabled={isButtonDisabled}
+          >
+            {player.user?.name}
+          </Button>
+        ))}
       <Text>Selected player:</Text>
-      {selectedPlayer ? <Text>Contaminated player</Text> : <Text>No player selected</Text>}
+      {selectedPlayer ? (
+        <Text>
+          {selectedPlayer.user?.name!}
+          {` is now a wolf...`}
+        </Text>
+      ) : (
+        <Text>No player selected</Text>
+      )}
     </SafeAreaView>
   );
 };
 
 export default ContaminatorView;
-
-import { useQuery } from "@tanstack/react-query";
-import { Button, Text } from "@ui-kitten/components";
-import { useRouter, useSearchParams } from "expo-router";
-import React, { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Game, Player } from "types";
-import Loading from "../../../components/loading";
-import { getGame } from "../../../utils/api/game";
-import { getPlayers } from "../../../utils/api/player";

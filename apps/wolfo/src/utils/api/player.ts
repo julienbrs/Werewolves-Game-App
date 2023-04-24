@@ -10,8 +10,9 @@ const playerApi = {
     const { data } = await api.get(`games/${gameId}/players/${userId}`);
     return data;
   },
-  updatePlayer: async (gameId: number, userId: string, player: Player) => {
-    const { data } = await api.put(`games/${gameId}/players/${userId}`, player);
+  updatePlayer: async (player: Player) => {
+    console.log(player);
+    const { data } = await api.patch(`games/${player.gameId}/players/${player.userId}`, player);
     return data;
   },
 };
