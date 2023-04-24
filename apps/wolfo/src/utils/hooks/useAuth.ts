@@ -1,15 +1,9 @@
-import { getToken, setToken } from "../api/api";
+import { getToken } from "../api/api";
 
 // le fetch original
 const useAuth = async (): Promise<string | null> => {
   const token = getToken();
-  if (token) {
-    setToken(token);
-    console.log("useAuth resolve");
-    return Promise.resolve(token);
-  }
-  console.log("useAuth reject");
-  return Promise.resolve(null);
+  return Promise.resolve(token);
 };
 
 export default useAuth;

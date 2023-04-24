@@ -24,7 +24,7 @@ const Auth = () => {
       key={item.id}
       title={item.title}
       description={item.content}
-      onPress={() => router.replace(item.link)}
+      onPress={() => router.push(item.link)}
     />
   );
 
@@ -36,7 +36,7 @@ const Auth = () => {
         ItemSeparatorComponent={Divider}
         onRefresh={refetch}
         refreshing={isLoading}
-      />{" "}
+      />
     </SafeAreaView>
   );
 };

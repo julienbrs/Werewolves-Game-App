@@ -42,12 +42,9 @@ export const deleteJob = (id: number, jobType: JobType) => {
 };
 
 export const createDeadlineJob = (deadline: Date, gameId: number, startDay: Date) => {
-  if (!checkDeadline(deadline, startDay)) {
-    return;
-  }
   const date = new Date(deadline);
   const start = new Date(startDay);
-  if (!date) {
+  if (!checkDeadline(date, start) || !date || !start) {
     return;
   }
   if (deadlineJobs[gameId]) {
@@ -57,7 +54,7 @@ export const createDeadlineJob = (deadline: Date, gameId: number, startDay: Date
   const dateString = `${start.getUTCSeconds()} ${start.getUTCMinutes()} ${start.getUTCHours()} ${date.getUTCDate()} ${
     date.getUTCMonth() + 1
   } *`;
-  console.log("cron at ", dateString);
+  //console.log("cron at ", dateString);
   const job = cron.schedule(dateString, async () => startGame(gameId));
   deadlineJobs[gameId] = job;
 };

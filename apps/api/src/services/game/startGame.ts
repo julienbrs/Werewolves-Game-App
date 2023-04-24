@@ -3,10 +3,8 @@ import prisma from "../../prisma";
 import { JobType, deleteJob } from "../scheduler";
 
 const startGame = async (gameId: number) => {
-  console.log("startGame");
   return await prisma
     .$transaction(async transaction => {
-      console.log("startGame transaction");
       const game = await transaction.game.findUnique({
         where: { id: gameId },
         select: {

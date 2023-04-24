@@ -29,11 +29,11 @@ const userController = {
       return res.status(400).json({ message: "Name already exists" });
     }
   },
-  async getUsers(req: Request, res: Response) {
+  async getAll(req: Request, res: Response) {
     const users = await prisma.user.findMany();
     res.json(users);
   },
-  async updateUser(req: Request, res: Response) {
+  async update(req: Request, res: Response) {
     const token = req.headers.authorization?.split(" ")[1];
     const decodedToken = jwt.verify(token, SECRET);
     const id = decodedToken.id;
@@ -97,7 +97,7 @@ const userController = {
     );
     res.json({ token, message: "User logged in" });
   },
-  async getMe(req: Request, res: Response) {
+  async getFromToken(req: Request, res: Response) {
     const token = req.headers.authorization?.split(" ")[1];
     const decodedToken = jwt.verify(token, SECRET);
     const id = decodedToken.id;
@@ -113,6 +113,24 @@ const userController = {
       .catch(error => {
         console.log(error);
         res.status(400).json(error);
+      });
+  },
+  async deleteUser(req: Request, res: Response) {
+    const token = req.headers.authorization?.split(" ")[1];
+    const decodedToken = jwt.verify(token, SECRET);
+    const id = decodedToken.id;
+    prisma.user
+      .delete({
+        where: {
+          id,
+        },
+      })
+      .then(() => {
+        res.json({ message: "User Deleted" });
+      })
+      .catch(error => {
+        console.log(error);
+        res.status(400).json({ message: "User does not exist in database" });
       });
   },
 };
