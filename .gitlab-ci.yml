@@ -36,10 +36,12 @@ install:
       policy: pull-push
   script:
     - pnpm install --frozen-lockfile
+    - mv .env.example .env
     - mkdir public
   artifacts:
     paths:
       - public
+      - .env
 
 
 lint:                # Vérification de la qualité du code javascript
