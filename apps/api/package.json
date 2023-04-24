@@ -1,7 +1,7 @@
 {
   "name": "api",
   "scripts": {
-    "dev": "pnpm with-env tsx watch src/index.ts",
+    "dev": "pnpm with-env tsx watch src/server.ts",
     "build": "pnpm with-env esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js --external:express --external:cors",
     "start": "pnpm with-env node dist/index.js",
     "lint": "eslint src",
