@@ -21,6 +21,7 @@ export const Power = {
 } as const;
 export type Power = ObjectValues<typeof Power>;
 
+import { User } from "./user";
 
 export type Player = {
   userId: string;
@@ -29,6 +30,7 @@ export type Player = {
   role?: Role;
   power?: Power;
   usedPower: boolean;
+  user?: User;
   createdAt?: string;
   updatedAt?: string;
 };
