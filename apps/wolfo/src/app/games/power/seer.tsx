@@ -56,15 +56,17 @@ const SeerView = () => {
     <SafeAreaView>
       <Text>Players:</Text>
       {game.players &&
-        game.players.map((player: Player) => (
-          <Button
-            key={player.userId}
-            onPress={() => handlePlayerClick(player)}
-            disabled={isButtonDisabled}
-          >
-            {player.user?.name}
-          </Button>
-        ))}
+        game.players
+          .filter((player: Player) => player.role === "VILLAGER")
+          .map((player: Player) => (
+            <Button
+              key={player.userId}
+              onPress={() => handlePlayerClick(player)}
+              disabled={isButtonDisabled}
+            >
+              {player.user?.name}
+            </Button>
+          ))}
       <Text>Selected player:</Text>
       {selectedPlayer ? (
         <Text>

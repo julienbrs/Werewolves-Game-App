@@ -14,6 +14,7 @@ const ContaminatorView = () => {
   const { gameId, userId } = useSearchParams();
   const queryClient = useQueryClient();
   console.log(gameId);
+  console.log(userId);
   const {
     data: game,
     isLoading,
@@ -46,7 +47,6 @@ const ContaminatorView = () => {
       role: "WOLF",
       power: "NONE",
     };
-    console.log(updatedPlayer);
     await updatePlayer(updatedPlayer);
 
     // Update the contaminator's power usage
@@ -71,17 +71,20 @@ const ContaminatorView = () => {
     <SafeAreaView>
       <Text>Players:</Text>
       {game?.players &&
-        game.players.map((player: Player) => (
-          <Button
-            key={player.userId}
-            onPress={async () => {
-              handlePlayerClick(player);
-            }}
-            disabled={isButtonDisabled}
-          >
-            {player.user?.name}
-          </Button>
-        ))}
+        game.players
+          .filter((player: Player) => player.role === "VILLAGER")
+          .map((player: Player) => (
+            <Button
+              key={player.userId}
+              onPress={async () => {
+                handlePlayerClick(player);
+              }}
+              disabled={isButtonDisabled}
+            >
+              {player.user?.name}
+            </Button>
+          ))}
+
       <Text>Selected player:</Text>
       {selectedPlayer ? (
         <Text>
