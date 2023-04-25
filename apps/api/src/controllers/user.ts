@@ -1,8 +1,8 @@
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import prisma from "../prisma";
+import { SECRET } from "../utils/env";
 const jwt = require("jsonwebtoken");
-const SECRET = process.env.SECRET;
 const userController = {
   async create(req: Request, res: Response) {
     const { name, password } = req.body;
