@@ -61,10 +61,15 @@ const newPeriod = async (day: boolean, gameId: number) => {
         },
       });
 
-      if (day) notificationService.newDay(transaction, game.players, game.name);
-      else notificationService.newNight(transaction, game.players, game.name);
       // on supprime le job si la game est fini
-      if (state === StateGame.END) deleteJob(gameId, day ? JobType.NEW_DAY : JobType.NEW_NIGHT);
+      if (state === StateGame.END) {
+        notificationService.endGame(transaction, game.players, game.name);
+        deleteJob(gameId, JobType.NEW_NIGHT);
+        deleteJob(gameId, JobType.NEW_DAY);
+      } else {
+        if (day) notificationService.newDay(transaction, game.players, game.name);
+        else notificationService.newNight(transaction, game.players, game.name);
+      }
     })
     .then(() => {
       console.log("New period created");
