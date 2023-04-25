@@ -2,7 +2,6 @@
 import "jest";
 import supertest from "supertest";
 import app from "../../app";
-import prisma from "../../prisma";
 const request = supertest(app);
 let token: string = "";
 
@@ -16,9 +15,6 @@ beforeAll(async () => {
   token = response.body.token;
 });
 
-afterAll(async () => {
-  await prisma.$disconnect();
-});
 
 describe("Scénario création de deux comptes avec meme nom", () => {
   describe("POST /api/users/ johnny", () => {
