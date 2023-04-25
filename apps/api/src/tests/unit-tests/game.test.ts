@@ -6,7 +6,6 @@ const request = supertest(app);
 let token: string = "";
 let gameId: number = -1;
 
-
 beforeAll(async () => {
   const repCreation = await request
     .post("/api/users/")
