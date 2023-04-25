@@ -50,7 +50,6 @@ install:
 lint:                # Vérification de la qualité du code javascript
   stage: lint           # Pas de lint css et html parce que c'est le code donné par le prof et j'ai pas à corriger son code
   script:
-    - mv .env.exemple .env
     - pnpm lint      # vérifie la qualité du code javascript (js/*.js) et typescript (src/*.ts) + écrit le rapport dans lintes_report.txt
                      # turborepo va se charger de faire le lint dans les api/, wolfo/ et database/
   
@@ -58,7 +57,6 @@ lint:                # Vérification de la qualité du code javascript
 test:
   stage: test
   script:
-    - mv .env.exemple .env
     - pnpm db:push  # push les migrations dans la base de données
     - pnpm test # lance db:generate puis test backend
 
