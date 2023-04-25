@@ -5,8 +5,9 @@ import prisma from "../prisma";
 import createGame from "../services/game/createGame";
 import { JobType, deleteJob } from "../services/scheduler";
 import { getTommorow } from "../services/time";
+import { SECRET } from "../utils/env";
 const jwt = require("jsonwebtoken");
-const SECRET = process.env.SECRET;
+// const SECRET = process.env.SECRET;
 
 const gameController = {
   async create(req: Request, res: Response) {
