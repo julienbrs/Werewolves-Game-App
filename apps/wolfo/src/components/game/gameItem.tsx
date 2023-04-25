@@ -66,9 +66,9 @@ export const GameItemNotJoined = ({ game, handleFunction }: GameItemProps) => {
             </Text>
             <Text style={styles.players}>players</Text>
             <Ionicons
-              name="exit-outline"
+              name="enter-outline"
               size={24}
-              color="red"
+              color="green"
               onPress={() => handleFunction(game.id)}
             />
           </View>

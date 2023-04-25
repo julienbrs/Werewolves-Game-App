@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Button, Text } from "@ui-kitten/components";
-import { useRouter, useSearchParams } from "expo-router";
+import { Stack, useRouter, useSearchParams } from "expo-router";
 import { useContext } from "react";
 import React from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -12,17 +12,19 @@ import { getPlayer } from "../../utils/api/player";
 const GameView = () => {
   const router = useRouter();
   const { id } = useSearchParams(); // idGame
+  const { id: userId } = useContext(AuthContext);
+
   // get game data
   const {
     data: game,
     isLoading,
     isError,
   } = useQuery<Game, Error>({
+    enabled: !isNaN(Number(id)),
     queryKey: ["mygames", id],
     queryFn: () => getGame(Number(id)),
-    staleTime: 1000 * 60 * 15, // 15 minutes
+    staleTime: 1000 * 60 * 5,
   });
-  const { id: userId } = useContext(AuthContext);
   // get player data
   const {
     data: player,
@@ -58,13 +60,15 @@ const GameView = () => {
         router.push({ pathname: "/games/power/contaminator", params: { gameId: game.id, userId } });
         break;
     }
+    return;
   };
-
   return (
     <SafeAreaView>
+      <Stack.Screen options={{ title: game.name, headerRight: () => null }} />
       {/* display all informations on the game after fetching data from backend*/}
       <Text>Game | {game.name}</Text>
       <Text>{game.state === StateGame.DAY ? "C'est le jour" : "C'est la nuit"}</Text>
+      <Text>{player.power}</Text>
       <Button onPress={redirectPower} disabled={player.usedPower}>
         Power
       </Button>

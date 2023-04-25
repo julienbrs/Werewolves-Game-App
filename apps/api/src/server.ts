@@ -1,13 +1,13 @@
 import cors from "cors";
+import dotenv from "dotenv";
 import { Server, Socket } from "socket.io";
 import { NewMessage } from "types";
-import { app } from "./app";
+import app from "./app";
 import prisma from "./prisma";
-
 import { relaunchGames } from "./services/scheduler";
+dotenv.config();
 const IP = process.env.IP || "localhost";
 const PORT = process.env.PORT || 3000;
-
 app.use(cors());
 relaunchGames();
 

@@ -26,6 +26,7 @@
       "cache": false
     },
     "test": {
+      "dependsOn": ["^db:generate"],
       "inputs": ["src/**", "test/**"]
     },
     "test:watch": {
@@ -39,6 +40,7 @@
     "POSTGRES_PASSWORD",
     "POSTGRES_DB",
     "IP",
-    "PORT"
+    "PORT",
+    "NODE_ENV"
   ]
 }

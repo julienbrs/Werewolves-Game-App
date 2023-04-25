@@ -14,7 +14,6 @@ beforeAll(async () => {
   expect(response.body).toHaveProperty("token");
   token = response.body.token;
 });
-
 describe("Scénario création de deux comptes avec meme nom", () => {
   describe("POST /api/users/ johnny", () => {
     test("Test account creation", async () => {

@@ -27,7 +27,7 @@ const SeerView = () => {
   } = useQuery<Player, Error>({
     enabled: Boolean(game),
     queryKey: ["player", userId],
-    queryFn: () => getPlayer(game?.id!, Array.isArray(userId) ? userId[0] : userId!),
+    queryFn: () => getPlayer(Number(gameId), String(userId)),
   });
 
   const [selectedPlayer, setSelectedPlayer] = useState<Player | undefined>();

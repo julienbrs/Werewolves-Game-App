@@ -65,7 +65,7 @@ describe("Scénario création de partie -> ajout de joueurs -> lancement", () =>
           spiritProb: 0.9,
           startDay: "2023-04-15T08:00:00+00:00",
           endDay: "2023-04-15T20:00:00+00:00",
-          deadline: "2023-04-25T00:00:00+00:00",
+          deadline: "2024-04-25T00:00:00+00:00",
         });
       expect(response.statusCode).toBe(201);
       gameId = response.body.id;
@@ -142,6 +142,8 @@ describe("Scénario création de partie -> ajout de joueurs -> lancement", () =>
       expect(repLogin.body.message).toBe("User logged in");
       expect(repLogin.body).toHaveProperty("token");
       token = repLogin.body.token;
+      // on supprime la game
+      await request.delete(`/api/games/${gameId}/delete`).set("Authorization", `Bearer ${token}`);
     });
   });
 });
