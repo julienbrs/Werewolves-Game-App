@@ -1,7 +1,7 @@
 import cors from "cors";
 import { Server, Socket } from "socket.io";
 import { NewMessage } from "types";
-import { app } from "./app";
+import app from "./app";
 import prisma from "./prisma";
 
 import { relaunchGames } from "./services/scheduler";

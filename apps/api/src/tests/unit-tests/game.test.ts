@@ -70,7 +70,7 @@ describe("Scénario création de partie -> ajout de joueurs -> lancement", () =>
           spiritProb: 0.9,
           startDay: "2023-04-15T08:00:00+00:00",
           endDay: "2023-04-15T20:00:00+00:00",
-          deadline: "2023-04-25T00:00:00+00:00",
+          deadline: "2024-04-25T00:00:00+00:00",
         });
       expect(response.statusCode).toBe(201);
       gameId = response.body.id;
@@ -152,6 +152,7 @@ describe("Scénario création de partie -> ajout de joueurs -> lancement", () =>
 });
 
 afterAll(async () => {
+  await request.delete("/api/games/").set("Authorization", `Bearer ${token}`);
   let repDelete = await request
     .delete("/api/users/")
     .set("Authorization", `Bearer ${token}`)
