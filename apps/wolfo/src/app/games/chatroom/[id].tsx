@@ -1,25 +1,23 @@
-import { Button, Input, Text } from "@ui-kitten/components";
+import { Button, Text } from "@ui-kitten/components";
 import { useRouter, useSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
+import { GiftedChat, IMessage } from "react-native-gifted-chat";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import io, { Socket } from "socket.io-client";
 import { Message, NewMessage } from "types";
-import { getMessages } from "../../utils/api/chat";
+import { getMessages } from "../../../utils/api/chat";
 
 const IP = process.env.IP || "localhost";
 const PORT = process.env.PORT || 3000;
 const socketEndpoint = `http://${IP}:${PORT}`;
 
 const ChatRoomView = () => {
-  const [messageInput, setMessageInput] = useState<string>("");
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messagesList, setMessagesList] = useState<IMessage[]>([]);
   const router = useRouter();
   const { id, userId, gameId } = useSearchParams();
 
-  // Create a state for the socket instance
   const [socket, setSocket] = useState<Socket | null>(null);
   useEffect(() => {
-    // Instantiate the socket inside the useEffect
     const newSocket = io(socketEndpoint);
     setSocket(newSocket);
 
@@ -33,8 +31,17 @@ const ChatRoomView = () => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const messages = await getMessages(Number(id));
-        setMessages(messages);
+        const messages: Message[] = await getMessages(Number(id));
+        const convertedMessages: IMessage[] = messages.map(msg => ({
+          _id: msg.id,
+          text: msg.content,
+          createdAt: new Date(msg.createdAt),
+          user: {
+            _id: msg.authorId,
+            name: msg.authorId,
+          },
+        }));
+        setMessagesList(convertedMessages);
       } catch (error) {
         console.error("Error fetching messages:", error);
       }
@@ -53,48 +60,49 @@ const ChatRoomView = () => {
       });
 
       const handleNewMessage = (msg: Message) => {
-        setMessages(prevMessages => [...prevMessages, msg]);
+        const convertedMessage: IMessage = {
+          _id: msg.id,
+          text: msg.content,
+          createdAt: new Date(msg.createdAt),
+          user: {
+            _id: msg.authorId,
+            name: msg.authorId,
+          },
+        };
+        setMessagesList(prevMessages => [...prevMessages, convertedMessage]);
       };
 
       socket.on("newMessage", handleNewMessage);
 
       return () => {
-        socket.off("newMessage", handleNewMessage); // désactive l'écoute de l'événement lors du nettoyage de l'effet.
+        socket.off("newMessage", handleNewMessage);
         socket.disconnect();
       };
     }
   }, [id, userId, socket]);
 
-  const sendMessage = () => {
-    try {
-      console.log(
-        `Sending message: ${messageInput} from ${userId} in game ${gameId} in chatroom ${id}`
-      );
+  const onSend = (msgList: IMessage[] = []) => {
+    msgList.forEach(msg => {
       const newMessage: NewMessage = {
         chatRoomId: Number(id),
-        content: messageInput,
+        content: msg.text,
         authorId: userId,
         gameId: Number(gameId),
       };
-      socket.emit("messagePosted", newMessage);
-      setMessageInput(""); // Vider le champ de texte après l'envoi du message
-    } catch (error) {
-      console.error("Error sending message:", error);
-    }
+      socket?.emit("messagePosted", newMessage);
+    });
   };
 
   return (
     <SafeAreaProvider>
       <Text>ChatRoom | {Number(id)}</Text>
-      {messages &&
-        messages.map((msg: Message, index: number) => <Text key={index}>{msg.content}</Text>)}
-      <Button onPress={() => router.back()}>Go Back</Button>
-      <Input
-        placeholder="Type your message..."
-        value={messageInput}
-        onChangeText={text => setMessageInput(text)}
+      <GiftedChat
+        messages={messagesList}
+        onSend={messages => onSend(messages)}
+        user={{ _id: userId }}
+        renderUsernameOnMessage={true}
       />
-      <Button onPress={sendMessage}>Send Message</Button>
+      <Button onPress={() => router.back()}>Go Back</Button>
     </SafeAreaProvider>
   );
 };
