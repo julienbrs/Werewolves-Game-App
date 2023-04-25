@@ -9,5 +9,6 @@ router.post("/:id/join", gameController.join);
 router.post("/:id/leave", gameController.leave);
 router.get("/:id", gameController.get);
 router.patch("/:id", gameController.update);
+router.delete("/:id/delete", gameController.delete);
 
 export default router;

@@ -51,6 +51,7 @@ lint:                # Vérification de la qualité du code javascript
   script:
     - mv .env.exemple .env
     - ls -la
+    - cat .env
     - pnpm lint      # vérifie la qualité du code javascript (js/*.js) et typescript (src/*.ts) + écrit le rapport dans lintes_report.txt
                      # turborepo va se charger de faire le lint dans les api/, wolfo/ et database/
   

@@ -142,6 +142,8 @@ describe("Scénario création de partie -> ajout de joueurs -> lancement", () =>
       expect(repLogin.body.message).toBe("User logged in");
       expect(repLogin.body).toHaveProperty("token");
       token = repLogin.body.token;
+      // on supprime la game
+      await request.delete(`/api/games/${gameId}/delete`).set("Authorization", `Bearer ${token}`);
     });
   });
 });
