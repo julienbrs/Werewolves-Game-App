@@ -7,12 +7,9 @@ stages:                 # Les étapes associées au projet.
 
 services:
   - postgres:12
+
 variables:
   npm_config_cache: '$CI_PROJECT_DIR/.npm'
-  POSTGRES_USER: $POSTGRES_USER
-  POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-  POSTGRES_DB: $POSTGRES_DB
-  POSTGRES_HOST_AUTH_METHOD: trust
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
@@ -50,8 +47,6 @@ lint:                # Vérification de la qualité du code javascript
   stage: lint           # Pas de lint css et html parce que c'est le code donné par le prof et j'ai pas à corriger son code
   script:
     - mv .env.exemple .env
-    - ls -la
-    - cat .env
     - pnpm lint      # vérifie la qualité du code javascript (js/*.js) et typescript (src/*.ts) + écrit le rapport dans lintes_report.txt
                      # turborepo va se charger de faire le lint dans les api/, wolfo/ et database/
   
