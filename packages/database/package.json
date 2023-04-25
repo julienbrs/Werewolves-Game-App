@@ -20,7 +20,6 @@
     "db:deploy": "pnpm with-env prisma migrate deploy",
     "db:studio": "pnpm with-env prisma studio",
     "lint": "pnpm with-env prisma validate && prisma format",
-    "with-env": "dotenv -e ../../.env --",
-    "test": "dotenv -e ../../.env.test -- prisma db push"
+    "with-env": "dotenv -e ../../.env --"
   }
 }

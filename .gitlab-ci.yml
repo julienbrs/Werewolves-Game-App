@@ -57,10 +57,12 @@ lint:                # Vérification de la qualité du code javascript
                      # turborepo va se charger de faire le lint dans les api/, wolfo/ et database/
 
 
-#test:
-#  stage: test
-#  script:
-#    - pnpm test # pareil que lint
+test:
+  stage: test
+  script:
+    - mv .env.exemple .env
+    - pnpm db:push  # push les migrations dans la base de données
+    - pnpm test # lance db:generate puis test backend
 
 
 
