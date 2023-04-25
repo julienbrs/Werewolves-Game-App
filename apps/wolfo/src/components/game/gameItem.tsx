@@ -1,8 +1,7 @@
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { ListItem, Text } from "@ui-kitten/components";
-import { useRouter } from "expo-router";
 import React from "react";
-import { Button, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Game, StateGame } from "types";
 import { parseDeadline } from "../../utils/services/parsedate";
 
@@ -11,7 +10,6 @@ interface GameItemProps {
   handleFunction: (id: number) => void;
 }
 export const GameItemLobby = ({ game, handleFunction }: GameItemProps) => {
-  const router = useRouter();
   return (
     <ListItem
       title={game.name}
@@ -30,16 +28,6 @@ export const GameItemLobby = ({ game, handleFunction }: GameItemProps) => {
               color="red"
               onPress={() => handleFunction(game.id)}
             />
-            <Button
-              title="Join Chat Lobby"
-              onPress={() =>
-                router.push({
-                  pathname: `/chatroom/8`, // todo change to real chatroomID
-                  params: { gameId: game.id, userId: "512daa49-a394-4afc-99b3-1e6a0e7daf88" }, // todo change to real userID
-                })
-              }
-            />
-            <Text>ID: {game.id}</Text>
           </View>
         );
       }}
