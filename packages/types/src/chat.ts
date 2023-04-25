@@ -10,6 +10,13 @@ export type Message = {
   updatedAt: Date;
 };
 
+export type NewMessage = {
+  chatRoomId: number;
+  content: string;
+  authorId: string;
+  gameId: number;
+};
+
 export type Reader = {
   playerId: string;
   gameId: number;

@@ -15,6 +15,7 @@ const Settings = () => {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const router = useRouter();
+  const { token } = useContext(AuthContext);
   const queryClient = useQueryClient();
 
   const { mutate: updateQuery } = useMutation<any, Error, User>({
@@ -60,6 +61,7 @@ const Settings = () => {
       <Button onPress={() => deleteQuery()}>Supprimer le compte</Button>
       <Button onPress={() => logout()}>Se déconnecter</Button>
       {errorMessage && <Text>{errorMessage}</Text>}
+      <Text>Token: {token}</Text>
     </SafeAreaView>
   );
 };

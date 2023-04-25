@@ -44,6 +44,35 @@ const chatroomController = {
     });
     res.status(200).json(messages);
   },
+
+  async sendMessage(req: Request, res: Response) {
+    const chatRoomId = Number(req.params.id);
+    const { content, authorId, gameId } = req.body;
+
+    if (isNaN(chatRoomId) || !content || !authorId || !gameId) {
+      res.status(400).send("Bad request");
+      return;
+    }
+
+    try {
+      const newMessage = await prisma.message.create({
+        data: {
+          chatRoomId,
+          content,
+          authorId,
+          gameId,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      });
+
+      res.status(201).json(newMessage);
+    } catch (error) {
+      console.error("Failed to send message:", error);
+      res.status(500).json(error);
+    }
+  },
+
   getHistory: async (req: Request, res: Response) => {
     const chatRoomId = Number(req.params.id);
     if (isNaN(chatRoomId)) {
