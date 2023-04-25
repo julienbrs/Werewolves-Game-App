@@ -2,6 +2,7 @@
 import "jest";
 import supertest from "supertest";
 import app from "../../app";
+import prisma from "../../prisma";
 const request = supertest(app);
 let token: string = "";
 
@@ -13,6 +14,10 @@ beforeAll(async () => {
   expect(response.status).toBe(201);
   expect(response.body).toHaveProperty("token");
   token = response.body.token;
+});
+
+afterAll(async () => {
+  await prisma.$disconnect();
 });
 
 describe("Scénario création de deux comptes avec meme nom", () => {

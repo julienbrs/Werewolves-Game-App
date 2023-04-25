@@ -29,7 +29,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   response => response,
   error => {
-    console.error(error);
+    console.error(error, error.config.url);
     //console.error(JSON.stringify(error));
     if (error.data === "Endpoint not found") {
       return Promise.reject({ message: "Endpoint not found at " + error.config.url });

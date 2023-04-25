@@ -1,37 +1,26 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button, Input, Text } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
-import * as SecureStore from "expo-secure-store";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Error, User } from "types";
-import Loading from "../../components/loading";
+import { AuthContext } from "../../components/context/tokenContext";
 import { setToken } from "../../utils/api/api";
-import { deleteUser, getMe, updateUser } from "../../utils/api/user";
+import { deleteUser, updateUser } from "../../utils/api/user";
 
 const Settings = () => {
+  const { name: defaultName, id, handleSetToken } = useContext(AuthContext);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [name, setName] = useState<string>("");
+  const [name, setName] = useState<string>(defaultName);
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [enableMe, setEnableMe] = useState<boolean>(true);
   const router = useRouter();
   const queryClient = useQueryClient();
-  const {
-    data: user,
-    isLoading: isLoadingUser,
-    isError,
-  } = useQuery<User>({
-    queryFn: getMe,
-    queryKey: ["user"],
-    enabled: enableMe,
-  });
+
   const { mutate: updateQuery } = useMutation<any, Error, User>({
     mutationFn: userUpdated => updateUser(userUpdated),
     onSuccess: data => {
-      SecureStore.setItemAsync("token", data.token);
-      queryClient.invalidateQueries(["user"]);
-      setToken(data.token);
+      handleSetToken(data.token);
       setErrorMessage("");
     },
     onError: (error: Error) => {
@@ -41,43 +30,28 @@ const Settings = () => {
   const { mutate: deleteQuery } = useMutation<any, Error>({
     mutationFn: deleteUser,
     onSuccess: async () => {
-      setEnableMe(false);
-      await queryClient.invalidateQueries(["token"]);
       setToken(null);
-      await queryClient.invalidateQueries(["user"]);
-      await SecureStore.deleteItemAsync("token");
+      await queryClient.invalidateQueries();
       router.back();
     },
   });
-
-  if (isLoadingUser) {
-    return <Loading title="Loading user informations" message="Waiting" />;
-  }
-  if (isError) {
-    return <Loading title="Error" message="Error" />;
-  }
+  const logout = async () => {
+    setToken(null);
+    await queryClient.invalidateQueries();
+    router.back();
+  };
   const handleModify = async () => {
     if (password !== confirmPassword) {
       setErrorMessage("Passwords don't match");
       return;
     }
-    const modifiedUser: User = {
-      id: user.id,
-      name,
-      password,
-    };
     await queryClient.invalidateQueries(["token"]);
-    updateQuery(modifiedUser);
+    updateQuery({ id, name, password });
   };
-  const logout = async () => {
-    setEnableMe(false);
-    setToken(null);
-    await queryClient.invalidateQueries(["token"]);
-    router.back();
-  };
+
   return (
     <SafeAreaView>
-      <Text>{user.name}'s settings</Text>
+      <Text>{name}'s settings</Text>
       <Input placeholder="Username" onChangeText={setName} />
       <Input placeholder="Password" onChangeText={setPassword} />
       <Input placeholder="Confirm password" onChangeText={setConfirmPassword} />

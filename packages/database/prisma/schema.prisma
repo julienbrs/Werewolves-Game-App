@@ -4,27 +4,28 @@
 generator client {
   provider                = "prisma-client-js"
   interactiveTransactions = true
-  previewFeatures = ["jsonProtocol"]
+  previewFeatures         = ["jsonProtocol"]
 }
 
 generator build {
-  provider = "prisma-client-js"
-  output   = "../../../apps/api/dist"
+  provider                = "prisma-client-js"
+  output                  = "../../../apps/api/dist"
   interactiveTransactions = true
-  previewFeatures = ["jsonProtocol"]
+  previewFeatures         = ["jsonProtocol"]
 }
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String   @unique
-  password  String
-  Player    Player[]
+  id           String         @id @default(uuid())
+  name         String         @unique
+  password     String
+  Player       Player[]
   Notification Notification[]
-  createdAt DateTime @default(now())
+  createdAt    DateTime       @default(now())
 }
 
 enum StateGame {
@@ -86,10 +87,10 @@ enum Power {
 }
 
 model Player {
-  state     StatePlayer?
-  role      Role?
-  power     Power?
-  usedPower Boolean   @default(false)
+  state     StatePlayer? @default(ALIVE)
+  role      Role?        @default(VILLAGER)
+  power     Power?       @default(NONE)
+  usedPower Boolean      @default(false)
   user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   game      Game         @relation(fields: [gameId], references: [id], onDelete: Cascade)
@@ -196,7 +197,7 @@ model Notification {
   content   String
   link      String
   readed    Boolean  @default(false)
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

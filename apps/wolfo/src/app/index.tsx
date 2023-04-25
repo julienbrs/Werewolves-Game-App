@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Button, Input, Tab, TabView } from "@ui-kitten/components";
-import { Redirect, useRouter } from "expo-router";
+import { Link, Redirect, useRouter } from "expo-router";
 import React from "react";
 import { ListGamesLobby, ListMyGames } from "../components/game/gameList";
 import Loading from "../components/loading";
@@ -22,6 +22,7 @@ const Home = () => {
   }
   return (
     <>
+      <Link href="_sitemap">Sitemap</Link>
       <Button onPress={() => router.push("/games/new")}>New game</Button>
       <Input placeholder="Recherche" onChangeText={setSearch} value={search} />
       <TabView selectedIndex={tabIndex} onSelect={setTabIndex}>
