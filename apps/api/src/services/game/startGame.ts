@@ -1,5 +1,6 @@
 import { Player, Power, Role, StateGame } from "database";
 import prisma from "../../prisma";
+import notificationService from "../notification";
 import { JobType, deleteJob } from "../scheduler";
 
 const startGame = async (gameId: number) => {
@@ -10,6 +11,7 @@ const startGame = async (gameId: number) => {
         where: { id: gameId },
         select: {
           id: true,
+          name: true,
           state: true,
           minPlayer: true,
           wolfProb: true,
@@ -115,13 +117,14 @@ const startGame = async (gameId: number) => {
           });
         }
       }
-      const playersUpdate = players.map(player => {
+      const playersUpdateTransaction = players.map(player => {
         return transaction.player.update({
           where: { userId_gameId: { userId: player.userId, gameId: player.gameId } },
           data: player,
         });
       });
-      await Promise.all(playersUpdate); // update all players concurrently
+      const playersUpdated = await Promise.all(playersUpdateTransaction); // update all players concurrently
+      await notificationService.startGame(transaction, playersUpdated, game.name);
       await transaction.game.update({
         where: { id: gameId },
         data: {
