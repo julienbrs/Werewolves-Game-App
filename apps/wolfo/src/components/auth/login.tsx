@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button, Input, Text } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
 import React, { useContext, useState } from "react";
+import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Error, NewUser } from "types";
 import { setToken } from "../../utils/api/api";
@@ -30,11 +31,25 @@ export const Login = () => {
     mutate(user);
   };
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
       <Input placeholder="Username" onChangeText={setName} />
-      <Input placeholder="Password" onChangeText={setPassword} />
-      <Button onPress={handleLogin}>Connect</Button>
+      <Input placeholder="Password" onChangeText={setPassword} style={styles.passwordInput} />
+      <Button onPress={handleLogin} style={styles.button}>
+        Login
+      </Button>
       {isError && <Text>{error.message}</Text>}
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+  button: {
+    marginTop: 20,
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+});

@@ -38,7 +38,7 @@ const HomeLayout = () => {
               <Stack.Screen
                 name="auth/index"
                 options={{
-                  title: "Authentification",
+                  header: () => null,
                   headerRight: () => null,
                   headerLeft: () => null,
                 }}

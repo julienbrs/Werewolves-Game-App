@@ -1,57 +1,43 @@
-import { Ionicons } from "@expo/vector-icons";
-import { Button } from "@ui-kitten/components";
+import { light as lightTheme, mapping } from "@eva-design/eva";
+import { ApplicationProvider, Tab, TabView } from "@ui-kitten/components";
 import React, { useState } from "react";
 import { ImageBackground, StyleSheet, View } from "react-native";
 import imgBackground from "../../../assets/homepage_day.png";
 import { Login } from "../../components/auth/login";
+import { Register } from "../../components/auth/register";
+
+const theme = {
+  ...lightTheme,
+  "color-primary-100": "#ffe3d7",
+  "color-primary-200": "#ffc1b3",
+  "color-primary-300": "#ffa28f",
+  "color-primary-400": "#ff876f",
+  "color-primary-500": "#914f49",
+  "color-primary-600": "#db4a34",
+  "color-primary-700": "#b53120",
+  "color-primary-800": "#8f1c13",
+  "color-primary-900": "#741108",
+};
 
 const Auth = () => {
-  const [showLogin, setShowLogin] = useState<boolean>(false);
-
-  const handleLoginClick = () => {
-    setShowLogin(true);
-  };
-
-  const handleRegisterClick = () => {
-    // Handle register button click
-  };
-
-  const handleCloseClick = () => {
-    setShowLogin(false);
-  };
-
+  const [tabIndex, setTabIndex] = useState<number>(0);
   return (
-    <View style={styles.container}>
-      <ImageBackground source={imgBackground} style={styles.image}>
-        {showLogin ? (
-          <>
-            <View style={styles.closeButtonContainer}>
-              <Button
-                appearance="ghost"
-                accessoryLeft={() => (
-                  <Ionicons
-                    name="close-outline"
-                    size={24}
-                    color="#fff"
-                    onPress={handleCloseClick}
-                  />
-                )}
-              />
-            </View>
-            <Login />
-          </>
-        ) : (
-          <View style={styles.buttonContainer}>
-            <Button style={styles.button} onPress={handleLoginClick}>
-              Login
-            </Button>
-            <Button style={styles.button} onPress={handleRegisterClick}>
-              Register
-            </Button>
+    <ApplicationProvider mapping={mapping} theme={theme}>
+      <View style={styles.container}>
+        <ImageBackground source={imgBackground} style={styles.image}>
+          <View style={styles.tabViewWrapper}>
+            <TabView selectedIndex={tabIndex} onSelect={setTabIndex} style={styles.tabView}>
+              <Tab title="Login">
+                <Login />
+              </Tab>
+              <Tab title="Register">
+                <Register />
+              </Tab>
+            </TabView>
           </View>
-        )}
-      </ImageBackground>
-    </View>
+        </ImageBackground>
+      </View>
+    </ApplicationProvider>
   );
 };
 
@@ -63,23 +49,18 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    resizeMode: "contain",
+    resizeMode: "cover",
     justifyContent: "center",
-    alignItems: "center",
   },
-  buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+  tabViewWrapper: {
+    width: "70%",
+    alignSelf: "center",
+    borderRadius: 10,
+    overflow: "hidden",
   },
-  button: {
-    marginHorizontal: 10,
-  },
-  closeButtonContainer: {
-    position: "absolute",
-    top: 20,
-    right: 20,
-    zIndex: 1,
+  tabView: {
+    borderRadius: 10,
+    overflow: "hidden",
   },
 });
 
