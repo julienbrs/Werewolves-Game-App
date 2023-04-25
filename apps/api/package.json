@@ -1,16 +1,15 @@
 {
   "name": "api",
   "scripts": {
-    "dev": "pnpm with-env tsx watch src/server.ts",
-    "build": "pnpm with-env esbuild src/server.ts --bundle --platform=node --outfile=dist/server.js --external:express --external:cors",
-    "start": "pnpm with-env node dist/server.js",
+    "dev": "tsx watch src/server.ts",
+    "build": "esbuild src/server.ts --bundle --platform=node --outfile=dist/server.js --external:express --external:cors",
+    "start": "node dist/server.js",
     "lint": "eslint src",
     "lint:fix": "pnpm lint --fix",
-    "test": "NODE_ENV=test pnpm with-env jest --coverage --detectOpenHandles --forceExit",
-    "test:watch": "NODE_ENV=test jest --watch",
+    "test": "jest --coverage --detectOpenHandles --forceExit",
+    "test:watch": "jest --watch",
     "clean": "git clean -xdf .expo .turbo node_modules",
-    "type-check": "tsc",
-    "with-env": "dotenv -e ../../.env --"
+    "type-check": "tsc"
   },
   "dependencies": {
     "@types/bcryptjs": "^2.4.2",

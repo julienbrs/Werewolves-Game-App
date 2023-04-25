@@ -12,14 +12,13 @@
   },
   "scripts": {
     "clean": "git clean -xdf .expo .turbo node_modules",
-    "docker:init": "pnpm with-env docker-compose up -d",
-    "db:generate": "pnpm with-env prisma generate",
-    "db:push": "pnpm with-env prisma db push --skip-generate",
-    "db:migrate": "pnpm with-env prisma migrate dev",
-    "db:reset": "pnpm with-env prisma migrate reset",
-    "db:deploy": "pnpm with-env prisma migrate deploy",
-    "db:studio": "pnpm with-env prisma studio",
-    "lint": "pnpm with-env prisma validate && prisma format",
-    "with-env": "dotenv -e ../../.env --"
+    "docker:init": "docker-compose up -d",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push --skip-generate",
+    "db:migrate": "prisma migrate dev",
+    "db:reset": "prisma migrate reset",
+    "db:deploy": "prisma migrate deploy",
+    "db:studio": "prisma studio",
+    "lint": "prisma validate && prisma format"
   }
 }
