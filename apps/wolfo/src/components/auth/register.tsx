@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button, Input } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
 import React, { useContext, useState } from "react";
+import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Error, NewUser } from "types";
 import { setToken } from "../../utils/api/api";
@@ -31,10 +32,24 @@ export const Register = () => {
     mutate(user);
   };
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
       <Input placeholder="Name" onChangeText={setName} />
       <Input placeholder="Password" onChangeText={setPassword} />
-      <Button onPress={handleRegister}>Register</Button>
+      <Button onPress={handleRegister} style={styles.button}>
+        Register
+      </Button>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+  button: {
+    marginTop: 20,
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+});
