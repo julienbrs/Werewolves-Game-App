@@ -57,7 +57,7 @@ const SeerView = () => {
       <Text>Players:</Text>
       {game.players &&
         game.players
-          .filter((player: Player) => player.role === "VILLAGER")
+          .filter((player: Player) => player.userId === userId)
           .map((player: Player) => (
             <Button
               key={player.userId}
