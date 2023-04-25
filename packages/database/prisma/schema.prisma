@@ -4,14 +4,12 @@
 generator client {
   provider                = "prisma-client-js"
   interactiveTransactions = true
-  previewFeatures         = ["jsonProtocol"]
 }
 
 generator build {
   provider                = "prisma-client-js"
   output                  = "../../../apps/api/dist"
   interactiveTransactions = true
-  previewFeatures         = ["jsonProtocol"]
 }
 
 datasource db {

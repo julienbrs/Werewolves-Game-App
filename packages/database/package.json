@@ -19,7 +19,7 @@
     "db:reset": "pnpm with-env prisma migrate reset",
     "db:deploy": "pnpm with-env prisma migrate deploy",
     "db:studio": "pnpm with-env prisma studio",
-    "lint": "pnpm with-env prisma validate && prisma format",
+    "linteee": "pnpm with-env prisma validate && prisma format",
     "with-env": "dotenv -e ../../.env --"
   }
 }
