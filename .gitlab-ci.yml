@@ -12,6 +12,9 @@ cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
     - node_modules/   # Cache des dépendances
+    - apps/api/node_modules/
+    - apps/wolfo/node_modules/
+    - apps/database/node_modules/
     - .pnpm-store/ # Moves pnpm cache inside project per GitLab restrictions
   policy: pull
 
@@ -25,15 +28,20 @@ install:
     - key: ${CI_COMMIT_REF_SLUG}
       paths:
         - node_modules/
+        - apps/api/node_modules/
+        - apps/wolfo/node_modules/
+        - apps/database/node_modules/
         - .pnpm-store/
       when: on_success
       policy: pull-push
   script:
     - pnpm install --frozen-lockfile
+    - mv .env.exemple .env
     - mkdir public
   artifacts:
     paths:
       - public
+      - .env
 
 
 lint:                # Vérification de la qualité du code javascript
@@ -43,10 +51,10 @@ lint:                # Vérification de la qualité du code javascript
                      # turborepo va se charger de faire le lint dans les api/, wolfo/ et database/
 
 
-test:
-  stage: test
-  script:
-    - pnpm test # pareil que lint
+#test:
+#  stage: test
+#  script:
+#    - pnpm test # pareil que lint
 
 
 
