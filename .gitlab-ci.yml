@@ -7,7 +7,8 @@ stages:                 # Les étapes associées au projet.
 
 variables:
   npm_config_cache: '$CI_PROJECT_DIR/.npm'
-    
+  CYPRESS_RECORD_KEY: $CYPRESS_RECORD_KEY
+
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
@@ -47,7 +48,7 @@ lint:                # Vérification de la qualité du code javascript
                      # turborepo va se charger de faire le lint dans les api/, wolfo/ et database/
   
 
-test:
+test-backend:
   services:
   - postgres:12
   variables:
@@ -59,7 +60,18 @@ test:
   stage: test
   script:
     - pnpm db:push  # push les migrations dans la base de données
-    - pnpm test # lance db:generate puis test backend
+    - cd apps/api
+    - pnpm test # lance le test jest
+
+test-frontend:
+  image: cypress/base:16.18.1
+  stage: test
+  parallel: 2 # Uses 2 parallel instances
+  script:
+    - cd apps/wolfo
+    - pnpm web # lance l'app en mode dev
+    - npx cypress run --record --parallel    # Runs tests in parallel and records to Cypress Cloud
+
 
 
 scalingo:
@@ -71,12 +83,12 @@ scalingo:
     PROJECT_DIR: apps/api
     GIT_DEPTH: 0
   image: ruby:3.1.3 # car dpl est codé en Ruby
-  before_script: []
   script:
+    - pnpm build # build le backend et le client prisma dans apps/api/dist
     - gem install dpl --pre # gem est le gestionnaire de paquets pour Ruby
     - curl -O https://cli-dl.scalingo.com/install && bash install # scalingo CLI est installé
     - scalingo --app=$SCALINGO_APP_NAME env-set PROJECT_DIR=$PROJECT_DIR # Pour indiquer sur le dépôt distant où est le backend (s'il est à la racine du projet ceci est facultatif, et il est possible de le faire une fois pour toute directement dans l'interface web de scalingo)
     - dpl --provider=scalingo --app=$SCALINGO_APP_NAME --api-token=$SCALINGO_API_TOKEN --region=$SCALINGO_REGION --branch=refs/heads/main
+  when: always
   rules:
     - if: $CI_COMMIT_BRANCH == "scalingo"
-      when: always
