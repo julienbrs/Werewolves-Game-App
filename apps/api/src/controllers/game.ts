@@ -252,12 +252,32 @@ const gameController = {
     if (isNaN(id)) {
       return res.status(400).json({ message: "Invalid id" });
     }
-    prisma.game
-      .delete({
-        where: { id },
+    prisma
+      .$transaction(async transaction => {
+        const game = await transaction.game.findUnique({
+          where: { id },
+          select: {
+            id: true,
+            dayChatRoomId: true,
+            nightChatRoomId: true,
+          },
+        });
+        if (!game) {
+          throw new Error("Game not found");
+        }
+        await transaction.game.delete({
+          where: { id: game.id },
+        });
+        await transaction.chatRoom.delete({
+          where: { id: game.dayChatRoomId },
+        });
+        await transaction.chatRoom.delete({
+          where: { id: game.nightChatRoomId },
+        });
+        return game;
       })
       .then(game => {
-        res.status(201).json(game);
+        res.status(201).json(`La game ${game.id} a été supprimé`);
       })
       .catch(error => {
         console.log(error);
