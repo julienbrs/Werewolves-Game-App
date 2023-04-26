@@ -9,11 +9,12 @@ stages:                 # Les étapes associées au projet.
 variables:
   npm_config_cache: '$CI_PROJECT_DIR/.npm'
   CYPRESS_RECORD_KEY: $CYPRESS_RECORD_KEY
+  CYPRESS_CACHE_FOLDER: '$CI_PROJECT_DIR/cache/Cypress'
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
-    - /.cache/Cypress/
+    - cache/Cypress/
     - node_modules/   # Cache des dépendances
     - apps/api/node_modules/
     - apps/wolfo/node_modules/
@@ -30,7 +31,7 @@ install:
   cache:
     - key: ${CI_COMMIT_REF_SLUG}
       paths:
-        - /.cache/Cypress/
+        - cache/Cypress/
         - node_modules/
         - apps/api/node_modules/
         - apps/wolfo/node_modules/
@@ -72,7 +73,6 @@ test-frontend:
   parallel: 2 # Uses 2 parallel instances
   script:
     - cd apps/wolfo
-    - pnpm install
     - pnpm web & # lance l'app en mode dev
     - npx wait-on 'http-get://localhost:19000'
     - npx cypress run --record --parallel    # Runs tests in parallel and records to Cypress Cloud
