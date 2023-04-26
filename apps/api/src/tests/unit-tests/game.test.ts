@@ -7,19 +7,20 @@ let token: string = "";
 let gameId: number = -1;
 
 beforeAll(async () => {
+  // first of all we create the user that will create the game
   const repCreation = await request
     .post("/api/users/")
     .set("Content-Type", "application/json")
     .send({
-      name: "axelle",
-      password: "axelle",
+      name: "usertwo",
+      password: "usertwo",
     });
   expect(repCreation.status).toBe(201);
   expect(repCreation.body).toHaveProperty("token");
   const repLogin = await request
     .post("/api/users/login")
     .set("Content-Type", "application/json")
-    .send({ name: "axelle", password: "axelle" });
+    .send({ name: "usertwo", password: "usertwo" });
   expect(repLogin.statusCode).toBe(200);
   expect(repLogin.body.message).toBe("User logged in");
   expect(repLogin.body).toHaveProperty("token");
@@ -58,11 +59,11 @@ describe("Scénario création de partie -> ajout de joueurs -> lancement", () =>
           state: "LOBBY",
           minPlayer: 5,
           maxPlayer: 5,
-          wolfProb: 0.5,
-          seerProb: 0.9,
-          insomProb: 0.9,
-          contProb: 0.9,
-          spiritProb: 0.9,
+          wolfProb: 0.2,
+          seerProb: 0.2,
+          insomProb: 0.5,
+          contProb: 0.2,
+          spiritProb: 1.0,
           startDay: "2023-04-15T08:00:00+00:00",
           endDay: "2023-04-15T20:00:00+00:00",
           deadline: "2024-04-25T00:00:00+00:00",
@@ -135,17 +136,35 @@ describe("Scénario création de partie -> ajout de joueurs -> lancement", () =>
 
       // on remet le token de départ dans token
       repLogin = await request
-        .post("/api/users/login")
-        .set("Content-Type", "application/json")
-        .send({ name: "axelle", password: "axelle" });
-      expect(repLogin.statusCode).toBe(200);
-      expect(repLogin.body.message).toBe("User logged in");
-      expect(repLogin.body).toHaveProperty("token");
-      token = repLogin.body.token;
-      // on supprime la game
-      await request.delete(`/api/games/${gameId}/delete`).set("Authorization", `Bearer ${token}`);
+      .post("/api/users/login")
+      .set("Content-Type", "application/json")
+      .send({ name: "usertwo", password: "usertwo" });
+    expect(repLogin.statusCode).toBe(200);
+    expect(repLogin.body.message).toBe("User logged in");
+    expect(repLogin.body).toHaveProperty("token");
+    token = repLogin.body.token;
     });
   });
+
+  //describe("Lancement puis suppression de la game", () => {
+  //  test("startGame then delete /api/games/:id", async () => {
+  //  
+  //  // On lance la partie qui est pleine
+  //  await startGame(gameId);
+  //  const repGetGame = await request
+  //  .get(`/api/games/${gameId}`)
+  //  .set("Authorization", `Bearer ${token}`)
+  //  .set("Content-Type", "application/json"); 
+  //  expect(repGetGame.body.players.length).toBe(5);
+  //  console.log(repGetGame.body.players);
+  //  console.log(repGetGame.body);
+  //  //on supprime la game
+  //  await request
+  //  .delete(`/api/games/${gameId}/delete`)
+  //  .set("Authorization", `Bearer ${token}`)
+  //  .set("Content-Type", "application/json"); 
+  //  }); 
+  //});
 });
 
 afterAll(async () => {
