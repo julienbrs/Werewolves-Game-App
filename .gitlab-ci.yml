@@ -13,6 +13,7 @@ variables:
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
+    - cache/Cypress/
     - node_modules/   # Cache des dépendances
     - apps/api/node_modules/
     - apps/wolfo/node_modules/
@@ -29,6 +30,7 @@ install:
   cache:
     - key: ${CI_COMMIT_REF_SLUG}
       paths:
+        - cache/Cypress/
         - node_modules/
         - apps/api/node_modules/
         - apps/wolfo/node_modules/
