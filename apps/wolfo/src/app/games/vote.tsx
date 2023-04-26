@@ -5,18 +5,27 @@ import React, { useRef, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Game, Player } from "types";
+import { Game, Player, StatePlayer } from "types";
 import Loading from "../../components/loading";
 import { getGame } from "../../utils/api/game";
 import { getPlayer } from "../../utils/api/player";
 
-const Choice = ({ choicePlayer, activePlayer, setActivePlayer, game, currentPlayer }) => {
+interface ChoiceProps {
+  choicePlayer: Player;
+  activePlayer: Player | null;
+  setActivePlayer: React.Dispatch<React.SetStateAction<Player | null>>;
+  currentPlayer: Player | undefined;
+}
+const Choice = ({ choicePlayer, activePlayer, setActivePlayer, currentPlayer }: ChoiceProps) => {
   const [Width, setWidth] = useState(0);
   const shiftAnim = useRef(new Animated.Value(0)).current;
-
   /* Style animation */
   const buttonContentShifted = {
     right: shiftAnim,
+  };
+  const confirmHandle = () => {
+    //set confirmed player
+    cancelHandle();
   };
   const cancelHandle = () => {
     setActivePlayer(null);
@@ -32,40 +41,51 @@ const Choice = ({ choicePlayer, activePlayer, setActivePlayer, game, currentPlay
   if (choicePlayer !== activePlayer) {
     stopAnimation();
   }
-  console.log(currentPlayer);
   return (
     <View style={styles.container}>
-      <Animated.View
-        onLayout={event => {
-          const { width } = event.nativeEvent.layout;
-          setWidth(width);
-        }}
-        style={[styles.buttonContent, buttonContentShifted]}
-      >
-        <Pressable
-          style={styles.pressableView}
-          onPress={() => {
-            if (choicePlayer === activePlayer) {
-              return;
-            }
-            setActivePlayer(choicePlayer);
-            Animated.timing(shiftAnim, {
-              toValue: Width,
-              duration: 1000,
-              useNativeDriver: true,
-            }).start();
+      {choicePlayer.state === StatePlayer.ALIVE ? (
+        <Animated.View style={[styles.buttonContent, buttonContentShifted]}>
+          <Pressable
+            style={styles.pressableView}
+            onPress={() => {
+              if (choicePlayer === activePlayer) {
+                return;
+              }
+              setActivePlayer(choicePlayer);
+              Animated.timing(shiftAnim, {
+                toValue: Width,
+                duration: 1000,
+                useNativeDriver: true,
+              }).start();
+            }}
+          >
+            <View
+              style={[styles.buttonViewLeft]}
+              onLayout={event => {
+                const { width } = event.nativeEvent.layout;
+                setWidth(width);
+              }}
+            >
+              <Text style={styles.text}>{choicePlayer?.user!.name}</Text>
+            </View>
+          </Pressable>
+
+          <View style={[styles.buttonViewRight]}>
+            <Button onPress={cancelHandle}>Confirm</Button>
+            <Button onPress={cancelHandle}>Cancel</Button>
+          </View>
+        </Animated.View>
+      ) : (
+        <View
+          style={[styles.buttonViewLeft, styles.deadPlayer]}
+          onLayout={event => {
+            const { width } = event.nativeEvent.layout;
+            setWidth(width);
           }}
         >
-          <View style={[styles.buttonViewLeft]}>
-            <Text style={styles.text}>{"Player"}</Text>
-          </View>
-        </Pressable>
-
-        <View style={[styles.buttonViewRight]}>
-          <Button onPress={cancelHandle}>Confirm</Button>
-          <Button onPress={cancelHandle}>Cancel</Button>
+          <Text style={styles.text}>{choicePlayer?.user!.name}</Text>
         </View>
-      </Animated.View>
+      )}
     </View>
   );
 };
@@ -73,7 +93,7 @@ const Choice = ({ choicePlayer, activePlayer, setActivePlayer, game, currentPlay
 const Vote = () => {
   const router = useRouter();
   const { gameId, userId } = useSearchParams();
-    const [activePlayer, setActivePlayer] = useState<Player | null>(null);
+  const [activePlayer, setActivePlayer] = useState<Player | null>(null);
 
   const {
     data: game,
@@ -108,7 +128,6 @@ const Vote = () => {
             choicePlayer={player}
             activePlayer={activePlayer}
             setActivePlayer={setActivePlayer}
-            game={game}
             currentPlayer={currentPlayer}
           />
         ))}
@@ -121,25 +140,37 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: "bold",
   },
+  containerBorder: {
+    borderStyle: "solid",
+    borderColor: "black",
+
+    borderWidth: 1,
+  },
   container: {
     width: "80%",
     left: "10%",
+    height: 80,
     overflow: "hidden",
+    borderRadius: 20,
   },
   buttonContent: {
     position: "relative",
     width: "200%",
+    height: "100%",
     display: "flex",
     flexDirection: "row",
     flexWrap: "nowrap",
     backgroundColor: "red",
   },
   pressableView: {
-    width: "100%",
+    width: "50%",
   },
   buttonViewLeft: {
+    display: "flex",
     textAlign: "center",
-    width: "50%",
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
   },
   deadPlayer: {
     backgroundColor: "gray",
@@ -148,10 +179,12 @@ const styles = StyleSheet.create({
     padding: 20,
     textAlign: "center",
     width: "50%",
+    height: "100%",
     backgroundColor: "blue",
     display: "flex",
     justifyContent: "space-around",
     flexDirection: "row",
+    alignItems: "center",
   },
 });
 
