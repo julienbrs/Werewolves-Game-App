@@ -52,14 +52,14 @@ model Game {
   startDay   DateTime @default(dbgenerated("'08:00:00'")) @db.Time()
   endDay     DateTime @default(dbgenerated("'22:00:00'")) @db.Time()
 
-  dayChat          DayChatRoom     @relation(fields: [dayChatRoomId], references: [id], onDelete: Cascade)
+  dayChat          DayChatRoom     @relation(fields: [dayChatRoomId], references: [id])
   dayChatRoomId    Int             @unique
-  nightChat        NightChatRoom   @relation(fields: [nightChatRoomId], references: [id], onDelete: Cascade)
+  nightChat        NightChatRoom   @relation(fields: [nightChatRoomId], references: [id])
   nightChatRoomId  Int             @unique
   spiritChat       SpiritChatRoom? @relation(fields: [spiritChatRoomId], references: [id], onDelete: Cascade)
   spiritChatRoomId Int?            @unique
 
-  elections Election[] @relation("game_elections")
+  elections Election[] @relation(name: "game_elections")
   curElec   Election?  @relation(name: "current_election", fields: [curElecId], references: [id], onDelete: Cascade)
   curElecId Int?       @unique
   createdAt DateTime   @default(now())
@@ -107,7 +107,7 @@ model Player {
 model Election {
   id              Int      @id @default(autoincrement())
   votes           Vote[]
-  game            Game     @relation(name: "game_elections", fields: [gameId], references: [id])
+  game            Game     @relation(name: "game_elections", fields: [gameId], references: [id], onDelete: Cascade)
   gameId          Int
   currentElection Game?    @relation(name: "current_election")
   day             DateTime @default(now())
@@ -119,7 +119,7 @@ model Vote {
   targets    Player   @relation(name: "targets", fields: [targetId, gameId], references: [userId, gameId])
   targetId   String
   gameId     Int
-  election   Election @relation(fields: [electionId], references: [id])
+  election   Election @relation(fields: [electionId], references: [id], onDelete: Cascade)
   electionId Int
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -130,7 +130,7 @@ model Vote {
 model ChatRoom {
   id        Int              @id @default(autoincrement())
   messages  Message[]
-  readers   Reader[]
+  readers   Reader[]  
   writers   Writer[]
   createdAt DateTime         @default(now())
   updatedAt DateTime         @updatedAt
@@ -141,7 +141,7 @@ model ChatRoom {
 
 model NightChatRoom {
   id       Int      @id @default(autoincrement())
-  game     Game?
+  game     Game?    
   chatRoom ChatRoom @relation(fields: [id], references: [id], onDelete: Cascade)
 }
 
@@ -173,7 +173,7 @@ model Reader {
   player     Player   @relation(fields: [playerId, gameId], references: [userId, gameId])
   playerId   String
   gameId     Int
-  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id])
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
   chatRoomId Int
 
   @@id([playerId, gameId, chatRoomId])
@@ -183,7 +183,7 @@ model Writer {
   player     Player   @relation(fields: [playerId, gameId], references: [userId, gameId])
   playerId   String
   gameId     Int
-  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id])
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
   chatRoomId Int
 
   @@id([playerId, gameId, chatRoomId])

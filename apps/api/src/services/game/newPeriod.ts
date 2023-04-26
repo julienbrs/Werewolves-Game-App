@@ -1,6 +1,7 @@
-import { Role, StateGame } from "database";
+import { Power, Role, StateGame } from "database";
 import prisma from "../../prisma";
 import { finishElection } from "../election";
+import notificationService from "../notification";
 import { JobType, deleteJob } from "../scheduler";
 
 const newPeriod = async (day: boolean, gameId: number) => {
@@ -9,15 +10,19 @@ const newPeriod = async (day: boolean, gameId: number) => {
       const game = await transaction.game.findUniqueOrThrow({
         where: { id: gameId },
         select: {
+          name: true,
           curElecId: true,
           state: true,
           players: {
             select: {
               userId: true,
+              gameId: true,
               state: true,
               role: true,
               power: true,
               usedPower: true,
+              createdAt: true,
+              updatedAt: true,
             },
           },
         },
@@ -46,8 +51,25 @@ const newPeriod = async (day: boolean, gameId: number) => {
           curElecId: newElec.id,
         },
       });
+      await transaction.player.updateMany({
+        where: {
+          gameId,
+          power: { not: Power.NONE },
+        },
+        data: {
+          usedPower: false,
+        },
+      });
+
       // on supprime le job si la game est fini
-      if (state === StateGame.END) deleteJob(gameId, day ? JobType.NEW_DAY : JobType.NEW_NIGHT);
+      if (state === StateGame.END) {
+        notificationService.endGame(transaction, game.players, game.name);
+        deleteJob(gameId, JobType.NEW_NIGHT);
+        deleteJob(gameId, JobType.NEW_DAY);
+      } else {
+        if (day) notificationService.newDay(transaction, game.players, game.name);
+        else notificationService.newNight(transaction, game.players, game.name);
+      }
     })
     .then(() => {
       console.log("New period created");
