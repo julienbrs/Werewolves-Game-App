@@ -46,7 +46,10 @@ const GameView = () => {
   }
   const redirectChat = () => {
     const chatId = game.state === StateGame.DAY ? game.dayChatRoomId : game.nightChatRoomId;
-    return router.push({ pathname: `/chatroom/${chatId}`, params: { gameId: game.id, userId } });
+    return router.push({
+      pathname: `/games/chatroom/${chatId}`,
+      params: { gameId: game.id, userId },
+    });
   };
 
   const redirectPower = () => {
