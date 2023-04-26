@@ -91,6 +91,7 @@ scalingo:
     PROJECT_DIR: apps/api
     GIT_DEPTH: 0
   image: ruby:3.1.3 # car dpl est codé en Ruby
+  before_script: []
   script:
     - gem install dpl --pre # gem est le gestionnaire de paquets pour Ruby
     - curl -O https://cli-dl.scalingo.com/install && bash install # scalingo CLI est installé
