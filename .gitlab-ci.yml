@@ -62,7 +62,6 @@ test:
     - pnpm test # lance db:generate puis test backend
 
 
-
 scalingo:
   stage: deploy
   variables:
