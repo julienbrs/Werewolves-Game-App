@@ -1,5 +1,5 @@
 import { Button, Text } from "@ui-kitten/components";
-import { useRouter, useSearchParams } from "expo-router";
+import { Stack, useRouter, useSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { GiftedChat, IMessage } from "react-native-gifted-chat";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -86,7 +86,7 @@ const ChatRoomView = () => {
       const newMessage: NewMessage = {
         chatRoomId: Number(id),
         content: msg.text,
-        authorId: userId,
+        authorId: String(userId),
         gameId: Number(gameId),
       };
       socket?.emit("messagePosted", newMessage);
@@ -95,11 +95,17 @@ const ChatRoomView = () => {
 
   return (
     <SafeAreaProvider>
+      <Stack.Screen
+        options={{
+          title: `Chatroom day/night (à changer)`,
+          headerRight: () => null,
+        }}
+      />
       <Text>ChatRoom | {Number(id)}</Text>
       <GiftedChat
         messages={messagesList}
         onSend={messages => onSend(messages)}
-        user={{ _id: userId }}
+        user={{ _id: String(userId) }}
         renderUsernameOnMessage={true}
       />
       <Button onPress={() => router.back()}>Go Back</Button>

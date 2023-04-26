@@ -34,17 +34,21 @@ const GameView = () => {
     enabled: Boolean(game),
     queryKey: ["player", userId],
     queryFn: () => getPlayer(game?.id!, userId),
+    staleTime: 1000 * 60 * 5,
   });
   if (isLoading || isLoadingPlayer) {
     return <Loading title="Game loading" message={"Game " + String(id) + "is loading"} />;
   }
   if (isError || isErrorPlayer || !game || !player) {
-    return router.back();
+    console.log("error");
+    console.log(isError, isErrorPlayer, !game, !player);
+    return <Loading title="Game error" message="oui" />;
   }
   const redirectChat = () => {
     const chatId = game.state === StateGame.DAY ? game.dayChatRoomId : game.nightChatRoomId;
-    router.push({ pathname: `./chatroom/${chatId}`, params: { gameId: game.id, userId } });
+    return router.push({ pathname: `/chatroom/${chatId}`, params: { gameId: game.id, userId } });
   };
+
   const redirectPower = () => {
     switch (player?.power) {
       case Power.SEER:

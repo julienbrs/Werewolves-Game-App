@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-
 import { SECRET } from "../utils/env";
+
 const extractBearerToken = (headerValue: string) => {
   if (typeof headerValue !== "string") {
     return false;

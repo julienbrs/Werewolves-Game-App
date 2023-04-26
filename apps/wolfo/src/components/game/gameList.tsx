@@ -26,6 +26,7 @@ export const ListGamesLobby: React.FC<ListProps> = ({ search }) => {
   } = useQuery<Game[]>({
     queryKey: ["games"],
     queryFn: getGamesLobby,
+    refetchOnMount: true,
   });
   const { mutate } = useMutation<any, Error, number>({
     mutationFn: (gameId: number) => joinGame(gameId),
@@ -92,7 +93,7 @@ export const ListMyGames: React.FC<ListProps> = ({ search }) => {
   } = useQuery<Game[]>({
     queryKey: ["mygames"],
     queryFn: getMyGames,
-    staleTime: Infinity,
+    refetchOnMount: true,
   });
   const { mutate } = useMutation<any, Error, number>({
     mutationFn: (gameId: number) => leaveGame(gameId),

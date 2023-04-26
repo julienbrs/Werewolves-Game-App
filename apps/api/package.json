@@ -38,8 +38,6 @@
     "esbuild": "^0.17.11",
     "eslint-config-wolfo": "workspace:*",
     "jest": "^29.5.0",
-    "jest-mock-extended": "2.0.4",
-    "prismock": "^1.13.1",
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.0",
     "tsconfig": "workspace:*",
