@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Text } from "@ui-kitten/components";
 import { useRouter, useSearchParams } from "expo-router";
 import React, { useState } from "react";
@@ -12,43 +12,63 @@ const SeerView = () => {
   const router = useRouter();
   const { gameId, userId } = useSearchParams();
   const queryClient = useQueryClient();
+
   const {
     data: game,
     isLoading,
     isError,
   } = useQuery<Game, Error>({
+    enabled: !isNaN(Number(gameId)),
     queryKey: ["mygames", gameId],
     queryFn: () => getGame(Number(gameId)),
+    staleTime: 1000 * 60 * 60 * 24, // 1 day
   });
   const {
     data: currentPlayer,
     isLoading: isLoadingPlayer,
     isError: isErrorPlayer,
   } = useQuery<Player, Error>({
-    enabled: Boolean(game),
+    enabled: !isNaN(Number(gameId)),
     queryKey: ["player", userId],
     queryFn: () => getPlayer(Number(gameId), String(userId)),
   });
 
+  const { mutate: updateQuery } = useMutation<any, Error, Player>({
+    mutationFn: playerUpdated => {
+      delete playerUpdated?.user;
+      return updatePlayer(playerUpdated);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["role", "power", "usedPower"]);
+    },
+    onError: (error: Error) => {
+      setErrorMessageUpdate(error.message);
+    },
+  });
+
+  // const queryClient = useQueryClient();
+
   const [selectedPlayer, setSelectedPlayer] = useState<Player | undefined>();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [isErrorUpdate, setErrorMessageUpdate] = useState<string>("");
 
   const handlePlayerClick = async (player: Player) => {
     setSelectedPlayer(player);
     setIsButtonDisabled(true);
     // Update the seer's power usage
-    const updatedContaminator: Player = {
+    const updatedSeer: Player = {
       ...currentPlayer!,
       usedPower: true,
     };
-    await updatePlayer(updatedContaminator);
+    delete updatedSeer?.user;
+    updateQuery(updatedSeer);
   };
 
   if (isLoading || isLoadingPlayer) {
     return <Loading title="Power loading" message={"Loading..."} />;
   }
-  if (isError || isErrorPlayer || !game) {
-    queryClient.invalidateQueries(["players", gameId]);
+  if (isError || isErrorPlayer || isErrorUpdate) {
+    // queryClient.invalidateQueries(["players", gameId]);
     return router.back();
   }
 
@@ -57,7 +77,7 @@ const SeerView = () => {
       <Text>Players:</Text>
       {game.players &&
         game.players
-          .filter((player: Player) => player.userId === userId)
+          .filter((player: Player) => player.userId !== userId)
           .map((player: Player) => (
             <Button
               key={player.userId}
@@ -72,7 +92,7 @@ const SeerView = () => {
         <Text>
           {`${selectedPlayer.user?.name} is a `}
           {selectedPlayer.role !== undefined ? selectedPlayer.role : ""}
-          {selectedPlayer.power !== undefined ? `, ${selectedPlayer.power}` : ""}
+          {selectedPlayer.power !== "NONE" ? `, ${selectedPlayer.power}` : ""}
         </Text>
       ) : (
         <Text>No player selected</Text>

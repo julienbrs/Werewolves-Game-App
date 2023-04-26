@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Text } from "@ui-kitten/components";
 import { useRouter, useSearchParams } from "expo-router";
 import React, { useState } from "react";
@@ -13,52 +13,68 @@ const ContaminatorView = () => {
   const router = useRouter();
   const { gameId, userId } = useSearchParams();
   const queryClient = useQueryClient();
-  console.log(gameId);
-  console.log(userId);
+
   const {
     data: game,
     isLoading,
     isError,
   } = useQuery<Game, Error>({
+    enabled: !isNaN(Number(gameId)),
     queryKey: ["mygames", gameId],
     queryFn: () => getGame(Number(gameId)),
+    staleTime: 1000 * 60 * 60 * 24, // 1 day
   });
-  console.log(game);
+
   const {
     data: currentPlayer,
     isLoading: isLoadingPlayer,
     isError: isErrorPlayer,
   } = useQuery<Player, Error>({
-    enabled: Boolean(game),
+    enabled: !isNaN(Number(gameId)),
     queryKey: ["player", userId],
-    queryFn: () => getPlayer(game?.id!, Array.isArray(userId) ? userId[0] : userId!),
+    queryFn: () => getPlayer(Number(gameId), String(userId)),
+  });
+
+  const { mutate: updateQuery } = useMutation<any, Error, Player>({
+    mutationFn: playerUpdated => {
+      return updatePlayer(playerUpdated);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["role", "power", "usedPower"]);
+    },
+    onError: (error: Error) => {
+      setErrorMessageUpdate(error.message);
+    },
   });
 
   const [selectedPlayer, setSelectedPlayer] = useState<Player | undefined>();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [isErrorUpdate, setErrorMessageUpdate] = useState<string>("");
 
   const handlePlayerClick = async (contaminatedPlayer: Player) => {
     setSelectedPlayer(contaminatedPlayer);
     setIsButtonDisabled(true);
 
     // Update the contaminated player's role and power
-    const updatedPlayer: Player = {
+    const updatedContaminated: Player = {
       ...contaminatedPlayer,
       role: "WOLF",
       power: "NONE",
     };
-    await updatePlayer(updatedPlayer);
+    delete updatedContaminated?.user;
+    updateQuery(updatedContaminated);
 
     // Update the contaminator's power usage
     const updatedContaminator: Player = {
       ...currentPlayer!,
       usedPower: true,
     };
-    await updatePlayer(updatedContaminator);
+
+    delete updatedContaminator?.user;
+    updateQuery(updatedContaminator);
   };
 
-  if (isError || isErrorPlayer || !game) {
-    queryClient.invalidateQueries(["players", gameId]);
+  if (isError || isErrorPlayer || isErrorUpdate) {
     router.back();
     console.log("erreur");
   }
