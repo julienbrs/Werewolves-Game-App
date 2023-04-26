@@ -14,9 +14,8 @@ interface ChoiceProps {
   choicePlayer: Player;
   activePlayer: Player | null;
   setActivePlayer: React.Dispatch<React.SetStateAction<Player | null>>;
-  currentPlayer: Player | undefined;
 }
-const Choice = ({ choicePlayer, activePlayer, setActivePlayer, currentPlayer }: ChoiceProps) => {
+const Choice = ({ choicePlayer, activePlayer, setActivePlayer }: ChoiceProps) => {
   const [Width, setWidth] = useState(0);
   const shiftAnim = useRef(new Animated.Value(0)).current;
   /* Style animation */
@@ -71,7 +70,7 @@ const Choice = ({ choicePlayer, activePlayer, setActivePlayer, currentPlayer }: 
           </Pressable>
 
           <View style={[styles.buttonViewRight]}>
-            <Button onPress={cancelHandle}>Confirm</Button>
+            <Button onPress={confirmHandle}>Confirm</Button>
             <Button onPress={cancelHandle}>Cancel</Button>
           </View>
         </Animated.View>
@@ -112,7 +111,7 @@ const Vote = () => {
     queryKey: ["player", userId],
     queryFn: () => getPlayer(game?.id!, Array.isArray(userId) ? userId[0] : userId!),
   });
-
+  console.log(currentPlayer);
   if (isLoading || isLoadingPlayer) {
     return <Loading title="Power loading" message={"Loading..."} />;
   }
@@ -128,7 +127,6 @@ const Vote = () => {
             choicePlayer={player}
             activePlayer={activePlayer}
             setActivePlayer={setActivePlayer}
-            currentPlayer={currentPlayer}
           />
         ))}
         <Text>vote</Text>
