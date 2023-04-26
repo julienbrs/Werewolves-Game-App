@@ -29,8 +29,7 @@ describe("Scénario création de deux comptes avec meme nom", () => {
   });
   describe("GET /api/users/", () => {
     test("Test number of users", async () => {
-      const response = await request
-        .get("/api/users/")
+      const response = await request.get("/api/users/");
       expect(response.statusCode).toBe(200);
       expect(response.body.length).toBe(2);
     });
@@ -54,8 +53,7 @@ describe("Scénario création de deux comptes avec meme nom", () => {
     expect(response.body.message).toBe("User Deleted");
   });
   test("Re-test number of users after delete", async () => {
-    const response = await request
-      .get("/api/users/")
+    const response = await request.get("/api/users/");
     expect(response.statusCode).toBe(200);
     expect(response.body.length).toBe(1);
   });
@@ -69,7 +67,7 @@ describe("GET /api/users/me", () => {
       .set("Content-Type", "application/json");
     expect(response.statusCode).toBe(200);
   });
-}); 
+});
 
 describe("Test scénario login -> update account", () => {
   describe("POST /api/users/login", () => {
@@ -133,19 +131,17 @@ describe("scénario création de compte -> update d'un autre compte avec meme no
   });
   describe("delete /api/users/", () => {
     test("Now delete test user", async () => {
-      token = (await request.post("/api/users/login").send({ name: "test", password: "test" })).body.token;
+      token = (await request.post("/api/users/login").send({ name: "test", password: "test" })).body
+        .token;
       const response = await request
-      .delete("/api/users/")
-      .set("Authorization", `Bearer ${token}`)
-      .set("Content-Type", "application/json");
+        .delete("/api/users/")
+        .set("Authorization", `Bearer ${token}`)
+        .set("Content-Type", "application/json");
       expect(response.statusCode).toBe(200);
       expect(response.body.message).toBe("User Deleted");
     });
   });
-
 });
-
-
 
 describe("POST /api/users/login", () => {
   test("login wrong username", async () => {
@@ -192,7 +188,6 @@ describe("POST /api/users/login", () => {
 //    expect(response.body.message).toBe("User does not exist in database");
 //  });
 //});
-
 
 afterAll(async () => {
   const response = await request
