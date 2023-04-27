@@ -114,7 +114,6 @@ pages:
 
 scalingo:
   stage: deploy
-  needs: [build]
   variables:
     # SCALINGO_API_TOKEN # variable à ne pas définir en clair ici (cf instructions à la fin du .gitlab-ci.yml ci-dessous)
     SCALINGO_APP_NAME: wolfo-backend # le nom de votre appli chez scalingo
