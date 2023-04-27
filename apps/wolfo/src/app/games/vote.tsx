@@ -5,17 +5,25 @@ import React, { useRef, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Game, Player, StatePlayer } from "types";
+import { Game, Player, StatePlayer, Vote as VoteType } from "types";
 import Loading from "../../components/loading";
 import { getGame } from "../../utils/api/game";
 import { getPlayer } from "../../utils/api/player";
-
+import voteApi from "../../utils/api/vote";
 interface ChoiceProps {
   choicePlayer: Player;
   activePlayer: Player | null;
   setActivePlayer: React.Dispatch<React.SetStateAction<Player | null>>;
+  currentPlayer: Player;
+  electionId: number;
 }
-const Choice = ({ choicePlayer, activePlayer, setActivePlayer }: ChoiceProps) => {
+const Choice = ({
+  choicePlayer,
+  activePlayer,
+  setActivePlayer,
+  currentPlayer,
+  electionId,
+}: ChoiceProps) => {
   const [Width, setWidth] = useState(0);
   const shiftAnim = useRef(new Animated.Value(0)).current;
   /* Style animation */
@@ -23,10 +31,19 @@ const Choice = ({ choicePlayer, activePlayer, setActivePlayer }: ChoiceProps) =>
     right: shiftAnim,
   };
   const confirmHandle = () => {
-    //set confirmed player
-    cancelHandle();
+    //TODO get electionId from game
+    const vote: VoteType = {
+      voterId: currentPlayer.userId,
+      targetId: choicePlayer.userId,
+      gameId: choicePlayer.gameId,
+      electionId: electionId,
+    };
+    voteApi.createVote(currentPlayer, electionId, vote);
+    setActivePlayer(null);
+    stopAnimation();
   };
   const cancelHandle = () => {
+    voteApi.deleteVote(currentPlayer, electionId);
     setActivePlayer(null);
     stopAnimation();
   };
@@ -70,8 +87,12 @@ const Choice = ({ choicePlayer, activePlayer, setActivePlayer }: ChoiceProps) =>
           </Pressable>
 
           <View style={[styles.buttonViewRight]}>
-            <Button onPress={confirmHandle}>Confirm</Button>
-            <Button onPress={cancelHandle}>Cancel</Button>
+            <Button onPress={confirmHandle} style={styles.buttonConfirm}>
+              Confirm
+            </Button>
+            <Button onPress={cancelHandle} style={styles.buttonCancel}>
+              Cancel
+            </Button>
           </View>
         </Animated.View>
       ) : (
@@ -116,7 +137,7 @@ const Vote = () => {
     return <Loading title="Power loading" message={"Loading..."} />;
   }
 
-  if (isErrorPlayer || isError) {
+  if (isErrorPlayer || isError || !game || !currentPlayer) {
     router.back();
   }
   return (
@@ -127,6 +148,8 @@ const Vote = () => {
             choicePlayer={player}
             activePlayer={activePlayer}
             setActivePlayer={setActivePlayer}
+            currentPlayer={currentPlayer as Player}
+            electionId={2}
           />
         ))}
         <Text>vote</Text>
@@ -151,6 +174,12 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     borderRadius: 20,
   },
+  buttonConfirm: {
+    backgroundColor: "green",
+  },
+  buttonCancel: {
+    backgroundColor: "red",
+  },
   buttonContent: {
     position: "relative",
     width: "200%",
@@ -158,12 +187,13 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     flexWrap: "nowrap",
-    backgroundColor: "red",
+    // backgroundColor: "red",
   },
   pressableView: {
     width: "50%",
   },
   buttonViewLeft: {
+    backgroundColor: "brown",
     display: "flex",
     textAlign: "center",
     width: "100%",
@@ -178,7 +208,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     width: "50%",
     height: "100%",
-    backgroundColor: "blue",
+    backgroundColor: "#8F4401",
     display: "flex",
     justifyContent: "space-around",
     flexDirection: "row",
