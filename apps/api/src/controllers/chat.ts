@@ -40,6 +40,15 @@ const chatroomController = {
         id: true,
         content: true,
         createdAt: true,
+        author: {
+          select: {
+            user: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
       },
     });
     res.status(200).json(messages);
@@ -85,6 +94,15 @@ const chatroomController = {
         id: true,
         content: true,
         createdAt: true,
+        author: {
+          select: {
+            user: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
       },
     });
     res.status(200).json(messages);
