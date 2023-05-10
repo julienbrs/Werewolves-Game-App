@@ -31,18 +31,19 @@ const ChatRoomView = () => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const messages: any = await getMessages(Number(id));
+        const messages: Message[] = await getMessages(Number(id));
         const convertedMessages: any = messages.map(
           (msg: {
             id: any;
             content: any;
             createdAt: string | number | Date;
-            authorId: any;
+            authorId: string;
             author: { user: { name: any } };
           }) => ({
             _id: msg.id,
             text: msg.content,
             createdAt: new Date(msg.createdAt),
+            authorId: msg.authorId,
             user: {
               _id: msg.authorId,
               name: msg.author.user.name,

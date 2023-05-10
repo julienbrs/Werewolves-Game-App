@@ -40,6 +40,7 @@ const chatroomController = {
         id: true,
         content: true,
         createdAt: true,
+        authorId: true,
         author: {
           select: {
             user: {
@@ -94,6 +95,7 @@ const chatroomController = {
         id: true,
         content: true,
         createdAt: true,
+        authorId: true,
         author: {
           select: {
             user: {
