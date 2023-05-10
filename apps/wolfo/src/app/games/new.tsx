@@ -1,10 +1,10 @@
-import { MaterialIcons } from "@expo/vector-icons";
 import { Slider } from "@rneui/themed";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button, IndexPath, Input, Layout, Select, SelectItem } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
 import { Dispatch, SetStateAction, useState } from "react";
 import React, {
+  Image,
   ImageBackground,
   Platform,
   SafeAreaView,
@@ -14,8 +14,20 @@ import React, {
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { NewGame as NewGameType, StateGame } from "types";
-import imgBackground from "../../../assets/sunny_village.png";
 import { createGame } from "../../utils/api/game";
+
+import imgBackground from "../../../assets/sunny_village.png";
+const imgParchemin = require("../../../assets/parchemin.png");
+const imgOwl = require("../../../assets/owl.png");
+const imgWolf_Howl = require("../../../assets/wolf_howl.png");
+const imgPotion = require("../../../assets/potion.png");
+const imgSeer = require("../../../assets/seer.png");
+const imgSpirit = require("../../../assets/spirit.png");
+const imgHut = require("../../../assets/hut.png");
+const imgVillage = require("../../../assets/village.png");
+const imgSun = require("../../../assets/sun.png");
+const imgNight = require("../../../assets/night.png");
+const imgCalendar = require("../../../assets/calendar.png");
 
 const NewGame = () => {
   const router = useRouter();
@@ -127,20 +139,27 @@ const NewGame = () => {
         <ImageBackground source={imgBackground} style={styles.imageBackground}>
           <View style={styles.viewWrapper}>
             <View style={styles.wrapperSelect}>
-              <View style={styles.imageWrapper}>
-                <MaterialIcons name="drive-file-rename-outline" size={24} color="black" />{" "}
+              <View style={styles.wrapperImageText}>
+                <View style={styles.imageWrapper}>
+                  <Image source={imgParchemin} style={styles.icon} />
+                </View>
+                <Text style={styles.text}>Game's name:</Text>
               </View>
-              <Text style={styles.text}>Game's name:</Text>
               <Input
                 style={styles.input}
                 status={gameNameStatus}
-                placeholder={"Game Name"}
+                placeholder={"Millers Hollow"}
                 onChangeText={setGameName}
               />
             </View>
 
             <View style={styles.wrapperSelect}>
-              <Text style={styles.text}>Minimum players:</Text>
+              <View style={styles.wrapperImageText}>
+                <View style={styles.imageWrapper}>
+                  <Image source={imgHut} style={styles.icon} />
+                </View>
+                <Text style={styles.text}>Minimum players:</Text>
+              </View>
               <Select
                 placeholder="Default"
                 style={styles.input}
@@ -161,7 +180,12 @@ const NewGame = () => {
               </Select>
             </View>
             <View style={styles.wrapperSelect}>
-              <Text style={styles.text}>Maximum players:</Text>
+              <View style={styles.wrapperImageText}>
+                <View style={styles.imageWrapper}>
+                  <Image source={imgVillage} style={styles.icon} />
+                </View>
+                <Text style={styles.text}>Maximum players:</Text>
+              </View>
               <Select
                 style={styles.input}
                 placeholder={maxPlayers}
@@ -181,7 +205,12 @@ const NewGame = () => {
               </Select>
             </View>
             <View id="dateline" style={styles.wrapperSelect}>
-              <Text style={styles.text}>Start date:</Text>
+              <View style={styles.wrapperImageText}>
+                <View style={styles.imageWrapper}>
+                  <Image source={imgCalendar} style={styles.icon} />
+                </View>
+                <Text style={styles.text}>Start date:</Text>
+              </View>
               <Button style={styles.timeButton} onPress={() => setStartDatelineVisibility(true)}>
                 {deadline.getDate() +
                   "/" +
@@ -200,8 +229,14 @@ const NewGame = () => {
               }}
               onCancel={() => hideTimePicker(setStartDatelineVisibility)}
             />
+
             <View id="startday" style={[styles.wrapperSelect]}>
-              <Text style={styles.text}>Day's start time</Text>
+              <View style={styles.wrapperImageText}>
+                <View style={styles.imageWrapper}>
+                  <Image source={imgSun} style={styles.icon} />
+                </View>
+                <Text style={styles.text}>Day's start time:</Text>
+              </View>
               {Platform.OS === "web" ? (
                 <Input
                   style={styles.timeButton}
@@ -222,8 +257,13 @@ const NewGame = () => {
               onConfirm={confirmStartDay}
               onCancel={() => hideTimePicker(setStartDayVisibility)}
             />
-            <View id="endday" style={[styles.wrapperSelect]}>
-              <Text style={styles.text}>Day's end time</Text>
+            <View id="endday" style={[styles.wrapperSelect, styles.lastSelect]}>
+              <View style={styles.wrapperImageText}>
+                <View style={styles.imageWrapper}>
+                  <Image source={imgNight} style={styles.icon} />
+                </View>
+                <Text style={styles.text}>Day's end time:</Text>
+              </View>
               {Platform.OS === "web" ? (
                 <Input
                   style={styles.timeButton}
@@ -245,7 +285,14 @@ const NewGame = () => {
               onCancel={() => hideTimePicker(setEndDayVisibility)}
             />
             {/* Sliders */}
-            <Text style={styles.text}>Wolf probability: {wolfProb}%</Text>
+            <View style={[styles.wrapperSelectIcon, styles.firstSelect]}>
+              <View style={styles.wrapperImageText}>
+                <View style={styles.imageWrapper}>
+                  <Image source={imgWolf_Howl} style={styles.icon} />
+                </View>
+                <Text style={styles.text}>Wolf probability: {wolfProb}%</Text>
+              </View>
+            </View>
             <Slider
               thumbStyle={styles.thumbSlider}
               animationType="timing"
@@ -256,7 +303,14 @@ const NewGame = () => {
               step={1}
             />
             {/* Contamination Prob */}
-            <Text style={styles.text}>Contamination probability: {contProb}%</Text>
+            <View style={styles.wrapperSelectIcon}>
+              <View style={styles.wrapperImageText}>
+                <View style={styles.imageWrapper}>
+                  <Image source={imgPotion} style={styles.icon} />
+                </View>
+                <Text style={styles.text}>Contamination probability: {contProb}%</Text>
+              </View>
+            </View>
             <Slider
               thumbStyle={styles.thumbSlider}
               animationType="timing"
@@ -267,7 +321,14 @@ const NewGame = () => {
               step={1}
             />
             {/* Seer Prob */}
-            <Text style={styles.text}>Seer probability: {seerProb}%</Text>
+            <View style={styles.wrapperSelectIcon}>
+              <View style={styles.wrapperImageText}>
+                <View style={styles.imageWrapper}>
+                  <Image source={imgSeer} style={styles.icon} />
+                </View>
+                <Text style={styles.text}>Seer probability: {seerProb}%</Text>
+              </View>
+            </View>
             <Slider
               thumbStyle={styles.thumbSlider}
               animationType="timing"
@@ -278,7 +339,14 @@ const NewGame = () => {
               step={1}
             />
             {/* Insomniac Prob */}
-            <Text style={styles.text}>Insomniac probability: {insomProb}%</Text>
+            <View style={styles.wrapperSelectIcon}>
+              <View style={styles.wrapperImageText}>
+                <View style={styles.imageWrapper}>
+                  <Image source={imgOwl} style={styles.icon} />
+                </View>
+                <Text style={styles.text}>Insomniac probability: {insomProb}%</Text>
+              </View>
+            </View>
             <Slider
               thumbStyle={styles.thumbSlider}
               animationType="timing"
@@ -289,7 +357,14 @@ const NewGame = () => {
               step={1}
             />
             {/* Spirit Prob */}
-            <Text style={styles.text}>Spirit probability: {spiritProb}%</Text>
+            <View style={styles.wrapperSelectIcon}>
+              <View style={styles.wrapperImageText}>
+                <View style={styles.imageWrapper}>
+                  <Image source={imgSpirit} style={styles.icon} />
+                </View>
+                <Text style={styles.text}>Spirit probability: {spiritProb}%</Text>
+              </View>
+            </View>
             <Slider
               thumbStyle={styles.thumbSlider}
               animationType="timing"
@@ -298,6 +373,7 @@ const NewGame = () => {
               onValueChange={setSpiritProb}
               value={spiritProb}
               step={1}
+              style={styles.spiritSlider}
             />
             <Button onPress={async () => await newGame()}>Create game</Button>
           </View>
@@ -311,7 +387,6 @@ const styles = StyleSheet.create({
   body: {
     flex: 1,
     flexDirection: "column",
-    overflow: "hidden",
   },
   container: {
     display: "flex",
@@ -330,26 +405,53 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    marginVertical: 10,
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  wrapperSelectIcon: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: -10,
+    marginTop: 5,
+  },
+  wrapperImageText: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
   },
   imageWrapper: {
     width: 50,
     height: 50,
-    marginRight: 10,
+    marginRight: -10,
   },
-  image: {
+  firstSelect: {
+    marginTop: 15,
+  },
+  lastSelect: {
+    marginBottom: 20,
+  },
+  spiritSlider: {
+    marginBottom: 5,
+  },
+
+  icon: {
     flex: 1,
     resizeMode: "contain",
+    width: 30,
+    height: 30,
   },
   text: {
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: 17,
     color: "#fffaf9",
   },
   thumbSlider: {
-    height: 28,
-    backgroundColor: "blue",
-    width: 28,
+    height: 15,
+    backgroundColor: "#914f49",
+    width: 15,
   },
   input: {
     margin: 2,
