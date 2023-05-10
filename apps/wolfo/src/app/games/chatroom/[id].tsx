@@ -1,5 +1,5 @@
 import { Button, Text } from "@ui-kitten/components";
-import { useRouter, useSearchParams } from "expo-router";
+import { Stack, useRouter, useSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { GiftedChat, IMessage } from "react-native-gifted-chat";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -32,15 +32,24 @@ const ChatRoomView = () => {
     const fetchMessages = async () => {
       try {
         const messages: Message[] = await getMessages(Number(id));
-        const convertedMessages: IMessage[] = messages.map(msg => ({
-          _id: msg.id,
-          text: msg.content,
-          createdAt: new Date(msg.createdAt),
-          user: {
-            _id: msg.authorId,
-            name: msg.authorId,
-          },
-        }));
+        const convertedMessages: any = messages.map(
+          (msg: {
+            id: any;
+            content: any;
+            createdAt: string | number | Date;
+            authorId: string;
+            author: { user: { name: any } };
+          }) => ({
+            _id: msg.id,
+            text: msg.content,
+            createdAt: new Date(msg.createdAt),
+            authorId: msg.authorId,
+            user: {
+              _id: msg.authorId,
+              name: msg.author.user.name,
+            },
+          })
+        );
         setMessagesList(convertedMessages);
       } catch (error) {
         console.error("Error fetching messages:", error);
@@ -66,7 +75,7 @@ const ChatRoomView = () => {
           createdAt: new Date(msg.createdAt),
           user: {
             _id: msg.authorId,
-            name: msg.authorId,
+            name: msg.author.user.name,
           },
         };
         setMessagesList(prevMessages => [...prevMessages, convertedMessage]);
@@ -86,7 +95,7 @@ const ChatRoomView = () => {
       const newMessage: NewMessage = {
         chatRoomId: Number(id),
         content: msg.text,
-        authorId: userId,
+        authorId: String(userId),
         gameId: Number(gameId),
       };
       socket?.emit("messagePosted", newMessage);
@@ -95,11 +104,17 @@ const ChatRoomView = () => {
 
   return (
     <SafeAreaProvider>
+      <Stack.Screen
+        options={{
+          title: `Chatroom day/night (à changer)`,
+          headerRight: () => null,
+        }}
+      />
       <Text>ChatRoom | {Number(id)}</Text>
       <GiftedChat
         messages={messagesList}
         onSend={messages => onSend(messages)}
-        user={{ _id: userId }}
+        user={{ _id: String(userId) }}
         renderUsernameOnMessage={true}
       />
       <Button onPress={() => router.back()}>Go Back</Button>

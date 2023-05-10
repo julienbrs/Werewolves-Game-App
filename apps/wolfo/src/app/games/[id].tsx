@@ -34,17 +34,22 @@ const GameView = () => {
     enabled: Boolean(game),
     queryKey: ["player", userId],
     queryFn: () => getPlayer(game?.id!, userId),
+    staleTime: 1000 * 60 * 5,
   });
   if (isLoading || isLoadingPlayer) {
     return <Loading title="Game loading" message={"Game " + String(id) + "is loading"} />;
   }
   if (isError || isErrorPlayer || !game || !player) {
-    return router.back();
+    return <Loading title="Game error" message="oui" />;
   }
   const redirectChat = () => {
     const chatId = game.state === StateGame.DAY ? game.dayChatRoomId : game.nightChatRoomId;
-    router.push({ pathname: `./chatroom/${chatId}`, params: { gameId: game.id, userId } });
+    return router.push({
+      pathname: `/games/chatroom/${chatId}`,
+      params: { gameId: game.id, userId },
+    });
   };
+
   const redirectPower = () => {
     switch (player?.power) {
       case Power.SEER:
@@ -69,6 +74,13 @@ const GameView = () => {
       <Text>Game | {game.name}</Text>
       <Text>{game.state === StateGame.DAY ? "C'est le jour" : "C'est la nuit"}</Text>
       <Text>{player.power}</Text>
+      <Button
+        onPress={() =>
+          router.push({ pathname: "/games/vote", params: { gameId: game.id, userId } })
+        }
+      >
+        Vote
+      </Button>
       <Button onPress={redirectPower} disabled={player.usedPower}>
         Power
       </Button>
