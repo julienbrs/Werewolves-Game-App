@@ -4,13 +4,17 @@ stages:                 # Les étapes associées au projet.
   - lint                # Pour la vérification statique du code
   - test                # Test de l'application
   - deploy              # Deploiement
+# Pas de stage "build", il est réalisé directement sur scalingo
 
 variables:
   npm_config_cache: '$CI_PROJECT_DIR/.npm'
-    
+  CYPRESS_RECORD_KEY: $CYPRESS_RECORD_KEY
+  CYPRESS_CACHE_FOLDER: '$CI_PROJECT_DIR/cache/Cypress'
+
 cache:
   key: ${CI_COMMIT_REF_SLUG}
   paths:
+    - cache/Cypress/
     - node_modules/   # Cache des dépendances
     - apps/api/node_modules/
     - apps/wolfo/node_modules/
@@ -27,6 +31,7 @@ install:
   cache:
     - key: ${CI_COMMIT_REF_SLUG}
       paths:
+        - cache/Cypress/
         - node_modules/
         - apps/api/node_modules/
         - apps/wolfo/node_modules/
@@ -47,7 +52,7 @@ lint:                # Vérification de la qualité du code javascript
                      # turborepo va se charger de faire le lint dans les api/, wolfo/ et database/
   
 
-test:
+test-backend:
   services:
   - postgres:12
   variables:
@@ -59,7 +64,52 @@ test:
   stage: test
   script:
     - pnpm db:push  # push les migrations dans la base de données
-    - pnpm test # lance db:generate puis test backend
+    - pnpm test # lance le test jest
+  artifacts:
+    paths:
+      - coverage/
+
+test-frontend:
+  image: cypress/base:16.18.1
+  stage: test
+  parallel: 2 # Uses 2 parallel instances
+  script:
+    - cd apps/wolfo
+    - pnpm web & # lance l'app en mode dev
+    - npx wait-on 'http-get://localhost:19000'
+    - npx cypress run --record --parallel    # Runs tests in parallel and records to Cypress Cloud
+
+
+badges:
+  stage: deploy
+  needs: [test-backend]     # Les badges dépendent de la vérification de la qualité du code
+  script:
+    - scripts/badges.sh # Génère les badges de qualité de code
+    - cd apps/api/
+    - pnpm exec jest-coverage-badges # Génère les badges de couverture de code
+  when: always          # On veut toujours générer les badges
+  artifacts:
+    paths:
+      - apps/api/coverage/
+  only:
+    changes:
+      - "src/**/*"
+
+
+pages:
+  stage: deploy
+  variables:
+    GIT_DEPTH: 0
+  needs: [badges]
+  only:
+    changes:
+      - "src/**/*"
+  script:
+    - mv apps/api/coverage/* public/ # Copie les badges et le report dans public
+    - mv docs/diagrams public/
+  artifacts:
+    paths:
+      - public
 
 
 scalingo:
@@ -77,6 +127,6 @@ scalingo:
     - curl -O https://cli-dl.scalingo.com/install && bash install # scalingo CLI est installé
     - scalingo --app=$SCALINGO_APP_NAME env-set PROJECT_DIR=$PROJECT_DIR # Pour indiquer sur le dépôt distant où est le backend (s'il est à la racine du projet ceci est facultatif, et il est possible de le faire une fois pour toute directement dans l'interface web de scalingo)
     - dpl --provider=scalingo --app=$SCALINGO_APP_NAME --api-token=$SCALINGO_API_TOKEN --region=$SCALINGO_REGION --branch=refs/heads/main
+  when: always
   rules:
     - if: $CI_COMMIT_BRANCH == "scalingo"
-      when: always

@@ -8,13 +8,14 @@
   "devDependencies": {
     "dotenv-cli": "^7.2.1",
     "prisma": "^4.12.0",
-    "tsconfig": "workspace:*"
+    "tsconfig": "*"
   },
   "scripts": {
     "clean": "git clean -xdf .expo .turbo node_modules",
     "docker:init": "docker-compose up -d",
     "db:generate": "prisma generate",
     "db:push": "prisma db push --skip-generate",
+    "db:init": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
     "db:deploy": "prisma migrate deploy",

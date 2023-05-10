@@ -4,7 +4,7 @@
   "pipeline": {
     "build": {
       "outputs": ["dist/**"],
-      "dependsOn": ["^build", "type-check", "^db:generate"]
+      "dependsOn": ["^build", "^db:generate"]
     },
     "dev": {
       "dependsOn": ["^db:generate"],
