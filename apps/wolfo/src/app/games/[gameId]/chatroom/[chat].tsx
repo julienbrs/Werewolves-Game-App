@@ -2,8 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Text } from "@ui-kitten/components";
 import { Stack, useRouter, useSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ImageBackground, KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
-import { Day, GiftedChat, IMessage } from "react-native-gifted-chat";
+import { Button, ImageBackground, KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
+import { Day, GiftedChat, IMessage, InputToolbar } from "react-native-gifted-chat";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import io, { Socket } from "socket.io-client";
 import { Message, NewMessage } from "types";
@@ -32,34 +32,43 @@ const ChatRoomView = () => {
     };
   }, []);
 
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["permissions", Number(chat), userId],
+    queryFn: () => getPermissions(Number(chat)),
+  });
+
   useEffect(() => {
     if (!chat) {
       return;
     }
     const fetchMessages = async () => {
-      try {
-        const messages: Message[] = await getMessages(Number(chat));
-        const convertedMessages: any = messages.map(
-          (msg: {
-            id: any;
-            content: any;
-            createdAt: string | number | Date;
-            authorId: string;
-            author: { user: { name: any } };
-          }) => ({
-            _id: msg.id,
-            text: msg.content,
-            createdAt: new Date(msg.createdAt),
-            authorId: msg.authorId,
-            user: {
-              _id: msg.authorId,
-              name: msg.author.user.name,
-            },
-          })
-        );
-        setMessagesList(convertedMessages.reverse());
-      } catch (error) {
-        console.error("Error fetching messages:", error);
+      if (data?.read === true) {
+        try {
+          const messages: Message[] = await getMessages(Number(chat));
+          const convertedMessages: any = messages.map(
+            (msg: {
+              id: any;
+              content: any;
+              createdAt: string | number | Date;
+              authorId: string;
+              author: { user: { name: any } };
+            }) => ({
+              _id: msg.id,
+              text: msg.content,
+              createdAt: new Date(msg.createdAt),
+              authorId: msg.authorId,
+              user: {
+                _id: msg.authorId,
+                name: msg.author.user.name,
+              },
+            })
+          );
+          setMessagesList(convertedMessages.reverse());
+        } catch (error) {
+          console.error("Error fetching messages:", error);
+        }
+      } else {
+        console.error("You don't have permission to view this chatroom");
       }
     };
 
@@ -98,25 +107,23 @@ const ChatRoomView = () => {
         socket.disconnect();
       };
     }
-  }, [chat, userId, socket]);
+  }, [chat, userId, socket, data]);
 
   const onSend = (msgList: IMessage[] = []) => {
-    msgList.forEach(msg => {
-      const newMessage: NewMessage = {
-        chatRoomId: Number(chat),
-        content: msg.text,
-        authorId: String(userId),
-        gameId: Number(gameId),
-      };
-      socket?.emit("messagePosted", newMessage);
-    });
+    if (data?.write === true) {
+      msgList.forEach(msg => {
+        const newMessage: NewMessage = {
+          chatRoomId: Number(chat),
+          content: msg.text,
+          authorId: String(userId),
+          gameId: Number(gameId),
+        };
+        socket?.emit("messagePosted", [newMessage, data.write]);
+      });
+    } else {
+      console.error("You don't have permission to write in this chatroom");
+    }
   };
-
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["permissions", Number(chat), userId],
-    queryFn: () => getPermissions(Number(chat)),
-    enabled: !isNaN(Number(chat)),
-  });
 
   if (isLoading) {
     return <Text>Loading...</Text>;
@@ -128,6 +135,13 @@ const ChatRoomView = () => {
     return <Day {...props} textStyle={styles.title} />;
   };
 
+  const renderInputToolbar = (props: any) => {
+    if (data.write === true) {
+      return <InputToolbar {...props} />;
+    }
+    return null;
+  };
+
   return (
     <SafeAreaProvider>
       <ImageBackground source={imgBackground} style={styles.imageBackground}>
@@ -137,18 +151,29 @@ const ChatRoomView = () => {
             headerRight: () => null,
           }}
         />
+        <Button
+          onPress={() => {
+            console.log("data:", data);
+          }}
+          title="permissions"
+        />
 
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{ flex: 1 }}
         >
-          <GiftedChat
-            messages={messagesList}
-            onSend={messages => onSend(messages)}
-            user={{ _id: String(userId) }}
-            renderUsernameOnMessage={true}
-            renderDay={renderDay}
-          />
+          {data.read === true ? (
+            <GiftedChat
+              messages={messagesList}
+              onSend={messages => onSend(messages)}
+              user={{ _id: String(userId) }}
+              renderUsernameOnMessage={true}
+              renderDay={renderDay}
+              renderInputToolbar={props => renderInputToolbar(props)}
+            />
+          ) : (
+            <Text>Vous n'avez pas les droits pour accéder à ce chat</Text>
+          )}
         </KeyboardAvoidingView>
       </ImageBackground>
     </SafeAreaProvider>
