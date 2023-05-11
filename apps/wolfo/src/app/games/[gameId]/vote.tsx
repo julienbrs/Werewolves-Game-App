@@ -6,10 +6,11 @@ import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, Player, Role, StateGame, StatePlayer, Vote as VoteType } from "types";
-import Loading from "../../components/loading";
-import { getGame } from "../../utils/api/game";
-import { getPlayer } from "../../utils/api/player";
-import voteApi from "../../utils/api/vote";
+import voteApi from "../../../utils/api/vote";
+import Loading from "../../../components/loading";
+import { getGame } from "../../../utils/api/game";
+import { getPlayer } from "../../../utils/api/player";
+
 interface ChoiceProps {
   choicePlayer: Player;
   activePlayer: Player | null;
@@ -151,7 +152,7 @@ const Vote = () => {
     isLoading: isLoadingPlayer,
     isError: isErrorPlayer,
   } = useQuery<Player, Error>({
-    enabled: Boolean(game),
+    enabled: Boolean(game) && Boolean(userId),
     queryKey: ["player", userId],
     queryFn: () => getPlayer(game?.id!, Array.isArray(userId) ? userId[0] : userId!),
   });

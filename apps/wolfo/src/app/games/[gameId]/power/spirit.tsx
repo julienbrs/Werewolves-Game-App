@@ -4,7 +4,7 @@ import { useSearchParams } from "expo-router";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game } from "types";
-import { getGame } from "../../../utils/api/game";
+import { getGame } from "../../../../utils/api/game";
 const SpiritView = () => {
   const { gameId, userId } = useSearchParams();
   console.log(gameId, userId);
