@@ -1,4 +1,4 @@
-export interface Vote  {
+export type Vote = {
   voterId: string;
   targetId: string;
   gameId: number;

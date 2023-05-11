@@ -3,11 +3,28 @@ import { Vote } from "types";
 import prisma from "../prisma";
 const voteController = {
   async get(req: Request, res: Response) {
-    res.status(201).json({ message: "It works" });
+    const { id } = req.params;
+    const electionId = +req.params.electionId;
+    if (isNaN(electionId)) {
+      return res.status(400).json({ message: "Election ID must be a number" });
+    }
+
+    prisma.vote
+      .findUnique({ where: { voterId_electionId: { voterId: id, electionId } } })
+      .then(vote => {
+        if (vote === null) {
+          return res.status(200).json({ message: "Vote not found" });
+        }
+        return res.status(200).json({ vote, message: "Vote found" });
+      })
+      .catch(_ => {
+        console.log(_);
+        return res.status(400).json({ message: "An error occurred" });
+      });
   },
   async create(req: Request, res: Response) {
     const { voterId, targetId, gameId }: Vote = req.body;
-    const electionId = +req.params?.electionId;
+    const electionId = +req.params.electionId;
     if (voterId === targetId) {
       return res.status(400).json({ message: "You can't vote for yourself!" });
     }
@@ -31,7 +48,7 @@ const voteController = {
       },
     };
 
-    await prisma.vote
+    return await prisma.vote
       .create({
         data,
       })
