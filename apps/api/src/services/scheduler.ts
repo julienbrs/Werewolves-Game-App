@@ -44,9 +44,11 @@ export const deleteJob = (id: number, jobType: JobType) => {
 export const createDeadlineJob = (deadline: Date, gameId: number, startDay: Date): boolean => {
   const date = new Date(deadline);
   const start = new Date(startDay);
+  console.log("createDeadlineJob", date, start);
   if (!checkDeadline(date, start) || !date || !start) {
     return false;
   }
+  console.log("check");
   if (deadlineJobs[gameId]) {
     deadlineJobs[gameId].stop();
     delete deadlineJobs[gameId];
@@ -85,10 +87,10 @@ export const relaunchGames = async () => {
       endDay: true,
     },
   });
-  games.forEach(game => {
+  games.forEach(async game => {
     if (game.state === StateGame.LOBBY) {
       if (!createDeadlineJob(game.deadline, game.id, game.startDay)) {
-        prisma.game.delete({ where: { id: game.id } });
+        await prisma.game.delete({ where: { id: game.id } });
       }
     } else if (game.state === StateGame.DAY || game.state === StateGame.NIGHT) {
       createNewDayJob(game.startDay, game.id);

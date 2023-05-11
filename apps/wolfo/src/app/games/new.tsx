@@ -16,6 +16,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { NewGame as NewGameType, StateGame } from "types";
 import { createGame } from "../../utils/api/game";
 
+import { ScrollView } from "react-native-gesture-handler";
 import imgBackground from "../../../assets/sunny_village.png";
 const imgParchemin = require("../../../assets/parchemin.png");
 const imgOwl = require("../../../assets/owl.png");
@@ -134,251 +135,253 @@ const NewGame = () => {
   };
   return (
     <SafeAreaView style={styles.body}>
-      {/* Page de création de la partie */}
-      <Layout level="1" style={[styles.container]}>
-        <ImageBackground source={imgBackground} style={styles.imageBackground}>
-          <View style={styles.viewWrapper}>
-            <View style={styles.wrapperSelect}>
-              <View style={styles.wrapperImageText}>
-                <View style={styles.imageWrapper}>
-                  <Image source={imgParchemin} style={styles.icon} />
+      <ScrollView>
+        {/* Page de création de la partie */}
+        <Layout level="1" style={[styles.container]}>
+          <ImageBackground source={imgBackground} style={styles.imageBackground}>
+            <View style={styles.viewWrapper}>
+              <View style={styles.wrapperSelect}>
+                <View style={styles.wrapperImageText}>
+                  <View style={styles.imageWrapper}>
+                    <Image source={imgParchemin} style={styles.icon} />
+                  </View>
+                  <Text style={styles.text}>Game's name:</Text>
                 </View>
-                <Text style={styles.text}>Game's name:</Text>
+                <Input
+                  style={styles.input}
+                  status={gameNameStatus}
+                  placeholder={"Millers Hollow"}
+                  onChangeText={setGameName}
+                />
               </View>
-              <Input
-                style={styles.input}
-                status={gameNameStatus}
-                placeholder={"Millers Hollow"}
-                onChangeText={setGameName}
-              />
-            </View>
 
-            <View style={styles.wrapperSelect}>
-              <View style={styles.wrapperImageText}>
-                <View style={styles.imageWrapper}>
-                  <Image source={imgHut} style={styles.icon} />
+              <View style={styles.wrapperSelect}>
+                <View style={styles.wrapperImageText}>
+                  <View style={styles.imageWrapper}>
+                    <Image source={imgHut} style={styles.icon} />
+                  </View>
+                  <Text style={styles.text}>Minimum players:</Text>
                 </View>
-                <Text style={styles.text}>Minimum players:</Text>
+                <Select
+                  placeholder="Default"
+                  style={styles.input}
+                  value={+minPlayersIndex.toString() + minPlayers - 1}
+                  selectedIndex={minPlayersIndex}
+                  onSelect={index => {
+                    setMinPlayersIndex(index);
+                    if (Number(maxPlayersIndex.toString()) < Number(index.toString())) {
+                      setMaxPlayersIndex(index);
+                    }
+                  }}
+                >
+                  {Array.from(Array(maxPlayers).keys())
+                    .slice(minPlayers - 1)
+                    .map(n => (
+                      <SelectItem key={n} title={n + 1 + ""} />
+                    ))}
+                </Select>
               </View>
-              <Select
-                placeholder="Default"
-                style={styles.input}
-                value={+minPlayersIndex.toString() + minPlayers - 1}
-                selectedIndex={minPlayersIndex}
-                onSelect={index => {
-                  setMinPlayersIndex(index);
-                  if (Number(maxPlayersIndex.toString()) < Number(index.toString())) {
-                    setMaxPlayersIndex(index);
-                  }
+              <View style={styles.wrapperSelect}>
+                <View style={styles.wrapperImageText}>
+                  <View style={styles.imageWrapper}>
+                    <Image source={imgVillage} style={styles.icon} />
+                  </View>
+                  <Text style={styles.text}>Maximum players:</Text>
+                </View>
+                <Select
+                  style={styles.input}
+                  placeholder={maxPlayers}
+                  value={Number(maxPlayersIndex.toString()) + minPlayers - 1}
+                  selectedIndex={maxPlayersIndex}
+                  onSelect={index => setMaxPlayersIndex(index)}
+                >
+                  {Array.from(Array(maxPlayers).keys())
+                    .slice(minPlayers - 1)
+                    .map(n => (
+                      <SelectItem
+                        key={n}
+                        disabled={n < Number(minPlayersIndex.toString()) - 1 + minPlayers - 1}
+                        title={n + 1 + ""}
+                      />
+                    ))}
+                </Select>
+              </View>
+              <View id="dateline" style={styles.wrapperSelect}>
+                <View style={styles.wrapperImageText}>
+                  <View style={styles.imageWrapper}>
+                    <Image source={imgCalendar} style={styles.icon} />
+                  </View>
+                  <Text style={styles.text}>Start date:</Text>
+                </View>
+                <Button style={styles.timeButton} onPress={() => setStartDatelineVisibility(true)}>
+                  {deadline.getDate() +
+                    "/" +
+                    (deadline.getMonth() + 1) +
+                    "/" +
+                    deadline.getFullYear()}
+                </Button>
+              </View>
+              <DateTimePickerModal
+                minimumDate={new Date()}
+                date={deadline}
+                isVisible={startDatelineVisibility}
+                onConfirm={(date: Date) => {
+                  setStartDatelineVisibility(false);
+                  setDeadline(date);
                 }}
-              >
-                {Array.from(Array(maxPlayers).keys())
-                  .slice(minPlayers - 1)
-                  .map(n => (
-                    <SelectItem key={n} title={n + 1 + ""} />
-                  ))}
-              </Select>
-            </View>
-            <View style={styles.wrapperSelect}>
-              <View style={styles.wrapperImageText}>
-                <View style={styles.imageWrapper}>
-                  <Image source={imgVillage} style={styles.icon} />
-                </View>
-                <Text style={styles.text}>Maximum players:</Text>
-              </View>
-              <Select
-                style={styles.input}
-                placeholder={maxPlayers}
-                value={Number(maxPlayersIndex.toString()) + minPlayers - 1}
-                selectedIndex={maxPlayersIndex}
-                onSelect={index => setMaxPlayersIndex(index)}
-              >
-                {Array.from(Array(maxPlayers).keys())
-                  .slice(minPlayers - 1)
-                  .map(n => (
-                    <SelectItem
-                      key={n}
-                      disabled={n < Number(minPlayersIndex.toString()) - 1 + minPlayers - 1}
-                      title={n + 1 + ""}
-                    />
-                  ))}
-              </Select>
-            </View>
-            <View id="dateline" style={styles.wrapperSelect}>
-              <View style={styles.wrapperImageText}>
-                <View style={styles.imageWrapper}>
-                  <Image source={imgCalendar} style={styles.icon} />
-                </View>
-                <Text style={styles.text}>Start date:</Text>
-              </View>
-              <Button style={styles.timeButton} onPress={() => setStartDatelineVisibility(true)}>
-                {deadline.getDate() +
-                  "/" +
-                  (deadline.getMonth() + 1) +
-                  "/" +
-                  deadline.getFullYear()}
-              </Button>
-            </View>
-            <DateTimePickerModal
-              minimumDate={new Date()}
-              date={deadline}
-              isVisible={startDatelineVisibility}
-              onConfirm={(date: Date) => {
-                setStartDatelineVisibility(false);
-                setDeadline(date);
-              }}
-              onCancel={() => hideTimePicker(setStartDatelineVisibility)}
-            />
+                onCancel={() => hideTimePicker(setStartDatelineVisibility)}
+              />
 
-            <View id="startday" style={[styles.wrapperSelect]}>
-              <View style={styles.wrapperImageText}>
-                <View style={styles.imageWrapper}>
-                  <Image source={imgSun} style={styles.icon} />
+              <View id="startday" style={[styles.wrapperSelect]}>
+                <View style={styles.wrapperImageText}>
+                  <View style={styles.imageWrapper}>
+                    <Image source={imgSun} style={styles.icon} />
+                  </View>
+                  <Text style={styles.text}>Day's start time:</Text>
                 </View>
-                <Text style={styles.text}>Day's start time:</Text>
+                {Platform.OS === "web" ? (
+                  <Input
+                    style={styles.timeButton}
+                    onChangeText={text => setEndDay(new Date(text))}
+                    placeholder="HH:MM"
+                  />
+                ) : (
+                  <Button style={styles.timeButton} onPress={() => setStartDayVisibility(true)}>
+                    {getTimeString(startDay.getHours(), startDay.getMinutes())}
+                  </Button>
+                )}
               </View>
-              {Platform.OS === "web" ? (
-                <Input
-                  style={styles.timeButton}
-                  onChangeText={text => setEndDay(new Date(text))}
-                  placeholder="HH:MM"
-                />
-              ) : (
-                <Button style={styles.timeButton} onPress={() => setStartDayVisibility(true)}>
-                  {getTimeString(startDay.getHours(), startDay.getMinutes())}
-                </Button>
-              )}
-            </View>
-            <DateTimePickerModal
-              mode="time"
-              is24Hour={true}
-              minuteInterval={5}
-              isVisible={startDayVisibility}
-              onConfirm={confirmStartDay}
-              onCancel={() => hideTimePicker(setStartDayVisibility)}
-            />
-            <View id="endday" style={[styles.wrapperSelect, styles.lastSelect]}>
-              <View style={styles.wrapperImageText}>
-                <View style={styles.imageWrapper}>
-                  <Image source={imgNight} style={styles.icon} />
+              <DateTimePickerModal
+                mode="time"
+                is24Hour={true}
+                minuteInterval={5}
+                isVisible={startDayVisibility}
+                onConfirm={confirmStartDay}
+                onCancel={() => hideTimePicker(setStartDayVisibility)}
+              />
+              <View id="endday" style={[styles.wrapperSelect, styles.lastSelect]}>
+                <View style={styles.wrapperImageText}>
+                  <View style={styles.imageWrapper}>
+                    <Image source={imgNight} style={styles.icon} />
+                  </View>
+                  <Text style={styles.text}>Day's end time:</Text>
                 </View>
-                <Text style={styles.text}>Day's end time:</Text>
+                {Platform.OS === "web" ? (
+                  <Input
+                    style={styles.timeButton}
+                    onChangeText={text => setEndDay(new Date(text))}
+                    placeholder="HH:MM"
+                  />
+                ) : (
+                  <Button style={styles.timeButton} onPress={() => setEndDayVisibility(true)}>
+                    {getTimeString(endDay.getHours(), endDay.getMinutes())}
+                  </Button>
+                )}
               </View>
-              {Platform.OS === "web" ? (
-                <Input
-                  style={styles.timeButton}
-                  onChangeText={text => setEndDay(new Date(text))}
-                  placeholder="HH:MM"
-                />
-              ) : (
-                <Button style={styles.timeButton} onPress={() => setEndDayVisibility(true)}>
-                  {getTimeString(endDay.getHours(), endDay.getMinutes())}
-                </Button>
-              )}
-            </View>
-            <DateTimePickerModal
-              mode="time"
-              is24Hour={true}
-              minuteInterval={5}
-              isVisible={startEndVisibility}
-              onConfirm={confirmEndDay}
-              onCancel={() => hideTimePicker(setEndDayVisibility)}
-            />
-            {/* Sliders */}
-            <View style={[styles.wrapperSelectIcon, styles.firstSelect]}>
-              <View style={styles.wrapperImageText}>
-                <View style={styles.imageWrapper}>
-                  <Image source={imgWolf_Howl} style={styles.icon} />
+              <DateTimePickerModal
+                mode="time"
+                is24Hour={true}
+                minuteInterval={5}
+                isVisible={startEndVisibility}
+                onConfirm={confirmEndDay}
+                onCancel={() => hideTimePicker(setEndDayVisibility)}
+              />
+              {/* Sliders */}
+              <View style={[styles.wrapperSelectIcon, styles.firstSelect]}>
+                <View style={styles.wrapperImageText}>
+                  <View style={styles.imageWrapper}>
+                    <Image source={imgWolf_Howl} style={styles.icon} />
+                  </View>
+                  <Text style={styles.text}>Wolf probability: {wolfProb}%</Text>
                 </View>
-                <Text style={styles.text}>Wolf probability: {wolfProb}%</Text>
               </View>
-            </View>
-            <Slider
-              thumbStyle={styles.thumbSlider}
-              animationType="timing"
-              minimumValue={0}
-              maximumValue={100}
-              onValueChange={setWolfProb}
-              value={wolfProb}
-              step={1}
-            />
-            {/* Contamination Prob */}
-            <View style={styles.wrapperSelectIcon}>
-              <View style={styles.wrapperImageText}>
-                <View style={styles.imageWrapper}>
-                  <Image source={imgPotion} style={styles.icon} />
+              <Slider
+                thumbStyle={styles.thumbSlider}
+                animationType="timing"
+                minimumValue={0}
+                maximumValue={100}
+                onValueChange={setWolfProb}
+                value={wolfProb}
+                step={1}
+              />
+              {/* Contamination Prob */}
+              <View style={styles.wrapperSelectIcon}>
+                <View style={styles.wrapperImageText}>
+                  <View style={styles.imageWrapper}>
+                    <Image source={imgPotion} style={styles.icon} />
+                  </View>
+                  <Text style={styles.text}>Contamination probability: {contProb}%</Text>
                 </View>
-                <Text style={styles.text}>Contamination probability: {contProb}%</Text>
               </View>
-            </View>
-            <Slider
-              thumbStyle={styles.thumbSlider}
-              animationType="timing"
-              minimumValue={0}
-              maximumValue={100}
-              onValueChange={setContProb}
-              value={contProb}
-              step={1}
-            />
-            {/* Seer Prob */}
-            <View style={styles.wrapperSelectIcon}>
-              <View style={styles.wrapperImageText}>
-                <View style={styles.imageWrapper}>
-                  <Image source={imgSeer} style={styles.icon} />
+              <Slider
+                thumbStyle={styles.thumbSlider}
+                animationType="timing"
+                minimumValue={0}
+                maximumValue={100}
+                onValueChange={setContProb}
+                value={contProb}
+                step={1}
+              />
+              {/* Seer Prob */}
+              <View style={styles.wrapperSelectIcon}>
+                <View style={styles.wrapperImageText}>
+                  <View style={styles.imageWrapper}>
+                    <Image source={imgSeer} style={styles.icon} />
+                  </View>
+                  <Text style={styles.text}>Seer probability: {seerProb}%</Text>
                 </View>
-                <Text style={styles.text}>Seer probability: {seerProb}%</Text>
               </View>
-            </View>
-            <Slider
-              thumbStyle={styles.thumbSlider}
-              animationType="timing"
-              minimumValue={0}
-              maximumValue={100}
-              onValueChange={setSeerProb}
-              value={seerProb}
-              step={1}
-            />
-            {/* Insomniac Prob */}
-            <View style={styles.wrapperSelectIcon}>
-              <View style={styles.wrapperImageText}>
-                <View style={styles.imageWrapper}>
-                  <Image source={imgOwl} style={styles.icon} />
+              <Slider
+                thumbStyle={styles.thumbSlider}
+                animationType="timing"
+                minimumValue={0}
+                maximumValue={100}
+                onValueChange={setSeerProb}
+                value={seerProb}
+                step={1}
+              />
+              {/* Insomniac Prob */}
+              <View style={styles.wrapperSelectIcon}>
+                <View style={styles.wrapperImageText}>
+                  <View style={styles.imageWrapper}>
+                    <Image source={imgOwl} style={styles.icon} />
+                  </View>
+                  <Text style={styles.text}>Insomniac probability: {insomProb}%</Text>
                 </View>
-                <Text style={styles.text}>Insomniac probability: {insomProb}%</Text>
               </View>
-            </View>
-            <Slider
-              thumbStyle={styles.thumbSlider}
-              animationType="timing"
-              minimumValue={0}
-              maximumValue={100}
-              onValueChange={setInsomProb}
-              value={insomProb}
-              step={1}
-            />
-            {/* Spirit Prob */}
-            <View style={styles.wrapperSelectIcon}>
-              <View style={styles.wrapperImageText}>
-                <View style={styles.imageWrapper}>
-                  <Image source={imgSpirit} style={styles.icon} />
+              <Slider
+                thumbStyle={styles.thumbSlider}
+                animationType="timing"
+                minimumValue={0}
+                maximumValue={100}
+                onValueChange={setInsomProb}
+                value={insomProb}
+                step={1}
+              />
+              {/* Spirit Prob */}
+              <View style={styles.wrapperSelectIcon}>
+                <View style={styles.wrapperImageText}>
+                  <View style={styles.imageWrapper}>
+                    <Image source={imgSpirit} style={styles.icon} />
+                  </View>
+                  <Text style={styles.text}>Spirit probability: {spiritProb}%</Text>
                 </View>
-                <Text style={styles.text}>Spirit probability: {spiritProb}%</Text>
               </View>
+              <Slider
+                thumbStyle={styles.thumbSlider}
+                animationType="timing"
+                minimumValue={0}
+                maximumValue={100}
+                onValueChange={setSpiritProb}
+                value={spiritProb}
+                step={1}
+                style={styles.spiritSlider}
+              />
+              <Button onPress={async () => await newGame()}>Create game</Button>
             </View>
-            <Slider
-              thumbStyle={styles.thumbSlider}
-              animationType="timing"
-              minimumValue={0}
-              maximumValue={100}
-              onValueChange={setSpiritProb}
-              value={spiritProb}
-              step={1}
-              style={styles.spiritSlider}
-            />
-            <Button onPress={async () => await newGame()}>Create game</Button>
-          </View>
-        </ImageBackground>
-      </Layout>
+          </ImageBackground>
+        </Layout>
+      </ScrollView>
     </SafeAreaView>
   );
 };
