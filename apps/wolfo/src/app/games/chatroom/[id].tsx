@@ -141,7 +141,7 @@ const ChatRoomView = () => {
         socket.disconnect();
       };
     }
-  }, [id, userId, socket, data]);
+  }, [id, userId, socket, data, game, player]);
 
   const onSend = (msgList: IMessage[] = []) => {
     if (data?.write === true) {

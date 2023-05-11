@@ -44,6 +44,13 @@ const GameView = () => {
   }
   const redirectChat = () => {
     const chatId = game.state === StateGame.DAY ? game.dayChatRoomId : game.nightChatRoomId;
+    const spiritChatId = game.spiritChatRoomId;
+    if (player.power === Power.SPIRIT && spiritChatId) {
+      return router.push({
+        pathname: `/games/chatroom/${spiritChatId}`,
+        params: { gameId: game.id, userId },
+      });
+    }
     return router.push({
       pathname: `/games/chatroom/${chatId}`,
       params: { gameId: game.id, userId },
@@ -59,7 +66,7 @@ const GameView = () => {
         router.push({ pathname: "/games/power/spirit", params: { gameId: game.id, userId } });
         break;
       case Power.INSOMNIAC:
-        router.push({ pathname: "/games/power/insomniac", params: { gameId: game.id, userId } });
+        redirectChat();
         break;
       case Power.CONTAMINATOR:
         router.push({ pathname: "/games/power/contaminator", params: { gameId: game.id, userId } });
@@ -74,6 +81,7 @@ const GameView = () => {
       <Text>Game | {game.name}</Text>
       <Text>{game.state === StateGame.DAY ? "C'est le jour" : "C'est la nuit"}</Text>
       <Text>{player.power}</Text>
+      <Text>{player.role}</Text>
       <Button
         onPress={() =>
           router.push({ pathname: "/games/vote", params: { gameId: game.id, userId } })
