@@ -2,8 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Text } from "@ui-kitten/components";
 import { Stack, useRouter, useSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ImageBackground, KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
-import { Day, GiftedChat, IMessage } from "react-native-gifted-chat";
+import { Button, ImageBackground, KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
+import { Day, GiftedChat, IMessage, InputToolbar } from "react-native-gifted-chat";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import io, { Socket } from "socket.io-client";
 import { Message, NewMessage } from "types";
@@ -123,6 +123,13 @@ const ChatRoomView = () => {
     return <Day {...props} textStyle={styles.title} />;
   };
 
+  const renderInputToolbar = (props: any) => {
+    if (data.write === true) {
+      return <InputToolbar {...props} />;
+    }
+    return null;
+  };
+
   return (
     <SafeAreaProvider>
       <ImageBackground source={imgBackground} style={styles.imageBackground}>
@@ -132,18 +139,29 @@ const ChatRoomView = () => {
             headerRight: () => null,
           }}
         />
+        <Button
+          onPress={() => {
+            console.log("data:", data);
+          }}
+          title="permissions"
+        />
 
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{ flex: 1 }}
         >
-          <GiftedChat
-            messages={messagesList}
-            onSend={messages => onSend(messages)}
-            user={{ _id: String(userId) }}
-            renderUsernameOnMessage={true}
-            renderDay={renderDay}
-          />
+          {data.read === true ? (
+            <GiftedChat
+              messages={messagesList}
+              onSend={messages => onSend(messages)}
+              user={{ _id: String(userId) }}
+              renderUsernameOnMessage={true}
+              renderDay={renderDay}
+              renderInputToolbar={props => renderInputToolbar(props)}
+            />
+          ) : (
+            <Text>Vous n'avez pas les droits pour accéder à ce chat</Text>
+          )}
         </KeyboardAvoidingView>
       </ImageBackground>
     </SafeAreaProvider>
