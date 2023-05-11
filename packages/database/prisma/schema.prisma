@@ -124,7 +124,7 @@ model Vote {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  @@id([voterId, targetId, electionId])
+  @@id([voterId, electionId])
 }
 
 model ChatRoom {

@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { ChatRoom } from "types";
 import prisma from "../prisma";
 import createChatroom from "../services/chat/createChatroom";
+import { SECRET } from "../utils/env";
+const jwt = require("jsonwebtoken");
 
 const chatroomController = {
   async create(req: Request, res: Response) {
@@ -138,6 +140,26 @@ const chatroomController = {
       },
     });
     res.status(200).json(chatRoom?.writers);
+  },
+  getPermissions: async (req: Request, res: Response) => {
+    const chatRoomId = Number(req.params.id);
+    const token = req.headers.authorization?.split(" ")[1];
+    const decodedToken = jwt.verify(token, SECRET);
+    const userId = decodedToken.id;
+    if (isNaN(chatRoomId) || !userId) {
+      res.status(400).send("Bad request");
+      return;
+    }
+    const chatRoom = await prisma.chatRoom.findUnique({
+      where: { id: chatRoomId },
+      include: {
+        readers: true,
+        writers: true,
+      },
+    });
+    const writePermission = chatRoom?.writers.some(writer => writer.playerId === userId);
+    const readPermission = chatRoom?.readers.some(reader => reader.playerId === userId);
+    res.status(200).json({ write: writePermission, read: readPermission });
   },
 };
 

@@ -5,24 +5,23 @@ import { useContext } from "react";
 import React from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, Player, Power, StateGame } from "types";
-import { AuthContext } from "../../components/context/tokenContext";
-import Loading from "../../components/loading";
-import { getGame } from "../../utils/api/game";
-import { getPlayer } from "../../utils/api/player";
+import { AuthContext } from "../../../components/context/tokenContext";
+import Loading from "../../../components/loading";
+import { getGame } from "../../../utils/api/game";
+import { getPlayer } from "../../../utils/api/player";
 const GameView = () => {
   const router = useRouter();
-  const { id } = useSearchParams(); // idGame
+  const { gameId } = useSearchParams(); // idGame
   const { id: userId } = useContext(AuthContext);
-
   // get game data
   const {
     data: game,
     isLoading,
     isError,
   } = useQuery<Game, Error>({
-    enabled: !isNaN(Number(id)),
-    queryKey: ["mygames", id],
-    queryFn: () => getGame(Number(id)),
+    enabled: !isNaN(Number(gameId)),
+    queryKey: ["mygames", gameId],
+    queryFn: () => getGame(Number(gameId)),
     staleTime: 1000 * 60 * 5,
   });
   // get player data
@@ -37,34 +36,48 @@ const GameView = () => {
     staleTime: 1000 * 60 * 5,
   });
   if (isLoading || isLoadingPlayer) {
-    return <Loading title="Game loading" message={"Game " + String(id) + "is loading"} />;
+    return <Loading title="Game loading" message={"Game " + String(gameId) + "is loading"} />;
   }
   if (isError || isErrorPlayer || !game || !player) {
     return <Loading title="Game error" message="oui" />;
   }
   const redirectChat = () => {
     const chatId = game.state === StateGame.DAY ? game.dayChatRoomId : game.nightChatRoomId;
+    const spiritChatId = game.spiritChatRoomId;
+    if (player.power === Power.SPIRIT && spiritChatId) {
+      return router.push({
+        pathname: `/games/chatroom/${spiritChatId}`,
+        params: { gameId: game.id, userId },
+      });
+    }
     return router.push({
-      pathname: `/games/chatroom/${chatId}`,
-      params: { gameId: game.id, userId },
+      pathname: `/games/${gameId}/chatroom/${chatId}`,
+      params: { gameId, userId },
     });
   };
 
   const redirectPower = () => {
     switch (player?.power) {
       case Power.SEER:
-        router.push({ pathname: "/games/power/seer", params: { gameId: game.id, userId } });
+        router.push({ pathname: `/games/${gameId}/power/seer`, params: { userId } });
         break;
       case Power.SPIRIT:
-        router.push({ pathname: "/games/power/spirit", params: { gameId: game.id, userId } });
+        router.push({ pathname: `/games/${gameId}/power/spirit`, params: { userId } });
         break;
       case Power.INSOMNIAC:
-        router.push({ pathname: "/games/power/insomniac", params: { gameId: game.id, userId } });
+        router.push({ pathname: `/games/${gameId}/power/insomniac`, params: { userId } });
         break;
       case Power.CONTAMINATOR:
-        router.push({ pathname: "/games/power/contaminator", params: { gameId: game.id, userId } });
+        router.push({
+          pathname: `/games/${gameId}/power/contaminator`,
+          params: { userId },
+        });
         break;
     }
+    return;
+  };
+  const redirectVote = () => {
+    router.push({ pathname: `/games/${gameId}/vote`, params: { userId } });
     return;
   };
   return (
@@ -74,13 +87,8 @@ const GameView = () => {
       <Text>Game | {game.name}</Text>
       <Text>{game.state === StateGame.DAY ? "C'est le jour" : "C'est la nuit"}</Text>
       <Text>{player.power}</Text>
-      <Button
-        onPress={() =>
-          router.push({ pathname: "/games/vote", params: { gameId: game.id, userId } })
-        }
-      >
-        Vote
-      </Button>
+      <Text>{player.role}</Text>
+      <Button onPress={redirectVote}>Vote</Button>
       <Button onPress={redirectPower} disabled={player.usedPower}>
         Power
       </Button>
