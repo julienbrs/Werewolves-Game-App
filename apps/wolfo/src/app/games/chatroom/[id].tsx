@@ -64,7 +64,7 @@ const ChatRoomView = () => {
           console.error("Error fetching messages:", error);
         }
       } else {
-        console.log("console, you don't have permission to view this chatroom");
+        console.error("You don't have permission to view this chatroom");
       }
     };
 
@@ -106,15 +106,19 @@ const ChatRoomView = () => {
   }, [id, userId, socket, data]);
 
   const onSend = (msgList: IMessage[] = []) => {
-    msgList.forEach(msg => {
-      const newMessage: NewMessage = {
-        chatRoomId: Number(id),
-        content: msg.text,
-        authorId: String(userId),
-        gameId: Number(gameId),
-      };
-      socket?.emit("messagePosted", newMessage);
-    });
+    if (data?.write === true) {
+      msgList.forEach(msg => {
+        const newMessage: NewMessage = {
+          chatRoomId: Number(id),
+          content: msg.text,
+          authorId: String(userId),
+          gameId: Number(gameId),
+        };
+        socket?.emit("messagePosted", [newMessage, data.write]);
+      });
+    } else {
+      console.error("You don't have permission to write in this chatroom");
+    }
   };
 
   if (isLoading) {
