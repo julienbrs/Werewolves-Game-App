@@ -159,7 +159,7 @@ model SpiritChatRoom {
 
 model Message {
   id         Int      @id @default(autoincrement())
-  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id])
+  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
   chatRoomId Int
   content    String
   author     Player   @relation(fields: [authorId, gameId], references: [userId, gameId])
