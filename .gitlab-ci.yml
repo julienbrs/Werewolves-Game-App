@@ -91,10 +91,6 @@ badges:
   artifacts:
     paths:
       - apps/api/coverage/
-  only:
-    changes:
-      - "src/**/*"
-
 
 pages:
   stage: deploy

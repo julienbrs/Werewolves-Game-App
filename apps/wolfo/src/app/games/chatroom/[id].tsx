@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { Button, Text } from "@ui-kitten/components";
 import { Stack, useRouter, useSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -5,7 +6,7 @@ import { GiftedChat, IMessage } from "react-native-gifted-chat";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import io, { Socket } from "socket.io-client";
 import { Message, NewMessage } from "types";
-import { getMessages } from "../../../utils/api/chat";
+import { getMessages, getPermissions } from "../../../utils/api/chat";
 
 const IP = process.env.IP || "localhost";
 const PORT = process.env.PORT || 3000;
@@ -101,6 +102,18 @@ const ChatRoomView = () => {
       socket?.emit("messagePosted", newMessage);
     });
   };
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["permissions", Number(id), userId],
+    queryFn: () => getPermissions(Number(id)),
+  });
+
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
+  if (isError || !data) {
+    return router.back();
+  }
 
   return (
     <SafeAreaProvider>
