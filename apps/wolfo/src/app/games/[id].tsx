@@ -40,8 +40,6 @@ const GameView = () => {
     return <Loading title="Game loading" message={"Game " + String(id) + "is loading"} />;
   }
   if (isError || isErrorPlayer || !game || !player) {
-    console.log("error");
-    console.log(isError, isErrorPlayer, !game, !player);
     return <Loading title="Game error" message="oui" />;
   }
   const redirectChat = () => {

@@ -1,6 +1,6 @@
 import cors from "cors";
 import { Server, Socket } from "socket.io";
-import { NewMessage } from "types";
+import { Message, NewMessage } from "types";
 import app from "./app";
 import prisma from "./prisma";
 import { relaunchGames } from "./services/scheduler";
@@ -49,9 +49,10 @@ export type NewMessage = {
 
   socket.on("messagePosted", async (message: NewMessage) => {
     try {
-      const newMessage = await prisma.message.create({
+      const messageObj: Message = await prisma.message.create({
         data: {
           content: message.content,
+          // author is the user of userId message.authorId and in the game of gameId message.gameId
           author: {
             connect: {
               userId_gameId: {
@@ -66,9 +67,12 @@ export type NewMessage = {
             },
           },
         },
+        include: {
+          author: true,
+        },
       });
 
-      io.to(`chatRoom-${message.chatRoomId}`).emit("newMessage", newMessage);
+      io.to(`chatRoom-${message.chatRoomId}`).emit("newMessage", messageObj);
     } catch (error) {
       console.error("Error creating and sending message:", error);
     }
