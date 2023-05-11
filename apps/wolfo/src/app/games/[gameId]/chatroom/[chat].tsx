@@ -1,31 +1,24 @@
 import { useQuery } from "@tanstack/react-query";
 import { Text } from "@ui-kitten/components";
 import { Stack, useRouter, useSearchParams } from "expo-router";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, ImageBackground, KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
 import { Day, GiftedChat, IMessage, InputToolbar } from "react-native-gifted-chat";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import io, { Socket } from "socket.io-client";
-import { Game, Message, NewMessage, Player } from "types";
-import { getMessages, getPermissions } from "../../../utils/api/chat";
+import { Message, NewMessage } from "types";
+import { getMessages, getPermissions } from "../../../../utils/api/chat";
 
 const IP = process.env.IP || "localhost";
 const PORT = process.env.PORT || 3000;
 const socketEndpoint = `http://${IP}:${PORT}`;
 
-import imgChatroomDay from "../../../../assets/chatroom_day.png";
-import imgChatroomInsomniac from "../../../../assets/chatroom_insomniac.png";
-import imgChatroomNight from "../../../../assets/chatroom_night.png";
-import imgChatroomSpirit from "../../../../assets/chatroom_spirit.png";
-import { AuthContext } from "../../../components/context/tokenContext";
-import { getGame } from "../../../utils/api/game";
-import { getPlayer } from "../../../utils/api/player";
+import imgBackground from "../../../../../assets/chatroom_day.png";
 
 const ChatRoomView = () => {
+  //console.log(usePathname());
   const [messagesList, setMessagesList] = useState<IMessage[]>([]);
-  const [imageBackground, setImgBackground] = useState(imgChatroomDay);
-  const { id, gameId } = useSearchParams();
-  const { id: userId } = useContext(AuthContext);
+  const { chat, userId, gameId } = useSearchParams();
   const router = useRouter();
   const [socket, setSocket] = useState<Socket | null>(null);
   useEffect(() => {
@@ -40,44 +33,18 @@ const ChatRoomView = () => {
   }, []);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["permissions", Number(id), userId],
-    queryFn: () => getPermissions(Number(id)),
-  });
-
-  // get game data
-  const { data: game } = useQuery<Game, Error>({
-    enabled: !isNaN(Number(id)),
-    queryKey: ["mygames", id],
-    queryFn: () => getGame(Number(id)),
-    staleTime: 1000 * 60 * 5,
-  });
-  // get player data
-  const { data: player } = useQuery<Player, Error>({
-    enabled: Boolean(game),
-    queryKey: ["player", userId],
-    queryFn: () => getPlayer(game?.id!, userId),
-    staleTime: 1000 * 60 * 5,
+    queryKey: ["permissions", Number(chat), userId],
+    queryFn: () => getPermissions(Number(chat)),
   });
 
   useEffect(() => {
-    const setUpAssets = () => {
-      console.log("Setting up assets");
-      console.log("game", game);
-      console.log("player", player);
-      if (player?.power === "INSOMNIAC" && player?.usedPower === true) {
-        setImgBackground(imgChatroomInsomniac);
-      } else if (player?.power === "SPIRIT" && player?.usedPower === true) {
-        setImgBackground(imgChatroomSpirit);
-      } else if (game?.state === "NIGHT") {
-        setImgBackground(imgChatroomNight);
-      } else {
-        setImgBackground(imgChatroomDay);
-      }
-    };
+    if (!chat) {
+      return;
+    }
     const fetchMessages = async () => {
       if (data?.read === true) {
         try {
-          const messages: Message[] = await getMessages(Number(id));
+          const messages: Message[] = await getMessages(Number(chat));
           const convertedMessages: any = messages.map(
             (msg: {
               id: any;
@@ -104,14 +71,13 @@ const ChatRoomView = () => {
         console.error("You don't have permission to view this chatroom");
       }
     };
-    setUpAssets();
 
     fetchMessages();
 
     if (socket) {
       socket.on("connect", () => {
         console.log("Connected to socket server");
-        socket.emit("joinChatRoom", { chatRoomId: id, userId });
+        socket.emit("joinChatRoom", { chatRoomId: chat, userId });
       });
 
       socket.on("disconnect", () => {
@@ -141,13 +107,13 @@ const ChatRoomView = () => {
         socket.disconnect();
       };
     }
-  }, [id, userId, socket, data, game, player]);
+  }, [chat, userId, socket, data]);
 
   const onSend = (msgList: IMessage[] = []) => {
     if (data?.write === true) {
       msgList.forEach(msg => {
         const newMessage: NewMessage = {
-          chatRoomId: Number(id),
+          chatRoomId: Number(chat),
           content: msg.text,
           authorId: String(userId),
           gameId: Number(gameId),
@@ -178,7 +144,7 @@ const ChatRoomView = () => {
 
   return (
     <SafeAreaProvider>
-      <ImageBackground source={imageBackground} style={styles.imageBackground}>
+      <ImageBackground source={imgBackground} style={styles.imageBackground}>
         <Stack.Screen
           options={{
             title: `Chatroom day/night (à changer)`,
