@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@ui-kitten/components";
-import { useRouter, useSearchParams } from "expo-router";
+import { useSearchParams } from "expo-router";
 import React, { useRef, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -137,7 +137,6 @@ const Choice = ({
 };
 
 const Vote = () => {
-  const router = useRouter();
   const { gameId, userId } = useSearchParams();
   const {
     data: game,
