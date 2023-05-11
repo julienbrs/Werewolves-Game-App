@@ -31,31 +31,40 @@ const ChatRoomView = () => {
     };
   }, []);
 
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["permissions", Number(id), userId],
+    queryFn: () => getPermissions(Number(id)),
+  });
+
   useEffect(() => {
     const fetchMessages = async () => {
-      try {
-        const messages: Message[] = await getMessages(Number(id));
-        const convertedMessages: any = messages.map(
-          (msg: {
-            id: any;
-            content: any;
-            createdAt: string | number | Date;
-            authorId: string;
-            author: { user: { name: any } };
-          }) => ({
-            _id: msg.id,
-            text: msg.content,
-            createdAt: new Date(msg.createdAt),
-            authorId: msg.authorId,
-            user: {
-              _id: msg.authorId,
-              name: msg.author.user.name,
-            },
-          })
-        );
-        setMessagesList(convertedMessages.reverse());
-      } catch (error) {
-        console.error("Error fetching messages:", error);
+      if (data?.read === true) {
+        try {
+          const messages: Message[] = await getMessages(Number(id));
+          const convertedMessages: any = messages.map(
+            (msg: {
+              id: any;
+              content: any;
+              createdAt: string | number | Date;
+              authorId: string;
+              author: { user: { name: any } };
+            }) => ({
+              _id: msg.id,
+              text: msg.content,
+              createdAt: new Date(msg.createdAt),
+              authorId: msg.authorId,
+              user: {
+                _id: msg.authorId,
+                name: msg.author.user.name,
+              },
+            })
+          );
+          setMessagesList(convertedMessages.reverse());
+        } catch (error) {
+          console.error("Error fetching messages:", error);
+        }
+      } else {
+        console.log("console, you don't have permission to view this chatroom");
       }
     };
 
@@ -94,7 +103,7 @@ const ChatRoomView = () => {
         socket.disconnect();
       };
     }
-  }, [id, userId, socket]);
+  }, [id, userId, socket, data]);
 
   const onSend = (msgList: IMessage[] = []) => {
     msgList.forEach(msg => {
@@ -107,11 +116,6 @@ const ChatRoomView = () => {
       socket?.emit("messagePosted", newMessage);
     });
   };
-
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["permissions", Number(id), userId],
-    queryFn: () => getPermissions(Number(id)),
-  });
 
   if (isLoading) {
     return <Text>Loading...</Text>;
