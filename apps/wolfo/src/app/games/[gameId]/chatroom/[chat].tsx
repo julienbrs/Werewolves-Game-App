@@ -7,17 +7,18 @@ import { Day, GiftedChat, IMessage } from "react-native-gifted-chat";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import io, { Socket } from "socket.io-client";
 import { Message, NewMessage } from "types";
-import { getMessages, getPermissions } from "../../../utils/api/chat";
+import { getMessages, getPermissions } from "../../../../utils/api/chat";
 
 const IP = process.env.IP || "localhost";
 const PORT = process.env.PORT || 3000;
 const socketEndpoint = `http://${IP}:${PORT}`;
 
-import imgBackground from "../../../../assets/chatroom_day.png";
+import imgBackground from "../../../../../assets/chatroom_day.png";
 
 const ChatRoomView = () => {
+  //console.log(usePathname());
   const [messagesList, setMessagesList] = useState<IMessage[]>([]);
-  const { id, userId, gameId } = useSearchParams();
+  const { chat, userId, gameId } = useSearchParams();
   const router = useRouter();
   const [socket, setSocket] = useState<Socket | null>(null);
   useEffect(() => {
@@ -32,9 +33,12 @@ const ChatRoomView = () => {
   }, []);
 
   useEffect(() => {
+    if (!chat) {
+      return;
+    }
     const fetchMessages = async () => {
       try {
-        const messages: Message[] = await getMessages(Number(id));
+        const messages: Message[] = await getMessages(Number(chat));
         const convertedMessages: any = messages.map(
           (msg: {
             id: any;
@@ -64,7 +68,7 @@ const ChatRoomView = () => {
     if (socket) {
       socket.on("connect", () => {
         console.log("Connected to socket server");
-        socket.emit("joinChatRoom", { chatRoomId: id, userId });
+        socket.emit("joinChatRoom", { chatRoomId: chat, userId });
       });
 
       socket.on("disconnect", () => {
@@ -94,12 +98,12 @@ const ChatRoomView = () => {
         socket.disconnect();
       };
     }
-  }, [id, userId, socket]);
+  }, [chat, userId, socket]);
 
   const onSend = (msgList: IMessage[] = []) => {
     msgList.forEach(msg => {
       const newMessage: NewMessage = {
-        chatRoomId: Number(id),
+        chatRoomId: Number(chat),
         content: msg.text,
         authorId: String(userId),
         gameId: Number(gameId),
@@ -109,8 +113,9 @@ const ChatRoomView = () => {
   };
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["permissions", Number(id), userId],
-    queryFn: () => getPermissions(Number(id)),
+    queryKey: ["permissions", Number(chat), userId],
+    queryFn: () => getPermissions(Number(chat)),
+    enabled: !isNaN(Number(chat)),
   });
 
   if (isLoading) {

@@ -44,11 +44,9 @@ export const deleteJob = (id: number, jobType: JobType) => {
 export const createDeadlineJob = (deadline: Date, gameId: number, startDay: Date): boolean => {
   const date = new Date(deadline);
   const start = new Date(startDay);
-  console.log("createDeadlineJob", date, start);
   if (!checkDeadline(date, start) || !date || !start) {
     return false;
   }
-  console.log("check");
   if (deadlineJobs[gameId]) {
     deadlineJobs[gameId].stop();
     delete deadlineJobs[gameId];
