@@ -33,6 +33,7 @@ const ChatRoomView = () => {
   }, []);
 
   const { data, isLoading, isError } = useQuery({
+    enabled: !isNaN(Number(chat)),
     queryKey: ["permissions", Number(chat), userId],
     queryFn: () => getPermissions(Number(chat)),
   });
