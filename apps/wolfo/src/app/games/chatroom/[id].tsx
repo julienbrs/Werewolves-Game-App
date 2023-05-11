@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { Button, Text } from "@ui-kitten/components";
+import { Text } from "@ui-kitten/components";
 import { Stack, useRouter, useSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
+import { ImageBackground, KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
 import { GiftedChat, IMessage } from "react-native-gifted-chat";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import io, { Socket } from "socket.io-client";
@@ -12,11 +13,12 @@ const IP = process.env.IP || "localhost";
 const PORT = process.env.PORT || 3000;
 const socketEndpoint = `http://${IP}:${PORT}`;
 
+import imgBackground from "../../../../assets/chatroom_day.png";
+
 const ChatRoomView = () => {
   const [messagesList, setMessagesList] = useState<IMessage[]>([]);
-  const router = useRouter();
   const { id, userId, gameId } = useSearchParams();
-
+  const router = useRouter();
   const [socket, setSocket] = useState<Socket | null>(null);
   useEffect(() => {
     const newSocket = io(socketEndpoint);
@@ -51,7 +53,7 @@ const ChatRoomView = () => {
             },
           })
         );
-        setMessagesList(convertedMessages);
+        setMessagesList(convertedMessages.reverse());
       } catch (error) {
         console.error("Error fetching messages:", error);
       }
@@ -69,17 +71,20 @@ const ChatRoomView = () => {
         console.log("Disconnected from socket server");
       });
 
-      const handleNewMessage = (msg: Message) => {
+      const handleNewMessage = (args: [Message, any]) => {
+        const msg = args[0];
+        const author = args[1];
+
         const convertedMessage: IMessage = {
           _id: msg.id,
           text: msg.content,
           createdAt: new Date(msg.createdAt),
           user: {
             _id: msg.authorId,
-            name: msg.author.user.name,
+            name: author,
           },
         };
-        setMessagesList(prevMessages => [...prevMessages, convertedMessage]);
+        setMessagesList(previousMessages => [convertedMessage, ...previousMessages]);
       };
 
       socket.on("newMessage", handleNewMessage);
@@ -114,25 +119,47 @@ const ChatRoomView = () => {
   if (isError || !data) {
     return router.back();
   }
+  const renderDay = props => {
+    return <Day {...props} textStyle={styles.title} />;
+  };
 
   return (
     <SafeAreaProvider>
-      <Stack.Screen
-        options={{
-          title: `Chatroom day/night (à changer)`,
-          headerRight: () => null,
-        }}
-      />
-      <Text>ChatRoom | {Number(id)}</Text>
-      <GiftedChat
-        messages={messagesList}
-        onSend={messages => onSend(messages)}
-        user={{ _id: String(userId) }}
-        renderUsernameOnMessage={true}
-      />
-      <Button onPress={() => router.back()}>Go Back</Button>
+      <ImageBackground source={imgBackground} style={styles.imageBackground}>
+        <Stack.Screen
+          options={{
+            title: `Chatroom day/night (à changer)`,
+            headerRight: () => null,
+          }}
+        />
+
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+        >
+          <GiftedChat
+            messages={messagesList}
+            onSend={messages => onSend(messages)}
+            user={{ _id: String(userId) }}
+            renderUsernameOnMessage={true}
+            renderDay={renderDay}
+          />
+        </KeyboardAvoidingView>
+      </ImageBackground>
     </SafeAreaProvider>
   );
 };
+
+const styles = StyleSheet.create({
+  imageBackground: {
+    flex: 1,
+    resizeMode: "cover",
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "black",
+  },
+});
 
 export default ChatRoomView;
