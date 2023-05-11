@@ -3,7 +3,7 @@ import { Text } from "@ui-kitten/components";
 import { Stack, useRouter, useSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ImageBackground, KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
-import { GiftedChat, IMessage } from "react-native-gifted-chat";
+import { Day, GiftedChat, IMessage } from "react-native-gifted-chat";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import io, { Socket } from "socket.io-client";
 import { Message, NewMessage } from "types";
@@ -119,7 +119,7 @@ const ChatRoomView = () => {
   if (isError || !data) {
     return router.back();
   }
-  const renderDay = props => {
+  const renderDay = (props: any) => {
     return <Day {...props} textStyle={styles.title} />;
   };
 
