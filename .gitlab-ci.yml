@@ -67,7 +67,7 @@ test-backend:
     - pnpm test # lance le test jest
   artifacts:
     paths:
-      - coverage/
+      - apps/api/coverage/
 
 test-frontend:
   image: cypress/base:16.18.1

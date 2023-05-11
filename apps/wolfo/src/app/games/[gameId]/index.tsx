@@ -88,13 +88,7 @@ const GameView = () => {
       <Text>{game.state === StateGame.DAY ? "C'est le jour" : "C'est la nuit"}</Text>
       <Text>{player.power}</Text>
       <Text>{player.role}</Text>
-      <Button
-        onPress={() =>
-          router.push({ pathname: "/games/vote", params: { gameId: game.id, userId } })
-        }
-      >
-        Vote
-      </Button>
+      <Button onPress={redirectVote}>Vote</Button>
       <Button onPress={redirectPower} disabled={player.usedPower}>
         Power
       </Button>
