@@ -17,18 +17,18 @@ import { NewGame as NewGameType, StateGame } from "types";
 import { createGame } from "../../utils/api/game";
 
 import { ScrollView } from "react-native-gesture-handler";
+import imgCalendar from "../../../assets/calendar.png";
+import imgHut from "../../../assets/hut.png";
+import imgNight from "../../../assets/night.png";
+import imgOwl from "../../../assets/owl.png";
+import imgParchemin from "../../../assets/parchemin.png";
+import imgPotion from "../../../assets/potion.png";
+import imgSeer from "../../../assets/seer.png";
+import imgSpirit from "../../../assets/spirit.png";
+import imgSun from "../../../assets/sun.png";
 import imgBackground from "../../../assets/sunny_village.png";
-const imgParchemin = require("../../../assets/parchemin.png");
-const imgOwl = require("../../../assets/owl.png");
-const imgWolf_Howl = require("../../../assets/wolf_howl.png");
-const imgPotion = require("../../../assets/potion.png");
-const imgSeer = require("../../../assets/seer.png");
-const imgSpirit = require("../../../assets/spirit.png");
-const imgHut = require("../../../assets/hut.png");
-const imgVillage = require("../../../assets/village.png");
-const imgSun = require("../../../assets/sun.png");
-const imgNight = require("../../../assets/night.png");
-const imgCalendar = require("../../../assets/calendar.png");
+import imgVillage from "../../../assets/village.png";
+import imgWolf_Howl from "../../../assets/wolf_howl.png";
 
 const NewGame = () => {
   const router = useRouter();
