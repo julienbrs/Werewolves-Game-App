@@ -11,7 +11,8 @@
     "web": "expo start --web",
     "lint": "eslint .",
     "lint:fix": "pnpm lint --fix",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "cypress": "cypress run"
   },
   "dependencies": {
     "@eva-design/eva": "^2.2.0",
