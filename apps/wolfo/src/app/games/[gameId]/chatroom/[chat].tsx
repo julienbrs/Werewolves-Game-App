@@ -1,26 +1,31 @@
 import { useQuery } from "@tanstack/react-query";
-import { Text } from "@ui-kitten/components";
+import { Card, Text } from "@ui-kitten/components";
 import { Stack, useRouter, useSearchParams } from "expo-router";
-import React, { useContext, useEffect, useState } from "react";
-import { Button, ImageBackground, KeyboardAvoidingView, Platform, StyleSheet } from "react-native";
+import { default as React, useContext, useEffect, useState } from "react";
+import {
+  Button,
+  ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  View,
+} from "react-native";
 import { Day, GiftedChat, IMessage, InputToolbar } from "react-native-gifted-chat";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import io, { Socket } from "socket.io-client";
-import { Message, NewMessage } from "types";
-import imgChatroomSpirit from "../../../../assets/chatroom_spirit.png";
+import { Game, Message, NewMessage, Player } from "types";
 import { getMessages, getPermissions } from "../../../../utils/api/chat";
 import { getGame } from "../../../../utils/api/game";
 import { getPlayer } from "../../../../utils/api/player";
-
-import { Game, Player } from "types";
 
 const IP = process.env.IP || "localhost";
 const PORT = process.env.PORT || 3000;
 const socketEndpoint = `http://${IP}:${PORT}`;
 
-import { default as imgChatroomDay } from "../../../../assets/chatroom_day.png";
-import imgChatroomInsomniac from "../../../../assets/chatroom_insomniac.png";
-import imgChatroomNight from "../../../../assets/chatroom_night.png";
+import { default as imgChatroomDay } from "../../../../../assets/chatroom_day.png";
+import imgChatroomInsomniac from "../../../../../assets/chatroom_insomniac.png";
+import imgChatroomNight from "../../../../../assets/chatroom_night.png";
+import imgChatroomSpirit from "../../../../../assets/chatroom_spirit.png";
 import { AuthContext } from "../../../../components/context/tokenContext";
 
 const ChatRoomView = () => {
@@ -29,9 +34,11 @@ const ChatRoomView = () => {
   const [imageBackground, setImgBackground] = useState(imgChatroomDay);
   const { chat, gameId } = useSearchParams();
   const { id: userId } = useContext(AuthContext);
+  const [textReason, setTextReason] = useState<string>("");
 
   const router = useRouter();
   const [socket, setSocket] = useState<Socket | null>(null);
+
   useEffect(() => {
     const newSocket = io(socketEndpoint);
     setSocket(newSocket);
@@ -64,24 +71,28 @@ const ChatRoomView = () => {
   });
 
   useEffect(() => {
-    if (!chat) {
-      return;
-    }
-
     const setUpAssets = () => {
-      console.log("Setting up assets");
-      console.log("game", game);
-      console.log("player", player);
-      if (player?.power === "INSOMNIAC" && player?.usedPower === true) {
-        setImgBackground(imgChatroomInsomniac);
+      if (player?.power === "INSOMNIAC") {
+        if (player?.usedPower === true) {
+          setImgBackground(imgChatroomInsomniac);
+        } else {
+          setTextReason("You can use your power to spy werewolves, go to power menu.");
+        }
       } else if (player?.power === "SPIRIT" && player?.usedPower === true) {
         setImgBackground(imgChatroomSpirit);
       } else if (game?.state === "NIGHT") {
         setImgBackground(imgChatroomNight);
+        if (player?.role === "VILLAGER") {
+          setTextReason("You are a villager. You can't see anything at night.");
+        }
       } else {
         setImgBackground(imgChatroomDay);
       }
     };
+
+    if (!chat) {
+      return;
+    }
 
     const fetchMessages = async () => {
       if (data?.read === true) {
@@ -153,6 +164,7 @@ const ChatRoomView = () => {
   }, [chat, userId, socket, data, game, player]);
 
   const onSend = (msgList: IMessage[] = []) => {
+    console.log("in onsend, we got: data", data);
     if (data?.write === true) {
       msgList.forEach(msg => {
         const newMessage: NewMessage = {
@@ -215,7 +227,11 @@ const ChatRoomView = () => {
               renderInputToolbar={props => renderInputToolbar(props)}
             />
           ) : (
-            <Text>Vous n'avez pas les droits pour accéder à ce chat</Text>
+            <View style={styles.centeredContainer}>
+              <Card style={styles.cardReason}>
+                <Text style={styles.cardText}>{textReason}</Text>{" "}
+              </Card>
+            </View>
           )}
         </KeyboardAvoidingView>
       </ImageBackground>
@@ -232,6 +248,23 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "black",
+  },
+  centeredContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  cardReason: {
+    alignSelf: "center",
+    width: "80%",
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    padding: 16,
+    borderRadius: 16,
+    textAlign: "center",
+  },
+  cardText: {
+    color: "white",
+    fontSize: 16,
   },
 });
 
