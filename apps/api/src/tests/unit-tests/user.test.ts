@@ -10,7 +10,6 @@ beforeAll(async () => {
     name: "userone",
     password: "userone",
   });
-  console.log(JSON.stringify(response));
   expect(response.status).toBe(201);
   expect(response.body).toHaveProperty("token");
   token = response.body.token;
@@ -20,7 +19,6 @@ describe("Scénario création de deux comptes avec meme nom", () => {
   describe("POST /api/users/ johnny", () => {
     test("Test account creation", async () => {
       const response = await request.post("/api/users/").send({ name: "johnny", password: "john" });
-      console.log(JSON.stringify(response));
       expect(response.statusCode).toBe(201);
       expect(response.body.message).toBe("User created");
       expect(response.body).toHaveProperty("token");
@@ -39,7 +37,6 @@ describe("Scénario création de deux comptes avec meme nom", () => {
       const response = await request
         .post("/api/users/")
         .send({ name: "johnny", password: "johndoe" });
-      console.log(JSON.stringify(response));
       expect(response.statusCode).toBe(400);
       expect(response.body.message).toBe("Name already exists");
     });

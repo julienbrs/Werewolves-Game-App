@@ -3,8 +3,8 @@ image: node:latest
 stages:                 # Les étapes associées au projet.
   - lint                # Pour la vérification statique du code
   - test                # Test de l'application
-  - build               # Build de l'application
   - deploy              # Deploiement
+# Pas de stage "build", il est réalisé directement sur scalingo
 
 variables:
   npm_config_cache: '$CI_PROJECT_DIR/.npm'
@@ -41,7 +41,6 @@ install:
       policy: pull-push
   script:
     - pnpm install --frozen-lockfile
-    - ls -la
   artifacts:
     paths:
 
@@ -66,6 +65,9 @@ test-backend:
   script:
     - pnpm db:push  # push les migrations dans la base de données
     - pnpm test # lance le test jest
+  artifacts:
+    paths:
+      - coverage/
 
 test-frontend:
   image: cypress/base:16.18.1
@@ -77,17 +79,41 @@ test-frontend:
     - npx wait-on 'http-get://localhost:19000'
     - npx cypress run --record --parallel    # Runs tests in parallel and records to Cypress Cloud
 
-build:
-  stage: build
+
+badges:
+  stage: deploy
+  needs: [test-backend]     # Les badges dépendent de la vérification de la qualité du code
   script:
-    - pnpm build # build le backend et le client prisma dans apps/api/dist
+    - scripts/badges.sh # Génère les badges de qualité de code
+    - cd apps/api/
+    - pnpm exec jest-coverage-badges # Génère les badges de couverture de code
+  when: always          # On veut toujours générer les badges
   artifacts:
     paths:
-      - apps/api/dist
+      - apps/api/coverage/
+  only:
+    changes:
+      - "src/**/*"
+
+
+pages:
+  stage: deploy
+  variables:
+    GIT_DEPTH: 0
+  needs: [badges]
+  only:
+    changes:
+      - "src/**/*"
+  script:
+    - mv apps/api/coverage/* public/ # Copie les badges et le report dans public
+    - mv docs/diagrams public/
+  artifacts:
+    paths:
+      - public
+
 
 scalingo:
   stage: deploy
-  needs: [build]
   variables:
     # SCALINGO_API_TOKEN # variable à ne pas définir en clair ici (cf instructions à la fin du .gitlab-ci.yml ci-dessous)
     SCALINGO_APP_NAME: wolfo-backend # le nom de votre appli chez scalingo
