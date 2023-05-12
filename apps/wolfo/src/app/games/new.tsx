@@ -222,16 +222,24 @@ const NewGame = () => {
                     deadline.getFullYear()}
                 </Button>
               </View>
-              <DateTimePickerModal
-                minimumDate={new Date()}
-                date={deadline}
-                isVisible={startDatelineVisibility}
-                onConfirm={(date: Date) => {
-                  setStartDatelineVisibility(false);
-                  setDeadline(date);
-                }}
-                onCancel={() => hideTimePicker(setStartDatelineVisibility)}
-              />
+              {Platform.OS === "web" ? (
+                <Input
+                  style={styles.timeButton}
+                  onChangeText={text => setDeadline(new Date(text))}
+                  placeholder="MM-DD-YYYY"
+                />
+              ) : (
+                <DateTimePickerModal
+                  minimumDate={new Date()}
+                  date={deadline}
+                  isVisible={startDatelineVisibility}
+                  onConfirm={(date: Date) => {
+                    setStartDatelineVisibility(false);
+                    setDeadline(date);
+                  }}
+                  onCancel={() => hideTimePicker(setStartDatelineVisibility)}
+                />
+              )}
 
               <View id="startday" style={[styles.wrapperSelect]}>
                 <View style={styles.wrapperImageText}>
