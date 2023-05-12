@@ -26,10 +26,10 @@ const chatroomController = {
     const userSpiritId = decodedToken.id;
     const chatRoomId = Number(req.params.id);
     const gameId = Number(req.body.gameId);
-    const userDeadId = String(req.body.deadId);
+    const userDeadId = String(req.body.userDeadId);
 
     if (isNaN(chatRoomId) || !userSpiritId || !gameId || !userDeadId) {
-      res.status(400).send("Bad request");
+      res.status(400).send("Bad request, missing parameters");
       return;
     }
     const playerSpiritId = await prisma.player.findUnique({
@@ -42,12 +42,12 @@ const chatroomController = {
     });
 
     if (!playerSpiritId) {
-      res.status(400).send("Bad request");
+      res.status(400).send("Bad request, player spirit id not found");
       return;
     }
     // Verify that player got spirit power and didn't use it yet
     if (playerSpiritId.power !== "SPIRIT" || playerSpiritId.usedPower === true) {
-      res.status(400).send("Bad request");
+      res.status(400).send("Bad request, no spirit power or already used");
       return;
     }
 
@@ -61,13 +61,14 @@ const chatroomController = {
     });
 
     if (!playerDeadId) {
-      res.status(400).send("Bad request");
+      // display player dead id
+      res.status(400).send("Bad request, player dead id not found");
       return;
     }
 
     // Verify that player is dead
     if (playerDeadId.state === "ALIVE") {
-      res.status(400).send("Bad request");
+      res.status(400).send("Bad request, player is not dead");
       return;
     }
 
@@ -78,20 +79,34 @@ const chatroomController = {
         },
         data: {
           readers: {
-            connect: {
-              playerId_gameId_chatRoomId: {
+            upsert: {
+              create: {
                 playerId: userDeadId,
                 gameId: gameId,
-                chatRoomId: chatRoomId,
+              },
+              update: {},
+              where: {
+                playerId_gameId_chatRoomId: {
+                  playerId: userDeadId,
+                  gameId: gameId,
+                  chatRoomId: chatRoomId,
+                },
               },
             },
           },
           writers: {
-            connect: {
-              playerId_gameId_chatRoomId: {
+            upsert: {
+              create: {
                 playerId: userDeadId,
                 gameId: gameId,
-                chatRoomId: chatRoomId,
+              },
+              update: {},
+              where: {
+                playerId_gameId_chatRoomId: {
+                  playerId: userDeadId,
+                  gameId: gameId,
+                  chatRoomId: chatRoomId,
+                },
               },
             },
           },

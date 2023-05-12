@@ -1,18 +1,23 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Text } from "@ui-kitten/components";
 import { useRouter, useSearchParams } from "expo-router";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, Player } from "types";
 import Loading from "../../../../components/loading";
+import { addDeadToChatroom } from "../../../../utils/api/chat";
 import { getGame } from "../../../../utils/api/game";
-import { getPlayer } from "../../../../utils/api/player";
+import { getPlayer, updatePlayer } from "../../../../utils/api/player";
 
 const SpiritView = () => {
   const router = useRouter();
   const { gameId, userId } = useSearchParams();
-  // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
+  const [selectedDeadPlayer, setSelectedDeadPlayer] = useState<Player | undefined>();
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+  // get game data
   const {
     data: game,
     isLoading,
@@ -24,8 +29,9 @@ const SpiritView = () => {
     staleTime: 1000 * 60 * 60 * 24, // 1 day
   });
 
+  // get player data
   const {
-    // data: currentPlayer,
+    data: currentPlayer,
     isLoading: isLoadingPlayer,
     isError: isErrorPlayer,
   } = useQuery<Player, Error>({
@@ -34,34 +40,36 @@ const SpiritView = () => {
     queryFn: () => getPlayer(Number(gameId), String(userId)),
   });
 
-  // const { mutate: updateQuery } = useMutation<any, Error, Player>({
-  //   mutationFn: playerUpdated => {
-  //     return updatePlayer(playerUpdated);
-  //   },
-  //   onSuccess: async () => {
-  //     await queryClient.invalidateQueries(["role", "power", "usedPower"]);
-  //   },
-  //   onError: (error: Error) => {
-  //     setErrorMessageUpdate(error.message);
-  //   },
-  // });
-
-  const [selectedDeadPlayer, setSelectedDeadPlayer] = useState<Player | undefined>();
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  // const [isErrorUpdate, setErrorMessageUpdate] = useState<string>("");
+  const { mutate: updateQuery } = useMutation<any, Error, Player>({
+    mutationFn: playerUpdated => {
+      return updatePlayer(playerUpdated);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["role", "power", "usedPower"]);
+    },
+    onError: (error: Error) => {
+      console.error("Error while updating power of user", error);
+    },
+  });
 
   const handlePlayerClick = async (player: Player) => {
     setSelectedDeadPlayer(player);
     setIsButtonDisabled(true);
     // TODO -> associer chatroom avec le mort selectionné
     // update l'utilisation du pouvoir quand le joueur a selectionné le mort avec lequel il veut parler
-    // const updatedContaminator: Player = {
-    //   ...currentPlayer!,
-    //   usedPower: true,
-    // };
+    const updatedSpirit: Player = {
+      ...currentPlayer!,
+      usedPower: true,
+    };
 
-    // delete updatedContaminator?.user;
-    // updateQuery(updatedContaminator);
+    const spiritChatId = game?.spiritChatRoomId;
+    if (spiritChatId && player?.userId && gameId) {
+      // TODO ->  ajouter le joueur mort dans la chatroom et le joueur qui a le pouvoir
+      console.log("addDeadToChatroom", spiritChatId, player.userId, Number(gameId));
+      addDeadToChatroom(spiritChatId, player.userId, Number(gameId));
+      // delete updatedSpirit?.user;
+      // updateQuery(updatedSpirit);
+    }
   };
 
   if (isLoading || isLoadingPlayer) {

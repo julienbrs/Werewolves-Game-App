@@ -48,7 +48,7 @@ const playerController = {
     const { id } = req.params;
     const { gameId } = req.params;
     const playerInfo: Player = { ...req.body };
-    console.log("controller");
+    console.log("controller in update player");
     // delete playerInfo.user;
     const player = await prisma.player.update({
       where: {

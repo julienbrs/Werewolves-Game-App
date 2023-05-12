@@ -24,7 +24,7 @@ const chatApi = {
     userDeadId: string,
     gameId: number
   ): Promise<void> => {
-    const response = await api.post(`/chatrooms/${chatRoomId}/adduser`, { userDeadId, gameId });
+    const response = await api.post(`/chatrooms/${chatRoomId}/adduserdead`, { userDeadId, gameId });
 
     if (response.status !== 200) {
       throw new Error("Failed to add dead to spirit");
