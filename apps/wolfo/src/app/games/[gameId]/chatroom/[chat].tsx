@@ -215,7 +215,7 @@ const ChatRoomView = () => {
 
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={{ flex: 1 }}
+          style={styles.keyboard}
         >
           {data.read === true ? (
             <GiftedChat
@@ -265,6 +265,9 @@ const styles = StyleSheet.create({
   cardText: {
     color: "white",
     fontSize: 16,
+  },
+  keyboard: {
+    flex: 1,
   },
 });
 

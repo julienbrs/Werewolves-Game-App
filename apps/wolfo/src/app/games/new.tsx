@@ -131,6 +131,7 @@ const NewGame = () => {
       contProb: contProb / 100,
       spiritProb: spiritProb / 100,
     };
+    console.log(game.deadline, game.startDay, game.endDay);
     mutate(game);
   };
   return (
