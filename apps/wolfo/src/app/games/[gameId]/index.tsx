@@ -7,12 +7,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, Player, Power, Role, StateGame } from "types";
 import { AuthContext } from "../../../components/context/tokenContext";
 import Loading from "../../../components/loading";
+import { getPermissions } from "../../../utils/api/chat";
 import { getGame } from "../../../utils/api/game";
 import { getPlayer } from "../../../utils/api/player";
 const GameView = () => {
   const router = useRouter();
   const { gameId } = useSearchParams(); // idGame
   const { id: userId } = useContext(AuthContext);
+
   // get game data
   const {
     data: game,
@@ -35,6 +37,14 @@ const GameView = () => {
     queryFn: () => getPlayer(game?.id!, userId),
     staleTime: 1000 * 60 * 5,
   });
+
+  // get permissions
+  const { data: spiritPerm } = useQuery({
+    enabled: !isNaN(Number(game?.spiritChatRoomId)),
+    queryKey: ["permissions", Number(game?.spiritChatRoomId), userId],
+    queryFn: () => getPermissions(Number(game?.spiritChatRoomId)),
+  });
+
   if (isLoading || isLoadingPlayer) {
     return <Loading title="Game loading" message={"Game " + String(gameId) + "is loading"} />;
   }
@@ -97,6 +107,18 @@ const GameView = () => {
       >
         Chat
       </Button>
+      {spiritPerm?.write === true && player.state === "DEAD" && (
+        <Button
+          onPress={() =>
+            router.push({
+              pathname: `/games/${gameId}/chatroom/${game.spiritChatRoomId}`,
+              params: { gameId, userId },
+            })
+          }
+        >
+          Spirit Chat
+        </Button>
+      )}
       <Button onPress={() => router.back()}>Go Back</Button>
     </SafeAreaView>
   );
