@@ -83,8 +83,8 @@ export const relaunchGames = async () => {
       deadline: true,
       startDay: true,
       endDay: true,
-      dayChatRoomId: true,
       nightChatRoomId: true,
+      dayChatRoomId: true,
     },
   });
   games.forEach(async game => {
@@ -94,14 +94,14 @@ export const relaunchGames = async () => {
           if (!game) {
             throw new Error("Game not found");
           }
+          await transaction.game.delete({
+            where: { id: game.id },
+          });
           await transaction.chatRoom.delete({
             where: { id: game.dayChatRoomId },
           });
           await transaction.chatRoom.delete({
             where: { id: game.nightChatRoomId },
-          });
-          await transaction.game.delete({
-            where: { id: game.id },
           });
           return game;
         });
