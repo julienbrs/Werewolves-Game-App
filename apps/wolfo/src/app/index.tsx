@@ -32,6 +32,7 @@ const Home = () => {
               onPress={() => router.push("/games/new")}
               style={styles.button}
               status="primary"
+              testID="new-game-button"
             >
               New game
             </Button>
@@ -40,6 +41,7 @@ const Home = () => {
               onChangeText={setSearch}
               value={search}
               style={styles.searchInput}
+              testID="search-game-input"
             />
             <View style={styles.tabViewWrapper}>
               <TabView selectedIndex={tabIndex} onSelect={setTabIndex} style={styles.tabView}>

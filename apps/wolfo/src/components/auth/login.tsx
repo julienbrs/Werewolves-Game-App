@@ -32,9 +32,9 @@ export const Login = () => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <Input placeholder="Username" onChangeText={setName} data-testid="username" />
-      <Input placeholder="Password" onChangeText={setPassword} data-testid="password" />
-      <Button onPress={handleLogin} style={styles.button} data-testid="login">
+      <Input placeholder="Username" onChangeText={setName} testID="username-input" />
+      <Input placeholder="Password" onChangeText={setPassword} testID="password-login-input" />
+      <Button onPress={handleLogin} style={styles.button} testID="login-button">
         Login
       </Button>
       {isError && <Text>{error.message}</Text>}

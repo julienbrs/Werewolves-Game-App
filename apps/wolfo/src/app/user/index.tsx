@@ -53,13 +53,23 @@ const Settings = () => {
   return (
     <SafeAreaView>
       <Text>{name}'s settings</Text>
-      <Input placeholder="Username" onChangeText={setName} />
-      <Input placeholder="Password" onChangeText={setPassword} />
-      <Input placeholder="Confirm password" onChangeText={setConfirmPassword} />
+      <Input placeholder="Username" onChangeText={setName} testID="update-username-input" />
+      <Input placeholder="Password" onChangeText={setPassword} testID="update-password-input" />
+      <Input
+        placeholder="Confirm password"
+        onChangeText={setConfirmPassword}
+        testID="confirm-update-password-input"
+      />
 
-      <Button onPress={handleModify}>Modifier le compte</Button>
-      <Button onPress={() => deleteQuery()}>Supprimer le compte</Button>
-      <Button onPress={() => logout()}>Se déconnecter</Button>
+      <Button onPress={handleModify} testID="update-account-button">
+        Modifier le compte
+      </Button>
+      <Button onPress={() => deleteQuery()} testID="delete-account-button">
+        Supprimer le compte
+      </Button>
+      <Button onPress={() => logout()} testID="logout-button">
+        Se déconnecter
+      </Button>
       {errorMessage && <Text>{errorMessage}</Text>}
       <Text>Token: {token}</Text>
     </SafeAreaView>

@@ -33,9 +33,9 @@ export const Register = () => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <Input placeholder="Name" onChangeText={setName} data-testid="name-input" />
-      <Input placeholder="Password" onChangeText={setPassword} data-testid="password-input" />
-      <Button onPress={handleRegister} style={styles.button} data-testid="register-button">
+      <Input placeholder="Name" onChangeText={setName} testID="name-input" />
+      <Input placeholder="Password" onChangeText={setPassword} testID="password-register-input" />
+      <Button onPress={handleRegister} style={styles.button} testID="register-button">
         Register
       </Button>
     </SafeAreaView>

@@ -45,6 +45,7 @@ const HomeLayout = () => {
                     size={24}
                     color="black"
                     onPress={() => router.push("/user")}
+                    testID="settings-button"
                   />
                 ),
               }}
