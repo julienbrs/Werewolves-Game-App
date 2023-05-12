@@ -13,7 +13,7 @@
     "lint:fix": "pnpm lint --fix",
     "type-check": "tsc --noEmit",
     "cy:open": "cypress open",
-    "cy:run": "cypress run --record",
+    "cy:run": "cypress run",
     "test": "start-test web 19000 cy:open",
     "test:ci": "start-test web 19000 cy:run"
   },

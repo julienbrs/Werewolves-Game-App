@@ -9,7 +9,7 @@ describe("Authentification", () => {
   };
 
   it("should allow new user to register and login", () => {
-    cy.visit("/auth");
+    cy.visit("/");
     cy.get('[data-testid="@name-input/input"]').type(newUser.name);
     cy.get('[data-testid="@password-register-input/input"]').type(newUser.password);
     cy.get('[data-testid="register-button"]').click();
