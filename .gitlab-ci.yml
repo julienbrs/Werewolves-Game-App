@@ -64,6 +64,8 @@ test-backend:
   stage: test
   script:
     - pnpm db:push  # push les migrations dans la base de données
+    - pnpm db:generate
+    - cd apps/api
     - pnpm test # lance le test jest
   artifacts:
     paths:
