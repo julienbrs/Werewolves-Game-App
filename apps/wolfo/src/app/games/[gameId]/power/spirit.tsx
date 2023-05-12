@@ -29,7 +29,7 @@ const SpiritView = () => {
     isLoading: isLoadingPlayer,
     isError: isErrorPlayer,
   } = useQuery<Player, Error>({
-    enabled: !isNaN(Number(gameId)),
+    enabled: !isNaN(Number(gameId)) && userId !== undefined,
     queryKey: ["player", userId],
     queryFn: () => getPlayer(Number(gameId), String(userId)),
   });
