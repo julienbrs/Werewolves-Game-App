@@ -2,17 +2,22 @@ import { useQuery } from "@tanstack/react-query";
 import { Button, Text } from "@ui-kitten/components";
 import { Stack, useRouter, useSearchParams } from "expo-router";
 import { useContext } from "react";
-import React from "react-native";
+import React, { ImageBackground, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, Player, Power, Role, StateGame } from "types";
 import { AuthContext } from "../../../components/context/tokenContext";
 import Loading from "../../../components/loading";
+import { getPermissions } from "../../../utils/api/chat";
 import { getGame } from "../../../utils/api/game";
 import { getPlayer } from "../../../utils/api/player";
+
+import imageBackground from "../../../../assets/menu_game_day.png";
+
 const GameView = () => {
   const router = useRouter();
   const { gameId } = useSearchParams(); // idGame
   const { id: userId } = useContext(AuthContext);
+
   // get game data
   const {
     data: game,
@@ -35,6 +40,14 @@ const GameView = () => {
     queryFn: () => getPlayer(game?.id!, userId),
     staleTime: 1000 * 60 * 5,
   });
+
+  // get permissions
+  const { data: spiritPerm } = useQuery({
+    enabled: !isNaN(Number(game?.spiritChatRoomId)),
+    queryKey: ["permissions", Number(game?.spiritChatRoomId), userId],
+    queryFn: () => getPermissions(Number(game?.spiritChatRoomId)),
+  });
+
   if (isLoading || isLoadingPlayer) {
     return <Loading title="Game loading" message={"Game " + String(gameId) + "is loading"} />;
   }
@@ -43,13 +56,6 @@ const GameView = () => {
   }
   const redirectChat = () => {
     const chatId = game.state === StateGame.DAY ? game.dayChatRoomId : game.nightChatRoomId;
-    const spiritChatId = game.spiritChatRoomId;
-    if (player.power === Power.SPIRIT && spiritChatId) {
-      return router.push({
-        pathname: `/games/chatroom/${spiritChatId}`,
-        params: { gameId: game.id, userId },
-      });
-    }
     return router.push({
       pathname: `/games/${gameId}/chatroom/${chatId}`,
       params: { gameId, userId },
@@ -83,29 +89,129 @@ const GameView = () => {
   return (
     <SafeAreaView>
       <Stack.Screen options={{ title: game.name, headerRight: () => null }} />
-      {/* display all informations on the game after fetching data from backend*/}
-      <Text>Game | {game.name}</Text>
-      <Text>{game.state === StateGame.DAY ? "C'est le jour" : "C'est la nuit"}</Text>
-      {player.power && <Text>Votre pouvoir : {player.power}</Text>}
-      {player.role && <Text>Votre role : {player.role}</Text>}
-      <Button onPress={redirectVote} disabled={!game.curElecId}>
-        Vote
-      </Button>
-      <Button onPress={redirectPower} disabled={player.usedPower && player.power !== Power.NONE}>
-        Power
-      </Button>
-      <Button
-        onPress={redirectChat}
-        disabled={
-          game.state === StateGame.DAY ||
-          (game.state === StateGame.NIGHT && player.role === Role.WOLF)
-        }
-      >
-        Chat
-      </Button>
-      <Button onPress={() => router.back()}>Go Back</Button>
+      <ImageBackground source={imageBackground} style={styles.imageBackground}>
+        <View style={styles.container}>
+          {/* display all informations on the game after fetching data from backend*/}
+          <Button
+            style={styles.button}
+            onPress={() => {
+              console.log("game.state", game.state);
+              console.log("player.power", player.power);
+              console.log("player.role", player.role);
+              console.log("player.usedPower", player.usedPower);
+              console.log("player.state", player.state);
+            }}
+          >
+            {evaProps => (
+              <Text {...evaProps} style={styles.buttonText}>
+                Show debug
+              </Text>
+            )}
+          </Button>
+          <Button onPress={redirectVote} style={styles.button}>
+            {evaProps => (
+              <Text {...evaProps} style={styles.buttonText}>
+                Vote
+              </Text>
+            )}
+          </Button>
+          <Button
+            style={styles.button}
+            onPress={redirectPower}
+            disabled={
+              player.usedPower && player.power !== Power.SPIRIT && player.power !== Power.NONE
+            }
+          >
+            {evaProps => (
+              <Text {...evaProps} style={styles.buttonText}>
+                Power
+              </Text>
+            )}
+          </Button>
+          <Button
+            style={
+              game.state === StateGame.NIGHT && player.role !== Role.WOLF
+                ? [styles.button, styles.disabledButton]
+                : styles.button
+            }
+            onPress={redirectChat}
+            disabled={game.state === StateGame.NIGHT && player.role !== Role.WOLF}
+          >
+            {evaProps => (
+              <Text
+                {...evaProps}
+                style={
+                  game.state === StateGame.NIGHT && player.role !== Role.WOLF
+                    ? [styles.buttonText, styles.disabledButtonText]
+                    : styles.buttonText
+                }
+              >
+                Chat
+              </Text>
+            )}
+          </Button>
+          {spiritPerm?.write === true && player.state === "DEAD" && (
+            <Button
+              style={styles.button}
+              onPress={() =>
+                router.push({
+                  pathname: `/games/${gameId}/chatroom/${game.spiritChatRoomId}`,
+                  params: { gameId, userId },
+                })
+              }
+            >
+              {evaProps => (
+                <Text {...evaProps} style={styles.buttonText}>
+                  Spirit Chat
+                </Text>
+              )}
+            </Button>
+          )}
+          <Button style={styles.button} onPress={() => router.back()}>
+            {evaProps => (
+              <Text {...evaProps} style={styles.buttonText}>
+                Go back
+              </Text>
+            )}
+          </Button>
+        </View>
+      </ImageBackground>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  imageBackground: {
+    flex: 1,
+    resizeMode: "cover",
+  },
+  container: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button: {
+    margin: 10,
+    width: 200,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    elevation: 8,
+  },
+  disabledButton: {
+    backgroundColor: "#ceccbd",
+    opacity: 0.8,
+  },
+  buttonText: {
+    color: "#222222",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  disabledButtonText: {
+    color: "#4e4e4e",
+  },
+});
 
 export default GameView;

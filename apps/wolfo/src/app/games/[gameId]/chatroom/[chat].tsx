@@ -78,7 +78,7 @@ const ChatRoomView = () => {
         } else {
           setTextReason("You can use your power to spy werewolves, go to power menu.");
         }
-      } else if (player?.power === "SPIRIT" && player?.usedPower === true) {
+      } else if (player?.power === "SPIRIT" && game?.spiritChatRoomId === Number(chat)) {
         setImgBackground(imgChatroomSpirit);
       } else if (game?.state === "NIGHT") {
         setImgBackground(imgChatroomNight);

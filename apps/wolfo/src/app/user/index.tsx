@@ -32,12 +32,14 @@ const Settings = () => {
     mutationFn: deleteUser,
     onSuccess: async () => {
       setToken(null);
+      handleSetToken(null);
       await queryClient.invalidateQueries();
       router.back();
     },
   });
   const logout = async () => {
     setToken(null);
+    handleSetToken(null);
     await queryClient.invalidateQueries();
     router.back();
   };
