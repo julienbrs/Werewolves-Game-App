@@ -39,3 +39,27 @@ declare global {
     }
   }
 }
+
+Cypress.Commands.add("getUsers", () => {
+  cy.intercept("GET", "http://localhost:3000/api/users").as("getUsers");
+});
+
+Cypress.Commands.add("getMe", () => {
+  cy.intercept("GET", "http://localhost:3000/api/users/me").as("getMe");
+});
+
+Cypress.Commands.add("createUser", () => {
+  cy.intercept("POST", "http://localhost:3000/api/users").as("createUser");
+});
+
+Cypress.Commands.add("deleteUser", () => {
+  cy.intercept("DELETE", "http://localhost:3000/api/users").as("deleteUser");
+});
+
+Cypress.Commands.add("updateUser", () => {
+  cy.intercept("PATCH", "http://localhost:3000/api/users").as("updateUser");
+});
+
+Cypress.Commands.add("login", () => {
+  cy.intercept("POST", "http://localhost:3000/api/users/login").as("login");
+});

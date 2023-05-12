@@ -153,6 +153,7 @@ const NewGame = () => {
                   status={gameNameStatus}
                   placeholder={"Millers Hollow"}
                   onChangeText={setGameName}
+                  testID="name-new-game-input"
                 />
               </View>
 
@@ -168,6 +169,7 @@ const NewGame = () => {
                   style={styles.input}
                   value={+minPlayersIndex.toString() + minPlayers - 1}
                   selectedIndex={minPlayersIndex}
+                  testID="minimum-players-select"
                   onSelect={index => {
                     setMinPlayersIndex(index);
                     if (Number(maxPlayersIndex.toString()) < Number(index.toString())) {
@@ -194,6 +196,7 @@ const NewGame = () => {
                   placeholder={maxPlayers}
                   value={Number(maxPlayersIndex.toString()) + minPlayers - 1}
                   selectedIndex={maxPlayersIndex}
+                  testID="maximum-players-select"
                   onSelect={index => setMaxPlayersIndex(index)}
                 >
                   {Array.from(Array(maxPlayers).keys())
@@ -227,6 +230,7 @@ const NewGame = () => {
                   style={styles.timeButton}
                   onChangeText={text => setDeadline(new Date(text))}
                   placeholder="MM-DD-YYYY"
+                  testID="start-date-input"
                 />
               ) : (
                 <DateTimePickerModal
@@ -253,6 +257,7 @@ const NewGame = () => {
                     style={styles.timeButton}
                     onChangeText={text => setEndDay(new Date(text))}
                     placeholder="HH:MM"
+                    testID="startday-input"
                   />
                 ) : (
                   <Button style={styles.timeButton} onPress={() => setStartDayVisibility(true)}>
@@ -280,6 +285,7 @@ const NewGame = () => {
                     style={styles.timeButton}
                     onChangeText={text => setEndDay(new Date(text))}
                     placeholder="HH:MM"
+                    testID="endday-input"
                   />
                 ) : (
                   <Button style={styles.timeButton} onPress={() => setEndDayVisibility(true)}>
