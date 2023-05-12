@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@ui-kitten/components";
-import { useSearchParams } from "expo-router";
+import { useRouter, useSearchParams } from "expo-router";
 import React, { useRef, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -139,6 +139,7 @@ const Choice = ({
 
 const Vote = () => {
   const { gameId, userId } = useSearchParams();
+  const router = useRouter();
   const {
     data: game,
     isLoading,
@@ -182,12 +183,15 @@ const Vote = () => {
     console.log(currentVote);
     activeVote.current = currentVote;
   }
-  if (isErrorPlayer || isErrorVote || isError || !game || !currentPlayer || !game.curElecId) {
+  if (isErrorPlayer || isErrorVote || isError || !game || !currentPlayer) {
     console.log(game);
     console.log(isErrorVote);
     return <Text>An error occured. Please try again in a little</Text>;
   }
-
+  if (!game.curElecId) {
+    router.back();
+    return;
+  }
   return (
     <SafeAreaView>
       <ScrollView>

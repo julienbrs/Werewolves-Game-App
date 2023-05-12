@@ -4,7 +4,7 @@ import { Stack, useRouter, useSearchParams } from "expo-router";
 import { useContext } from "react";
 import React from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Game, Player, Power, StateGame } from "types";
+import { Game, Player, Power, Role, StateGame } from "types";
 import { AuthContext } from "../../../components/context/tokenContext";
 import Loading from "../../../components/loading";
 import { getGame } from "../../../utils/api/game";
@@ -82,10 +82,21 @@ const GameView = () => {
       <Text>{player.power}</Text>
       <Text>{player.role}</Text>
       <Button onPress={redirectVote}>Vote</Button>
-      <Button onPress={redirectPower} disabled={player.usedPower && player.power !== Power.SPIRIT}>
+      <Button
+        onPress={redirectPower}
+        disabled={player.usedPower && player.power !== Power.SPIRIT && player.power !== Power.NONE}
+      >
         Power
       </Button>
-      <Button onPress={redirectChat}>Chat</Button>
+      <Button
+        onPress={redirectChat}
+        disabled={
+          game.state === StateGame.DAY ||
+          (game.state === StateGame.NIGHT && player.role === Role.WOLF)
+        }
+      >
+        Chat
+      </Button>
       <Button onPress={() => router.back()}>Go Back</Button>
     </SafeAreaView>
   );

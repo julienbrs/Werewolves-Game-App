@@ -85,9 +85,10 @@ test-frontend:
     - pnpm db:push
     - pnpm dev & # lance l'api en mode dev
     - cd apps/wolfo
-    - pnpm web & # lance l'app en mode dev
-    - npx wait-on 'http-get://localhost:19000'
-    - npx cypress run --record --parallel    # Runs tests in parallel and records to Cypress Cloud
+    - pnpm test:ci # lance les tests cypress  
+#    - pnpm web & # lance l'app en mode dev
+#    - npx wait-on 'http-get://localhost:19000'
+#    - npx cypress run --record --parallel    # Runs tests in parallel and records to Cypress Cloud
 
 
 badges:

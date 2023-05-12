@@ -7,85 +7,35 @@ declare global {
   namespace Cypress {
     interface Chainable {
       /**
-       * Custom command to intercept GET endpoint for tags
-       * @example cy.getTags()
+       * Custom command to intercept GET endpoint for users
+       * @example cy.getUsers()
        */
-      getTags(): Chainable<void>;
+      getUsers(): Chainable<void>;
       /**
-       * Custom command to intercept POST endpoint for tags
-       * @example cy.postTags()
+       * Custom command to intercept GET endpoint for current user
+       * @example cy.getMe()
        */
-      postTag(): Chainable<void>;
+      getMe(): Chainable<void>;
       /**
-       * Custom command to intercept DELETE endpoint for tags
-       * @example cy.deleteTags()
+       * Custom command to intercept POST endpoint for users
+       * @example cy.createUser()
        */
-      deleteTag(): Chainable<void>;
+      createUser(): Chainable<void>;
       /**
-       * Custom command to intercept PUT endpoint for bookmarks
-       * @example cy.putTag()
+       * Custom command to intercept DELETE endpoint for user
+       * @example cy.deleteUser()
        */
-      putTag(): Chainable<void>;
+      deleteUser(): Chainable<void>;
       /**
-       * Custom command to intercept GET endpoint for bookmarks
-       * @example cy.getBookmarks()
+       * Custom command to intercept UPDATE endpoint for users
+       * @example cy.updateUser()
        */
-      getBookmarks(): Chainable<void>;
+      updateUser(): Chainable<void>;
       /**
-       * Custom command to intercept POST endpoint for bookmarks
-       * @example cy.postBookmarks()
+       * Custom command to intercept POST endpoint for user
+       * @example cy.login()
        */
-      postBookmark(): Chainable<void>;
-      /**
-       * Custom command to intercept DELETE endpoint for bookmarks
-       * @example cy.deleteBookmarks()
-       */
-      deleteBookmark(): Chainable<void>;
-      /**
-       * Custom command to intercept PUT endpoint for bookmarks
-       * @example cy.putBookmark()
-       */
-      putBookmark(): Chainable<void>;
+      login(): Chainable<void>;
     }
   }
 }
-
-Cypress.Commands.add("getTags", () => {
-  cy.intercept("GET", "https://cawrest.osc-fr1.scalingo.io/bmt/verninp/tags").as("getTags");
-});
-
-Cypress.Commands.add("postTag", () => {
-  cy.intercept("POST", "https://cawrest.osc-fr1.scalingo.io/bmt/verninp/tags").as("postTag");
-});
-
-Cypress.Commands.add("deleteTag", () => {
-  cy.intercept("DELETE", "https://cawrest.osc-fr1.scalingo.io/bmt/verninp/tags/*").as("deleteTag");
-});
-
-Cypress.Commands.add("putTag", () => {
-  cy.intercept("PUT", "https://cawrest.osc-fr1.scalingo.io/bmt/verninp/tags/*").as("putTag");
-});
-
-Cypress.Commands.add("getBookmarks", () => {
-  cy.intercept("GET", "https://cawrest.osc-fr1.scalingo.io/bmt/verninp/bookmarks").as(
-    "getBookmarks"
-  );
-});
-
-Cypress.Commands.add("postBookmark", () => {
-  cy.intercept("POST", "https://cawrest.osc-fr1.scalingo.io/bmt/verninp/bookmarks").as(
-    "postBookmark"
-  );
-});
-
-Cypress.Commands.add("deleteBookmark", () => {
-  cy.intercept("DELETE", "https://cawrest.osc-fr1.scalingo.io/bmt/verninp/bookmarks/*").as(
-    "deleteBookmark"
-  );
-});
-
-Cypress.Commands.add("putBookmark", () => {
-  cy.intercept("PUT", "https://cawrest.osc-fr1.scalingo.io/bmt/verninp/bookmarks/*").as(
-    "putBookmark"
-  );
-});
