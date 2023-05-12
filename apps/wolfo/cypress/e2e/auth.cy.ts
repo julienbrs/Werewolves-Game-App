@@ -9,7 +9,7 @@ describe("Authentification", () => {
   };
 
   it("should allow new user to register and login", () => {
-    cy.visit("http://localhost:19000/auth");
+    cy.visit("/auth");
     cy.get('[data-testid="@name-input/input"]').type(newUser.name);
     cy.get('[data-testid="@password-register-input/input"]').type(newUser.password);
     cy.get('[data-testid="register-button"]').click();
@@ -21,7 +21,7 @@ describe("Authentification", () => {
   });
 
   it("should not allow existing user to register again", () => {
-    cy.visit("http://localhost:19000/auth");
+    cy.visit("/auth");
     cy.get('[data-testid="@name-input/input"]').type(newUser.name);
     cy.get('[data-testid="@password-register-input/input"]').type(newUser.password);
     cy.get('[data-testid="register-button"]').click();
@@ -31,7 +31,7 @@ describe("Authentification", () => {
 
   it("should not allow invalid username to login", () => {
     const invalidUsername = "nonexistentuser";
-    cy.visit("http://localhost:19000/auth");
+    cy.visit("/auth");
     cy.get('[data-testid="@name-input/input"]').type(invalidUsername);
     cy.get('[data-testid="@password-register-input/input"]').type("doesntmatter");
     cy.get('[data-testid="login-button"]').click();
@@ -41,7 +41,7 @@ describe("Authentification", () => {
 
   it("should not allow invalid password to login", () => {
     const invalidPassword = "wrongpass";
-    cy.visit("http://localhost:19000/auth");
+    cy.visit("/auth");
     cy.get('[data-testid="@name-input/input"]').type(newUser.name);
     cy.get('[data-testid="@password-register-input/input"]').type(invalidPassword);
     cy.get('[data-testid="login-button"]').click();
@@ -50,7 +50,7 @@ describe("Authentification", () => {
   });
 
   it("should allow existing user to login", () => {
-    cy.visit("http://localhost:19000/auth");
+    cy.visit("/auth");
     cy.get('[data-testid="@username-input/input"]').type(newUser.name);
     cy.get('[data-testid="@password-login-input/input"]').type(newUser.password);
     cy.get('[data-testid="login-button"]').click();
@@ -58,7 +58,7 @@ describe("Authentification", () => {
   });
 
   it("should allow you to log in and modify your account", () => {
-    cy.visit("http://localhost:19000/auth");
+    cy.visit("/auth");
     cy.get('[data-testid="@username-input/input"]').type(newUser.name);
     cy.get('[data-testid="@password-login-input/input"]').type(newUser.password);
     cy.get('[data-testid="login-button"]').click();
@@ -72,7 +72,7 @@ describe("Authentification", () => {
   });
 
   it("should allow you to log in and delete your account", () => {
-    cy.visit("http://localhost:19000/auth");
+    cy.visit("/auth");
     cy.get('[data-testid="@username-input/input"]').type(updateUser.name);
     cy.get('[data-testid="@password-login-input/input"]').type(updateUser.password);
     cy.get('[data-testid="login-button"]').click();
