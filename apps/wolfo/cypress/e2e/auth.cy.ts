@@ -1,3 +1,8 @@
+before(() => {
+  cy.visit("/");
+  // wait 15s
+  cy.wait(15000);
+});
 describe("Authentification", () => {
   const newUser = {
     name: "newuser",

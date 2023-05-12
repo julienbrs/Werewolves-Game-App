@@ -89,7 +89,6 @@ test-frontend:
     - cd apps/wolfo
 #    - pnpm test:ci # lance les tests cypress  
     - pnpm web &
-    - sleep 10 
     - npx cypress run --record --parallel # lance l'app en mode dev
 #    - npx wait-on 'http-get://localhost:19000'
 #    - npx cypress run --record --parallel    # Runs tests in parallel and records to Cypress Cloud
