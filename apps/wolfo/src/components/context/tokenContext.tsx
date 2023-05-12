@@ -25,7 +25,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [name, setName] = useState<string>("");
   const [id, setId] = useState<string>("");
 
-  const handleSetToken = (newToken: string) => {
+  const handleSetToken = (newToken: string | null) => {
+    if (!newToken) {
+      if (Platform.OS === "web") {
+        localStorage.removeItem("token");
+      } else {
+        SecureStore.deleteItemAsync("token");
+      }
+      return;
+    }
     setToken(newToken);
     if (Platform.OS === "web") {
       localStorage.setItem("token", newToken);

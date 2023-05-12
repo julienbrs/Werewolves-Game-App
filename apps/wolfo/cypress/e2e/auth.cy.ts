@@ -1,11 +1,3 @@
-before(() => {
-  cy.visit("/", {
-    failOnStatusCode: false,
-    timeout: 15000,
-  });
-  // wait 15s
-  cy.wait(15000);
-});
 describe("Authentification", () => {
   const newUser = {
     name: "newuser",

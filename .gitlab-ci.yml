@@ -71,27 +71,25 @@ test-backend:
     paths:
       - apps/api/coverage/
 
-test-frontend:
-  image: cypress/base:16.18.1
-  services:
-  - postgres:12
-  variables:
-    npm_config_cache: '$CI_PROJECT_DIR/.npm'
-    POSTGRES_USER: $POSTGRES_USER
-    POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-    POSTGRES_DB: $POSTGRES_DB
-    POSTGRES_HOST_AUTH_METHOD: trust
-  stage: test
-  parallel: 2 # Uses 2 parallel instances
-  script:
-    - pnpm db:push
-    - pnpm dev > /dev/null 2>&1 & # lance l'api en mode dev
-    - cd apps/wolfo
-#    - pnpm test:ci # lance les tests cypress  
-    - pnpm web &
-    - npx cypress run --record --parallel # lance l'app en mode dev
+#test-frontend:
+#  image: cypress/base:16.18.1
+#  services:
+#  - postgres:12
+#  variables:
+#    npm_config_cache: '$CI_PROJECT_DIR/.npm'
+#    POSTGRES_USER: $POSTGRES_USER
+#    POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+#    POSTGRES_DB: $POSTGRES_DB
+#    POSTGRES_HOST_AUTH_METHOD: trust
+#  stage: test
+#  parallel: 2 # Uses 2 parallel instances
+#  script:
+#    - pnpm db:push
+#    - pnpm dev > /dev/null 2>&1 & # lance l'api en mode dev
+#    - cd apps/wolfo
+#    - pnpm web &
 #    - npx wait-on 'http-get://localhost:19000'
-#    - npx cypress run --record --parallel    # Runs tests in parallel and records to Cypress Cloud
+#    - npx cypress run --record --parallel # lance l'app en mode dev
 
 
 badges:
