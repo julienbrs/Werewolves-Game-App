@@ -18,6 +18,67 @@ const chatroomController = {
         res.status(400).json(error);
       });
   },
+
+  // add a writer and a reader to a chatroom
+  async addDeadtoSpirit(req: Request, res: Response) {
+    const token = req.headers.authorization?.split(" ")[1];
+    const decodedToken = jwt.verify(token, SECRET);
+    const userId = decodedToken.id;
+    const chatRoomId = Number(req.params.id);
+    const { gameId } = req.body;
+
+    if (isNaN(chatRoomId) || !userId || !gameId) {
+      res.status(400).send("Bad request");
+      return;
+    }
+    const playerId = await prisma.player.findUnique({
+      where: {
+        userId_gameId: {
+          userId: userId,
+          gameId: gameId,
+        },
+      },
+    });
+
+    if (!playerId) {
+      res.status(400).send("Bad request");
+      return;
+    }
+
+    try {
+      const chatroom = await prisma.chatRoom.update({
+        where: {
+          id: chatRoomId,
+        },
+        data: {
+          readers: {
+            connect: {
+              playerId_gameId_chatRoomId: {
+                playerId: userId,
+                gameId: gameId,
+                chatRoomId: chatRoomId,
+              },
+            },
+          },
+          writers: {
+            connect: {
+              playerId_gameId_chatRoomId: {
+                playerId: userId,
+                gameId: gameId,
+                chatRoomId: chatRoomId,
+              },
+            },
+          },
+        },
+      });
+      res.status(200).json(chatroom);
+    } catch (error) {
+      console.error("controllers");
+      console.error("Failed to add user to chatroom:", error);
+      res.status(400).json(error);
+    }
+  },
+
   getTodayMessages: async (req: Request, res: Response) => {
     const chatRoomId = Number(req.params.id);
     if (isNaN(chatRoomId)) {
