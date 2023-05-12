@@ -83,8 +83,8 @@ export const relaunchGames = async () => {
       deadline: true,
       startDay: true,
       endDay: true,
-      dayChatRoomId: true,
       nightChatRoomId: true,
+      dayChatRoomId: true,
     },
   });
   games.forEach(async game => {

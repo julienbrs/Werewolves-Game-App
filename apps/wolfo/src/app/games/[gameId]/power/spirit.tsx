@@ -4,9 +4,9 @@ import { useRouter, useSearchParams } from "expo-router";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, Player } from "types";
-import Loading from "../../../components/loading";
-import { getGame } from "../../../utils/api/game";
-import { getPlayer } from "../../../utils/api/player";
+import Loading from "../../../../components/loading";
+import { getGame } from "../../../../utils/api/game";
+import { getPlayer } from "../../../../utils/api/player";
 
 const SpiritView = () => {
   const router = useRouter();

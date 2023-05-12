@@ -6,10 +6,10 @@ import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, Player, Role, StateGame, StatePlayer, Vote as VoteType } from "types";
-import voteApi from "../../../utils/api/vote";
 import Loading from "../../../components/loading";
 import { getGame } from "../../../utils/api/game";
 import { getPlayer } from "../../../utils/api/player";
+import voteApi from "../../../utils/api/vote";
 
 interface ChoiceProps {
   choicePlayer: Player;
@@ -144,6 +144,7 @@ const Vote = () => {
     isLoading,
     isError,
   } = useQuery<Game, Error>({
+    enabled: Boolean(gameId),
     queryKey: ["mygames", gameId],
     queryFn: () => getGame(Number(gameId)),
   });
@@ -162,6 +163,7 @@ const Vote = () => {
     isError: isErrorVote,
     isSuccess: isSuccessVote,
   } = useQuery<VoteType, Error>({
+    enabled: Boolean(currentPlayer) && Boolean(game?.curElecId),
     queryKey: ["vote", userId],
     queryFn: () => {
       return voteApi.getVote(currentPlayer!, game?.curElecId!);
@@ -174,7 +176,7 @@ const Vote = () => {
   const activeVote = useRef<VoteType | undefined>(undefined);
   console.log(currentVote);
   if (isLoading || isLoadingPlayer || isLoadingVote) {
-    return <Loading title="Player list loading" message={"Loading..."} />;
+    return <Loading title="Vote Loading" message={"Loading..."} />;
   }
   if (isSuccessVote) {
     console.log(currentVote);
