@@ -20,27 +20,53 @@ const chatroomController = {
   },
 
   // add a writer and a reader to a chatroom
-  async addDeadtoSpirit(req: Request, res: Response) {
+  async addDeadtoSpiritism(req: Request, res: Response) {
     const token = req.headers.authorization?.split(" ")[1];
     const decodedToken = jwt.verify(token, SECRET);
-    const userId = decodedToken.id;
+    const userSpiritId = decodedToken.id;
     const chatRoomId = Number(req.params.id);
-    const { gameId } = req.body;
+    const gameId = Number(req.body.gameId);
+    const userDeadId = String(req.body.deadId);
 
-    if (isNaN(chatRoomId) || !userId || !gameId) {
+    if (isNaN(chatRoomId) || !userSpiritId || !gameId || !userDeadId) {
       res.status(400).send("Bad request");
       return;
     }
-    const playerId = await prisma.player.findUnique({
+    const playerSpiritId = await prisma.player.findUnique({
       where: {
         userId_gameId: {
-          userId: userId,
+          userId: userSpiritId,
           gameId: gameId,
         },
       },
     });
 
-    if (!playerId) {
+    if (!playerSpiritId) {
+      res.status(400).send("Bad request");
+      return;
+    }
+    // Verify that player got spirit power and didn't use it yet
+    if (playerSpiritId.power !== "SPIRIT" || playerSpiritId.usedPower === true) {
+      res.status(400).send("Bad request");
+      return;
+    }
+
+    const playerDeadId = await prisma.player.findUnique({
+      where: {
+        userId_gameId: {
+          userId: userDeadId,
+          gameId: gameId,
+        },
+      },
+    });
+
+    if (!playerDeadId) {
+      res.status(400).send("Bad request");
+      return;
+    }
+
+    // Verify that player is dead
+    if (playerDeadId.state === "ALIVE") {
       res.status(400).send("Bad request");
       return;
     }
@@ -54,7 +80,7 @@ const chatroomController = {
           readers: {
             connect: {
               playerId_gameId_chatRoomId: {
-                playerId: userId,
+                playerId: userDeadId,
                 gameId: gameId,
                 chatRoomId: chatRoomId,
               },
@@ -63,7 +89,7 @@ const chatroomController = {
           writers: {
             connect: {
               playerId_gameId_chatRoomId: {
-                playerId: userId,
+                playerId: userDeadId,
                 gameId: gameId,
                 chatRoomId: chatRoomId,
               },
