@@ -43,13 +43,6 @@ const GameView = () => {
   }
   const redirectChat = () => {
     const chatId = game.state === StateGame.DAY ? game.dayChatRoomId : game.nightChatRoomId;
-    const spiritChatId = game.spiritChatRoomId;
-    if (player.power === Power.SPIRIT && spiritChatId) {
-      return router.push({
-        pathname: `/games/chatroom/${spiritChatId}`,
-        params: { gameId: game.id, userId },
-      });
-    }
     return router.push({
       pathname: `/games/${gameId}/chatroom/${chatId}`,
       params: { gameId, userId },
@@ -89,7 +82,7 @@ const GameView = () => {
       <Text>{player.power}</Text>
       <Text>{player.role}</Text>
       <Button onPress={redirectVote}>Vote</Button>
-      <Button onPress={redirectPower} disabled={player.usedPower}>
+      <Button onPress={redirectPower} disabled={player.usedPower && player.power !== Power.SPIRIT}>
         Power
       </Button>
       <Button onPress={redirectChat}>Chat</Button>
