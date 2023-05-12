@@ -1,11 +1,12 @@
+import * as SecureStore from "expo-secure-store";
 import jwtDecode from "jwt-decode";
 import React, { createContext, useState } from "react";
-
+import { Platform } from "react-native";
 interface AuthContextType {
   token: string;
   name: string;
   id: string;
-  handleSetToken: (token: string) => void;
+  handleSetToken: (token: string | null) => void;
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -26,6 +27,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const handleSetToken = (newToken: string) => {
     setToken(newToken);
+    if (Platform.OS === "web") {
+      localStorage.setItem("token", newToken);
+    } else {
+      SecureStore.setItemAsync("token", newToken);
+    }
     const decodedToken: any = jwtDecode(newToken);
     setName(decodedToken.name);
     setId(decodedToken.id);
