@@ -100,10 +100,7 @@ const GameView = () => {
       </Button>
       <Button
         onPress={redirectChat}
-        disabled={
-          game.state === StateGame.DAY ||
-          (game.state === StateGame.NIGHT && player.role === Role.WOLF)
-        }
+        disabled={game.state === StateGame.NIGHT && player.role !== Role.WOLF}
       >
         Chat
       </Button>
