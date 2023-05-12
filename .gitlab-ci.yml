@@ -85,7 +85,7 @@ test-frontend:
   parallel: 2 # Uses 2 parallel instances
   script:
     - pnpm db:push
-    - pnpm dev & # lance l'api en mode dev
+    - pnpm dev > /dev/null 2>&1 & # lance l'api en mode dev
     - cd apps/wolfo
     - pnpm test:ci # lance les tests cypress  
 #    - pnpm web & # lance l'app en mode dev
