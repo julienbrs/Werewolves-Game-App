@@ -18,6 +18,93 @@ const chatroomController = {
         res.status(400).json(error);
       });
   },
+
+  // add a writer and a reader to a chatroom
+  async addDeadtoSpiritism(req: Request, res: Response) {
+    const token = req.headers.authorization?.split(" ")[1];
+    const decodedToken = jwt.verify(token, SECRET);
+    const userSpiritId = decodedToken.id;
+    const chatRoomId = Number(req.params.id);
+    const gameId = Number(req.body.gameId);
+    const userDeadId = String(req.body.deadId);
+
+    if (isNaN(chatRoomId) || !userSpiritId || !gameId || !userDeadId) {
+      res.status(400).send("Bad request");
+      return;
+    }
+    const playerSpiritId = await prisma.player.findUnique({
+      where: {
+        userId_gameId: {
+          userId: userSpiritId,
+          gameId: gameId,
+        },
+      },
+    });
+
+    if (!playerSpiritId) {
+      res.status(400).send("Bad request");
+      return;
+    }
+    // Verify that player got spirit power and didn't use it yet
+    if (playerSpiritId.power !== "SPIRIT" || playerSpiritId.usedPower === true) {
+      res.status(400).send("Bad request");
+      return;
+    }
+
+    const playerDeadId = await prisma.player.findUnique({
+      where: {
+        userId_gameId: {
+          userId: userDeadId,
+          gameId: gameId,
+        },
+      },
+    });
+
+    if (!playerDeadId) {
+      res.status(400).send("Bad request");
+      return;
+    }
+
+    // Verify that player is dead
+    if (playerDeadId.state === "ALIVE") {
+      res.status(400).send("Bad request");
+      return;
+    }
+
+    try {
+      const chatroom = await prisma.chatRoom.update({
+        where: {
+          id: chatRoomId,
+        },
+        data: {
+          readers: {
+            connect: {
+              playerId_gameId_chatRoomId: {
+                playerId: userDeadId,
+                gameId: gameId,
+                chatRoomId: chatRoomId,
+              },
+            },
+          },
+          writers: {
+            connect: {
+              playerId_gameId_chatRoomId: {
+                playerId: userDeadId,
+                gameId: gameId,
+                chatRoomId: chatRoomId,
+              },
+            },
+          },
+        },
+      });
+      res.status(200).json(chatroom);
+    } catch (error) {
+      console.error("controllers");
+      console.error("Failed to add user to chatroom:", error);
+      res.status(400).json(error);
+    }
+  },
+
   getTodayMessages: async (req: Request, res: Response) => {
     const chatRoomId = Number(req.params.id);
     if (isNaN(chatRoomId)) {

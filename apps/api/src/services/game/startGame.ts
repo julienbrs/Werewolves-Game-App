@@ -125,18 +125,10 @@ const startGame = async (gameId: number) => {
       });
       const playersUpdated = await Promise.all(playersUpdateTransaction); // update all players concurrently
       await notificationService.startGame(transaction, playersUpdated, game.name);
-      const newElec = await transaction.election.create({
-        data: {
-          game: {
-            connect: { id: gameId },
-          },
-        },
-      });
       await transaction.game.update({
         where: { id: gameId },
         data: {
           state: StateGame.DAY,
-          curElecId: newElec.id,
         },
       });
     })
