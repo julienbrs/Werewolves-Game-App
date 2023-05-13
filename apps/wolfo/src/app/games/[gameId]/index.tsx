@@ -16,7 +16,7 @@ import imageBackground from "../../../../assets/menu_game_day.png";
 const GameView = () => {
   const router = useRouter();
   const { gameId } = useSearchParams(); // idGame
-  const { id: userId } = useContext(AuthContext);
+  const { id: userId, token } = useContext(AuthContext);
 
   // get game data
   const {
@@ -24,7 +24,7 @@ const GameView = () => {
     isLoading,
     isError,
   } = useQuery<Game, Error>({
-    enabled: !isNaN(Number(gameId)),
+    enabled: !isNaN(Number(gameId)) && Boolean(token),
     queryKey: ["mygames", gameId],
     queryFn: () => getGame(Number(gameId)),
     staleTime: 1000 * 60 * 5,
