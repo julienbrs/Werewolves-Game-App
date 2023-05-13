@@ -38,7 +38,16 @@ const Home = () => {
               testID="search-game-input"
             />
             <View style={styles.tabViewWrapper}>
-              <TabView selectedIndex={tabIndex} onSelect={setTabIndex} style={styles.tabView}>
+              <TabView
+                selectedIndex={tabIndex}
+                onSelect={index => {
+                  if (isNaN(index)) {
+                    return;
+                  }
+                  setTabIndex(index);
+                }}
+                style={styles.tabView}
+              >
                 <Tab title="Mes parties" style={styles.title}>
                   <ListMyGames search={search} />
                 </Tab>
