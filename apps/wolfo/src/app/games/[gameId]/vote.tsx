@@ -2,7 +2,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@ui-kitten/components";
 import { useSearchParams } from "expo-router";
 import React, { useRef, useState } from "react";
-import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, Player, Role, StateGame, StatePlayer, Vote as VoteType } from "types";
@@ -29,12 +29,8 @@ const Choice = ({
 }: ChoiceProps) => {
   const [clicked, setClicked] = useState(false);
   const queryClient = useQueryClient();
-  const [Width, setWidth] = useState(0);
-  const shiftAnim = useRef(new Animated.Value(0)).current;
   /* Style animation */
-  const buttonContentShifted = {
-    right: shiftAnim,
-  };
+
   const confirmHandle = async () => {
     const vote: VoteType = {
       voterId: currentPlayer.userId,
@@ -94,13 +90,7 @@ const Choice = ({
           }}
         >
           {!clicked && (
-            <View
-              style={[styles.buttonViewLeft]}
-              onLayout={event => {
-                const { width } = event.nativeEvent.layout;
-                setWidth(width);
-              }}
-            >
+            <View style={[styles.buttonViewLeft]}>
               <Text style={styles.text}>{choicePlayer?.user!.name}</Text>
             </View>
           )}
@@ -122,10 +112,6 @@ const Choice = ({
             styles.buttonViewLeft,
             choicePlayer.state === StatePlayer.DEAD ? styles.deadPlayer : {},
           ]}
-          onLayout={event => {
-            const { width } = event.nativeEvent.layout;
-            setWidth(width);
-          }}
         >
           <Text style={styles.text}>{choicePlayer?.user!.name}</Text>
         </View>
