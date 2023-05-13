@@ -52,7 +52,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           } else {
             // Redirect away from the sign-in page.
             handleSetToken(t);
-            router.replace("/");
+            console.log("token from storage replace /");
+            if (inAuthGroup) router.replace("/");
           }
         });
       } else if (tok && inAuthGroup) {
