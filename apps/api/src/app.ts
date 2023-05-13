@@ -13,6 +13,11 @@ app.use("*", (req, res, next) => {
   next();
 });
 
+// Swagger Documentation
+import swaggerUi from "swagger-ui-express";
+import swaggerFile from "../swagger_output.json";
+app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerFile));
+
 // Assign Routes
 app.use("/", router);
 

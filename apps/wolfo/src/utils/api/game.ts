@@ -7,6 +7,7 @@ const gameApi = {
     return data;
   },
   getMyGames: async (): Promise<Game[]> => {
+    console.log("getMyGames");
     const { data } = await api.get("/games/mygames");
     return data;
   },

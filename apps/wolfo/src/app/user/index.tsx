@@ -35,17 +35,17 @@ const Settings = () => {
   const { mutate: deleteQuery } = useMutation<any, Error>({
     mutationFn: deleteUser,
     onSuccess: async () => {
-      setTokenApi(null);
-      handleSetToken(null);
       await queryClient.invalidateQueries();
+      handleSetToken(null);
+      setTokenApi(null);
       router.back();
     },
   });
   const logout = async () => {
-    setTokenApi(null);
-    handleSetToken(null);
     await queryClient.invalidateQueries();
-    router.push("/(auth)/");
+    handleSetToken(null);
+    setTokenApi(null);
+    router.back();
   };
   const handleModify = async () => {
     if (password !== confirmPassword) {

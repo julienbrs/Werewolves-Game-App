@@ -70,6 +70,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         SecureStore.deleteItemAsync("token");
       }
       setToken(null);
+      setName("");
+      setId("");
       return;
     }
     setToken(newToken);

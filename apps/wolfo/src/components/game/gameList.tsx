@@ -2,11 +2,12 @@ import { AntDesign } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Divider, List, Text } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, StateGame } from "types";
 import { getGamesLobby, getMyGames, joinGame, leaveGame } from "../../utils/api/game";
+import { AuthContext } from "../context/tokenContext";
 import Loading from "../loading";
 import { ModalConfirmChoice } from "../modals/modalConfirm";
 import { GameItemInGame, GameItemLobby, GameItemNotJoined } from "./gameItem";
@@ -19,15 +20,18 @@ export const ListGamesLobby: React.FC<ListProps> = ({ search }) => {
   const queryClient = useQueryClient();
   const [visible, setVisible] = useState<boolean>(false);
   const [selectedGame, setSelectedGame] = useState<number>(0);
+  const { token } = useContext(AuthContext);
   const toggleVisible = () => setVisible(!visible);
   const {
     data: games,
     isLoading,
     refetch,
   } = useQuery<Game[]>({
+    enabled: Boolean(token),
     queryKey: ["games"],
     queryFn: getGamesLobby,
     refetchOnMount: true,
+    cacheTime: 0,
   });
   const { mutate } = useMutation<any, Error, number>({
     mutationFn: (gameId: number) => joinGame(gameId),
@@ -83,18 +87,22 @@ export const ListMyGames: React.FC<ListProps> = ({ search }) => {
   const queryClient = useQueryClient();
   const [visible, setVisible] = useState<boolean>(false);
   const [selectedGame, setSelectedGame] = useState<number>(0);
+  const { token } = useContext(AuthContext);
+
   const toggleVisible = () => setVisible(!visible);
   const router = useRouter();
-
+  console.log(token);
   const {
     data: games,
     isLoading,
     isError,
     refetch,
   } = useQuery<Game[]>({
+    enabled: Boolean(token),
     queryKey: ["mygames"],
     queryFn: getMyGames,
     refetchOnMount: true,
+    cacheTime: 0,
   });
   const { mutate } = useMutation<any, Error, number>({
     mutationFn: (gameId: number) => leaveGame(gameId),

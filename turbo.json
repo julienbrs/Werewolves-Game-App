@@ -7,7 +7,7 @@
       "dependsOn": ["^build", "^db:generate"]
     },
     "dev": {
-      "dependsOn": ["^db:generate"],
+      "dependsOn": ["^db:generate", "doc"],
       "cache": false,
       "persistent": true
     },
@@ -41,6 +41,8 @@
     "POSTGRES_DB",
     "IP",
     "PORT",
+    "PROTOCOL",
+    "BASE_URL",
     "NODE_ENV"
   ]
 }
