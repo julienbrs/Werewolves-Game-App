@@ -85,7 +85,8 @@ const styles = StyleSheet.create({
     color: "brown",
     opacity: 0.95,
     marginBottom: 20,
-    boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.25)",
+    borderRadius: 16,
+    boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.15)",
   },
   tabViewWrapper: {
     width: "70%",
@@ -101,12 +102,15 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 16,
     overflow: "hidden",
   },
+  title: {
+    paddingVertical: 5,
+  },
   button: {
     width: "70%",
     height: 50,
     borderRadius: 16,
     marginBottom: 20,
-    boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.25)",
+    boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.15)",
   },
   rules: {
     backgroundColor: "#d37c4c",

@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 20,
-    boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.25)",
+    boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.15)",
     borderColor: "#834742",
   },
   disabledButton: {
