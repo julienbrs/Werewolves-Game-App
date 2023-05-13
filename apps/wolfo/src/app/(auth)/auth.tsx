@@ -12,7 +12,7 @@ const Auth = () => {
       <ImageBackground source={imgBackground} style={styles.image}>
         <View style={styles.tabViewWrapper}>
           <TabView selectedIndex={tabIndex} onSelect={setTabIndex} style={styles.tabView}>
-            <Tab title="Login">
+            <Tab title="Login" style={styles.title}>
               <Login />
             </Tab>
             <Tab title="Register">
@@ -39,12 +39,15 @@ const styles = StyleSheet.create({
   tabViewWrapper: {
     width: "70%",
     alignSelf: "center",
-    borderTopStartRadius: 20,
-    borderTopEndRadius: 20,
+    borderTopStartRadius: 12,
+    borderTopEndRadius: 12,
     overflow: "hidden",
   },
   tabView: {
     overflow: "hidden",
+  },
+  title: {
+    paddingVertical: 5,
   },
 });
 

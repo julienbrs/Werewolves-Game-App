@@ -151,13 +151,6 @@ const GameView = () => {
               )}
             </Button>
           )}
-          <Button style={styles.button} onPress={() => router.back()}>
-            {evaProps => (
-              <Text {...evaProps} style={styles.buttonText}>
-                Go back
-              </Text>
-            )}
-          </Button>
         </View>
       </ImageBackground>
     </SafeAreaView>
