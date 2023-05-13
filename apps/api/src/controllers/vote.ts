@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Vote } from "types";
+import { Player, Vote } from "types";
 import prisma from "../prisma";
 const voteController = {
   async get(req: Request, res: Response) {
@@ -66,15 +66,27 @@ const voteController = {
   },
   async getAll(req: Request, res: Response) {
     const electionId = +req.params?.electionId;
-    /* Caller would already have gameId and electionId, so not returning them */
-    const votes = await prisma.vote.findMany({
-      where: { electionId },
-      select: {
-        voterId: true,
-        targetId: true,
-      },
-    });
-    res.json(votes);
+    const players: Player[] = req.body;
+
+    if (isNaN(electionId)) {
+      res.status(400).json({ message: "Election ID must be a number" });
+    }
+    console.log("players" + players);
+    return await Promise.all(
+      Array.from(players).map(
+        async p =>
+          await prisma.vote.findMany({
+            where: {
+              targetId: p.userId,
+            },
+          })
+      )
+    )
+      .then(votes => res.json({ votes, message: "Returning votes" }))
+      .catch(e => {
+        console.log(e);
+        res.status(400).json({ message: "An error occured" });
+      });
   },
   async update(req: Request, res: Response) {
     const { id } = req.params;
@@ -82,7 +94,7 @@ const voteController = {
     const vote: Vote = req.body;
 
     if (isNaN(electionId)) {
-      res.status(400).json({ message: "Election ID must be a number" });
+      return res.status(400).json({ message: "Election ID must be a number" });
     }
     if (vote.voterId !== id) {
       return res.status(400).json({ message: "You can't vote in someone else's stead!" });
@@ -112,7 +124,7 @@ const voteController = {
     const electionId = +req.params?.electionId;
 
     if (isNaN(electionId)) {
-      res.status(400).json({ message: "Election ID must be a number" });
+      return res.status(400).json({ message: "Election ID must be a number" });
     }
 
     prisma.vote

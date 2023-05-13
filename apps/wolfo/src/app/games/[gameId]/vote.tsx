@@ -1,7 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button } from "@ui-kitten/components";
 import { useRouter, useSearchParams } from "expo-router";
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useRef } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -14,23 +13,13 @@ import voteApi from "../../../utils/api/vote";
 
 interface ChoiceProps {
   choicePlayer: Player;
-  activePlayer: Player | null;
-  setActivePlayer: React.Dispatch<React.SetStateAction<Player | null>>;
   currentPlayer: Player;
   electionId: number;
+  nbVotes: number;
   currentVote: VoteType | undefined;
 }
-const Choice = ({
-  choicePlayer,
-  activePlayer,
-  setActivePlayer,
-  currentPlayer,
-  electionId,
-  currentVote,
-}: ChoiceProps) => {
-  const [clicked, setClicked] = useState(false);
+const Choice = ({ choicePlayer, currentPlayer, electionId, nbVotes, currentVote }: ChoiceProps) => {
   const queryClient = useQueryClient();
-  /* Style animation */
 
   const confirmHandle = async () => {
     const vote: VoteType = {
@@ -43,88 +32,62 @@ const Choice = ({
       await voteApi
         .createVote(currentPlayer, electionId, vote)
         .then(() => {
-          queryClient.invalidateQueries(["vote"]);
+          queryClient.invalidateQueries({ queryKey: ["vote"] });
         })
         .catch(_ => console.log("An error occurred"));
     } else if (currentVote?.targetId !== choicePlayer.userId) {
-      console.log("here");
       await voteApi
         .updateVote(currentPlayer, electionId, vote)
         .then(() => {
-          queryClient.invalidateQueries(["vote"]);
+          queryClient.invalidateQueries({ queryKey: ["vote"] });
         })
         .catch(_ => console.log("An error occurred"));
     }
-    setActivePlayer(null);
-    setClicked(false);
   };
   const cancelHandle = async () => {
     if (currentVote?.targetId === choicePlayer.userId) {
-      console.log("deleted");
       await voteApi.deleteVote(currentPlayer, electionId).then(() => {
-        queryClient.invalidateQueries(["vote"]);
+        queryClient.invalidateQueries({ queryKey: ["vote"] });
       });
     }
-    setActivePlayer(null);
-    setClicked(true);
   };
-  if (choicePlayer !== activePlayer) {
-    if (clicked) {
-      setClicked(false);
-    }
-  }
+
   return (
     <View style={styles.container}>
+      <View style={styles.voteCount}>
+        <Text>{nbVotes}</Text>
+      </View>
+      <View
+        style={[
+          styles.buttonView,
+          choicePlayer.userId === currentVote?.targetId ? styles.selected : {},
+          choicePlayer.state === StatePlayer.DEAD ? styles.deadPlayer : {},
+        ]}
+      >
+        <Text style={styles.text}>{choicePlayer?.user!.name}</Text>
+      </View>
       {choicePlayer.state === StatePlayer.ALIVE && currentPlayer.state === StatePlayer.ALIVE ? (
         <Pressable
-          style={[styles.buttonContent]}
+          style={[
+            styles.buttonContent,
+            choicePlayer.userId === currentVote?.targetId
+              ? styles.buttonCancel
+              : styles.buttonConfirm,
+          ]}
           onPress={() => {
-            if (choicePlayer === activePlayer) {
-              return;
+            if (choicePlayer.userId === currentVote?.targetId) {
+              cancelHandle();
+            } else {
+              confirmHandle();
             }
-            setActivePlayer(choicePlayer);
-            setClicked(true);
           }}
         >
-          {!clicked && (
-            <View
-              style={[
-                styles.buttonView,
-                styles.buttonViewLeft,
-                choicePlayer.userId === currentVote?.targetId ? styles.selected : {},
-              ]}
-            >
-              <Text style={styles.text}>{choicePlayer?.user!.name}</Text>
-            </View>
-          )}
-
-          {clicked && (
-            <View
-              style={[
-                styles.buttonView,
-                styles.buttonViewRight,
-                choicePlayer.userId === currentVote?.targetId ? styles.selected : {},
-              ]}
-            >
-              <Button onPress={confirmHandle} style={styles.buttonConfirm}>
-                Confirm
-              </Button>
-              <Button onPress={cancelHandle} style={styles.buttonCancel}>
-                Cancel
-              </Button>
-            </View>
-          )}
+          <Text style={styles.text}>
+            {choicePlayer.userId === currentVote?.targetId ? "Cancel" : "Vote"}
+          </Text>
         </Pressable>
       ) : (
-        <View
-          style={[
-            styles.buttonView,
-            styles.buttonViewLeft,
-            choicePlayer.state === StatePlayer.DEAD ? styles.deadPlayer : {},
-          ]}
-        >
-          <Text style={styles.text}>{choicePlayer?.user!.name}</Text>
-        </View>
+        <></>
       )}
     </View>
   );
@@ -143,6 +106,7 @@ const Vote = () => {
     queryKey: ["mygames", gameId],
     queryFn: () => getGame(Number(gameId)),
   });
+
   const {
     data: currentPlayer,
     isLoading: isLoadingPlayer,
@@ -153,31 +117,47 @@ const Vote = () => {
     queryFn: () => getPlayer(game?.id!, Array.isArray(userId) ? userId[0] : userId!),
   });
   const {
+    data: votes,
+    isLoading: areVotesLoading,
+    isError: isErrorVotes,
+  } = useQuery<VoteType[][], Error>({
+    queryKey: ["vote", "votes"],
+    enabled: Boolean(currentPlayer) && Boolean(game?.curElecId) && Boolean(game?.players),
+    queryFn: () => {
+      return voteApi.getVotes(game?.players, currentPlayer!, game?.curElecId!);
+    },
+    refetchOnMount: true,
+  });
+  const {
     data: currentVote,
     isLoading: isLoadingVote,
     isError: isErrorVote,
     isSuccess: isSuccessVote,
   } = useQuery<VoteType, Error>({
     enabled: Boolean(currentPlayer) && Boolean(game?.curElecId),
-    queryKey: ["vote", userId],
+    queryKey: ["vote"],
     queryFn: () => {
       return voteApi.getVote(currentPlayer!, game?.curElecId!);
     },
     refetchOnMount: true,
-    refetchOnWindowFocus: true,
   });
 
-  const [activePlayer, setActivePlayer] = useState<Player | null>(null);
   const activeVote = useRef<VoteType | undefined>(undefined);
-  console.log(currentVote);
-  if (isLoading || isLoadingPlayer || isLoadingVote) {
+  if (isLoading || areVotesLoading || isLoadingPlayer || isLoadingVote) {
     return <Loading title="Vote Loading" message={"Loading..."} />;
   }
   if (isSuccessVote) {
-    console.log(currentVote);
     activeVote.current = currentVote;
   }
-  if (isErrorPlayer || isErrorVote || isError || !game || !currentPlayer) {
+  if (
+    isErrorPlayer ||
+    isErrorVotes ||
+    isErrorVote ||
+    isError ||
+    !game ||
+    !votes ||
+    !currentPlayer
+  ) {
     console.log(game);
     console.log(isErrorVote);
     return <Text>An error occured. Please try again in a little</Text>;
@@ -193,15 +173,14 @@ const Vote = () => {
           <Text>Can't vote at night. Come back in the morning!</Text>
         )}
         {game?.players.map(
-          (player: Player) =>
+          (player: Player, i: number) =>
             currentPlayer.userId !== player.userId &&
             (game.state === StateGame.DAY ||
               (currentPlayer.role === Role.WOLF && player.role !== Role.WOLF)) && (
               <Choice
                 choicePlayer={player}
-                activePlayer={activePlayer}
-                setActivePlayer={setActivePlayer}
                 currentPlayer={currentPlayer as Player}
+                nbVotes={votes[i].length}
                 electionId={game?.curElecId!}
                 currentVote={currentVote}
               />
@@ -219,6 +198,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontWeight: "bold",
+    textAlign: "center",
   },
   containerBorder: {
     borderStyle: "solid",
@@ -228,42 +208,42 @@ const styles = StyleSheet.create({
   },
   container: {
     position: "relative",
-    width: "80%",
-    left: "10%",
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "nowrap",
+    // width: "80%",
+    // left: "10%",
     height: "18vh",
     overflow: "hidden",
-    borderRadius: 25,
+    // borderRadius: 25,
   },
   buttonConfirm: {
-    borderRadius: 25,
+    // borderRadius: 25,
     backgroundColor: "green",
   },
   buttonCancel: {
-    borderRadius: 25,
+    // borderRadius: 25,
     backgroundColor: "red",
   },
   buttonContent: {
     position: "relative",
-    width: "100%",
-    flex: 1,
     display: "flex",
-    flexDirection: "row",
-    flexWrap: "nowrap",
+    justifyContent: "center",
     // backgroundColor: "red",
+    height: "clamp(3em, 100%, 8em)",
+    paddingHorizontal: "1.5em",
+    width: "8%",
   },
   buttonView: {
-    borderRadius: 25,
+    flexGrow: 1,
     borderWidth: 5,
     borderStyle: "solid",
     borderColor: "rgb(94, 54, 50)",
     backgroundColor: "rgb(145, 79, 73)",
-  },
-  buttonViewLeft: {
     position: "relative",
     display: "flex",
     textAlign: "center",
-    width: "100%",
-    height: "100%",
+    height: "clamp(3em, 100%, 8em)",
     justifyContent: "center",
   },
   deadPlayer: {
@@ -274,15 +254,16 @@ const styles = StyleSheet.create({
     borderColor: "rgb(135, 113, 5)",
     backgroundColor: "rgb(235, 212, 99)",
   },
-  buttonViewRight: {
-    padding: 20,
-    textAlign: "center",
-    width: "100%",
-    height: "100%",
+  voteCount: {
+    borderWidth: 5,
+    borderStyle: "solid",
+    borderColor: "rgb(59, 54, 54)",
+    height: "clamp(3em, 100%, 8em)",
+    aspectRatio: 1,
+    backgroundColor: "gray",
     display: "flex",
-    justifyContent: "space-around",
-    flexDirection: "row",
-    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
   },
 });
 
