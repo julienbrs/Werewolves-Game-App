@@ -29,6 +29,14 @@ const Home = () => {
         <ImageBackground source={imgBackground} style={styles.image}>
           <View style={styles.centeredView}>
             <Button
+              onPress={() => {}}
+              style={[styles.button, styles.rules]}
+              status="primary"
+              testID="rule-button"
+            >
+              Rules
+            </Button>
+            <Button
               onPress={() => router.push("/games/new")}
               style={styles.button}
               status="primary"
@@ -64,7 +72,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    overflow: "hidden",
   },
   image: {
     flex: 1,
@@ -79,22 +86,27 @@ const styles = StyleSheet.create({
     color: "brown",
     opacity: 0.95,
     marginBottom: 20,
+    borderRadius: 16,
+    boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.25)",
   },
   tabViewWrapper: {
     width: "70%",
     alignSelf: "center",
-    borderRadius: 10,
-    overflow: "hidden",
+    borderRadius: 16,
   },
   tabView: {
-    borderRadius: 10,
-    overflow: "hidden",
+    borderRadius: 16,
   },
   button: {
     width: "70%",
     height: 50,
-    borderRadius: 10,
-    overflow: "hidden",
+    borderRadius: 16,
+    marginBottom: 20,
+    boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.25)",
+  },
+  rules: {
+    backgroundColor: "#d37c4c",
+    borderColor: "#d37c4c",
     marginBottom: 60,
   },
 });
