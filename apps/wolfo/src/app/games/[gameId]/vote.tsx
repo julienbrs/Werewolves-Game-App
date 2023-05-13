@@ -1,15 +1,15 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@ui-kitten/components";
-import { useSearchParams } from "expo-router";
+import { useRouter, useSearchParams } from "expo-router";
 import React, { useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, Player, Role, StateGame, StatePlayer, Vote as VoteType } from "types";
-import voteApi from "../../../utils/api/vote";
 import Loading from "../../../components/loading";
 import { getGame } from "../../../utils/api/game";
 import { getPlayer } from "../../../utils/api/player";
+import voteApi from "../../../utils/api/vote";
 
 interface ChoiceProps {
   choicePlayer: Player;
@@ -122,11 +122,13 @@ const Choice = ({
 
 const Vote = () => {
   const { gameId, userId } = useSearchParams();
+  const router = useRouter();
   const {
     data: game,
     isLoading,
     isError,
   } = useQuery<Game, Error>({
+    enabled: Boolean(gameId),
     queryKey: ["mygames", gameId],
     queryFn: () => getGame(Number(gameId)),
   });
@@ -145,6 +147,7 @@ const Vote = () => {
     isError: isErrorVote,
     isSuccess: isSuccessVote,
   } = useQuery<VoteType, Error>({
+    enabled: Boolean(currentPlayer) && Boolean(game?.curElecId),
     queryKey: ["vote", userId],
     queryFn: () => {
       return voteApi.getVote(currentPlayer!, game?.curElecId!);
@@ -157,18 +160,21 @@ const Vote = () => {
   const activeVote = useRef<VoteType | undefined>(undefined);
   console.log(currentVote);
   if (isLoading || isLoadingPlayer || isLoadingVote) {
-    return <Loading title="Player list loading" message={"Loading..."} />;
+    return <Loading title="Vote Loading" message={"Loading..."} />;
   }
   if (isSuccessVote) {
     console.log(currentVote);
     activeVote.current = currentVote;
   }
-  if (isErrorPlayer || isErrorVote || isError || !game || !currentPlayer || !game.curElecId) {
+  if (isErrorPlayer || isErrorVote || isError || !game || !currentPlayer) {
     console.log(game);
     console.log(isErrorVote);
     return <Text>An error occured. Please try again in a little</Text>;
   }
-
+  if (!game.curElecId) {
+    router.back();
+    return;
+  }
   return (
     <SafeAreaView>
       <ScrollView>

@@ -81,7 +81,12 @@ const NewGame = () => {
   const hideTimePicker = (setter: Dispatch<SetStateAction<boolean>>) => {
     setter(false);
   };
-
+  const setTimeWeb = (time: string, setter: Dispatch<SetStateAction<Date>>) => {
+    const [hours, minutes] = time.split(":"); // extraction des heures et minutes
+    const date = new Date(0);
+    date.setHours(Number(hours), Number(minutes), 0, 0); // définit l'heure spécifiée
+    setter(date);
+  };
   const getTimeString = (hours: number, minutes: number): string => {
     return ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2);
   };
@@ -116,7 +121,6 @@ const NewGame = () => {
     }
     const startDayString = getTimeString(startDay.getHours(), startDay.getMinutes()) + ":00";
     const endDayString = getTimeString(endDay.getHours(), endDay.getMinutes()) + ":00";
-
     const game: NewGameType = {
       name: gameName,
       state: StateGame.LOBBY,
@@ -152,6 +156,7 @@ const NewGame = () => {
                   status={gameNameStatus}
                   placeholder={"Millers Hollow"}
                   onChangeText={setGameName}
+                  testID="name-new-game-input"
                 />
               </View>
 
@@ -160,13 +165,14 @@ const NewGame = () => {
                   <View style={styles.imageWrapper}>
                     <Image source={imgHut} style={styles.icon} />
                   </View>
-                  <Text style={styles.text}>Minimum players:</Text>
+                  <Text style={styles.text}>Min players:</Text>
                 </View>
                 <Select
                   placeholder="Default"
                   style={styles.input}
                   value={+minPlayersIndex.toString() + minPlayers - 1}
                   selectedIndex={minPlayersIndex}
+                  testID="minimum-players-select"
                   onSelect={index => {
                     setMinPlayersIndex(index);
                     if (Number(maxPlayersIndex.toString()) < Number(index.toString())) {
@@ -186,13 +192,14 @@ const NewGame = () => {
                   <View style={styles.imageWrapper}>
                     <Image source={imgVillage} style={styles.icon} />
                   </View>
-                  <Text style={styles.text}>Maximum players:</Text>
+                  <Text style={styles.text}>Max players:</Text>
                 </View>
                 <Select
                   style={styles.input}
                   placeholder={maxPlayers}
                   value={Number(maxPlayersIndex.toString()) + minPlayers - 1}
                   selectedIndex={maxPlayersIndex}
+                  testID="maximum-players-select"
                   onSelect={index => setMaxPlayersIndex(index)}
                 >
                   {Array.from(Array(maxPlayers).keys())
@@ -221,16 +228,25 @@ const NewGame = () => {
                     deadline.getFullYear()}
                 </Button>
               </View>
-              <DateTimePickerModal
-                minimumDate={new Date()}
-                date={deadline}
-                isVisible={startDatelineVisibility}
-                onConfirm={(date: Date) => {
-                  setStartDatelineVisibility(false);
-                  setDeadline(date);
-                }}
-                onCancel={() => hideTimePicker(setStartDatelineVisibility)}
-              />
+              {Platform.OS === "web" ? (
+                <Input
+                  style={styles.timeButton}
+                  onChangeText={text => setDeadline(new Date(text))}
+                  placeholder="MM-DD-YYYY"
+                  testID="start-date-input"
+                />
+              ) : (
+                <DateTimePickerModal
+                  minimumDate={new Date()}
+                  date={deadline}
+                  isVisible={startDatelineVisibility}
+                  onConfirm={(date: Date) => {
+                    setStartDatelineVisibility(false);
+                    setDeadline(date);
+                  }}
+                  onCancel={() => hideTimePicker(setStartDatelineVisibility)}
+                />
+              )}
 
               <View id="startday" style={[styles.wrapperSelect]}>
                 <View style={styles.wrapperImageText}>
@@ -242,8 +258,9 @@ const NewGame = () => {
                 {Platform.OS === "web" ? (
                   <Input
                     style={styles.timeButton}
-                    onChangeText={text => setEndDay(new Date(text))}
+                    onChangeText={text => setTimeWeb(text, setStartDay)}
                     placeholder="HH:MM"
+                    testID="startday-input"
                   />
                 ) : (
                   <Button style={styles.timeButton} onPress={() => setStartDayVisibility(true)}>
@@ -269,8 +286,9 @@ const NewGame = () => {
                 {Platform.OS === "web" ? (
                   <Input
                     style={styles.timeButton}
-                    onChangeText={text => setEndDay(new Date(text))}
+                    onChangeText={text => setTimeWeb(text, setEndDay)}
                     placeholder="HH:MM"
+                    testID="endday-input"
                   />
                 ) : (
                   <Button style={styles.timeButton} onPress={() => setEndDayVisibility(true)}>
@@ -457,6 +475,7 @@ const styles = StyleSheet.create({
     width: 15,
   },
   input: {
+    alignSelf: "flex-end",
     margin: 2,
     width: "40%",
   },

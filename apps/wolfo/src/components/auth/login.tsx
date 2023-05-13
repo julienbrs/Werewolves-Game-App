@@ -5,7 +5,7 @@ import React, { useContext, useState } from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Error, NewUser } from "types";
-import { setToken } from "../../utils/api/api";
+import { setTokenApi } from "../../utils/api/api";
 import { login } from "../../utils/api/user";
 import { AuthContext } from "../context/tokenContext";
 export const Login = () => {
@@ -17,7 +17,7 @@ export const Login = () => {
   const { mutate, isError, error } = useMutation<any, Error, NewUser>({
     mutationFn: user => login(user),
     onSuccess: async data => {
-      setToken(data.token);
+      setTokenApi(data.token);
       handleSetToken(data.token);
       await queryClient.invalidateQueries(["token"]);
       router.replace("/");
@@ -32,9 +32,14 @@ export const Login = () => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <Input placeholder="Username" onChangeText={setName} />
-      <Input placeholder="Password" onChangeText={setPassword} style={styles.passwordInput} />
-      <Button onPress={handleLogin} style={styles.button}>
+      <Input placeholder="Username" onChangeText={setName} testID="username-input" />
+      <Input
+        placeholder="Password"
+        onChangeText={setPassword}
+        testID="password-login-input"
+        style={styles.password}
+      />
+      <Button onPress={handleLogin} style={styles.button} testID="login-button">
         Login
       </Button>
       {isError && <Text>{error.message}</Text>}
@@ -44,12 +49,15 @@ export const Login = () => {
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 10,
-    overflow: "hidden",
+    borderRadius: 0,
+  },
+  password: {
+    borderBottomEndRadius: 20,
+    borderBottomStartRadius: 20,
   },
   button: {
     marginTop: 20,
-    borderRadius: 10,
-    overflow: "hidden",
+    borderRadius: 20,
+    borderColor: "#834742",
   },
 });

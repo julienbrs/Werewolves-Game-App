@@ -18,6 +18,19 @@ const chatApi = {
     const { data } = await api.post("/chatrooms", chatroom);
     return data;
   },
+
+  addDeadToChatroom: async (
+    chatRoomId: number,
+    userDeadId: string,
+    gameId: number
+  ): Promise<void> => {
+    const response = await api.post(`/chatrooms/${chatRoomId}/adduserdead`, { userDeadId, gameId });
+
+    if (response.status !== 200) {
+      throw new Error("Failed to add dead to spirit");
+    }
+  },
+
   postMessage: async (
     chatRoomId: string,
     content: string,
@@ -47,4 +60,5 @@ export const {
   getChatrooms,
   postMessage,
   getPermissions,
+  addDeadToChatroom,
 } = chatApi;

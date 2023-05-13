@@ -39,11 +39,11 @@ const styles = StyleSheet.create({
   tabViewWrapper: {
     width: "70%",
     alignSelf: "center",
-    borderRadius: 10,
+    borderTopStartRadius: 20,
+    borderTopEndRadius: 20,
     overflow: "hidden",
   },
   tabView: {
-    borderRadius: 10,
     overflow: "hidden",
   },
 });

@@ -5,7 +5,7 @@ import React, { useContext, useState } from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Error, NewUser } from "types";
-import { setToken } from "../../utils/api/api";
+import { setTokenApi } from "../../utils/api/api";
 import { createUser } from "../../utils/api/user";
 import { AuthContext } from "../context/tokenContext";
 export const Register = () => {
@@ -17,7 +17,7 @@ export const Register = () => {
   const { mutate } = useMutation<any, Error, NewUser>({
     mutationFn: user => createUser(user),
     onSuccess: async data => {
-      setToken(data.token);
+      setTokenApi(data.token);
       handleSetToken(data.token);
       await queryClient.invalidateQueries(["token"]);
       router.replace("/");
@@ -33,9 +33,9 @@ export const Register = () => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <Input placeholder="Name" onChangeText={setName} />
-      <Input placeholder="Password" onChangeText={setPassword} />
-      <Button onPress={handleRegister} style={styles.button}>
+      <Input placeholder="Name" onChangeText={setName} testID="name-input" />
+      <Input placeholder="Password" onChangeText={setPassword} testID="password-register-input" />
+      <Button onPress={handleRegister} style={styles.button} testID="register-button">
         Register
       </Button>
     </SafeAreaView>

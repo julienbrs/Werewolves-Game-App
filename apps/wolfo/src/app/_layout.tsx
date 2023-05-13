@@ -45,13 +45,15 @@ const HomeLayout = () => {
                     size={24}
                     color="black"
                     onPress={() => router.push("/user")}
+                    testID="settings-button"
                   />
                 ),
               }}
             >
               <Stack.Screen
-                name="auth/index"
+                name="(auth)/auth"
                 options={{
+                  title: "Authentification",
                   header: () => null,
                   headerRight: () => null,
                   headerLeft: () => null,
@@ -69,6 +71,12 @@ const HomeLayout = () => {
                       onPress={() => router.push("/notifications")}
                     />
                   ),
+                }}
+              />
+              <Stack.Screen
+                name="games/new"
+                options={{
+                  title: "New game",
                 }}
               />
               <Stack.Screen
