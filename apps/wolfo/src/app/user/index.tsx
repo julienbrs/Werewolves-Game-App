@@ -42,7 +42,7 @@ const Settings = () => {
     setTokenApi(null);
     handleSetToken(null);
     await queryClient.invalidateQueries();
-    router.back();
+    router.push("/(auth)/");
   };
   const handleModify = async () => {
     if (password !== confirmPassword) {
