@@ -161,7 +161,7 @@ const NewGame = () => {
                   <View style={styles.imageWrapper}>
                     <Image source={imgHut} style={styles.icon} />
                   </View>
-                  <Text style={styles.text}>Minimum players:</Text>
+                  <Text style={styles.text}>Min players:</Text>
                 </View>
                 <Select
                   placeholder="Default"
@@ -187,7 +187,7 @@ const NewGame = () => {
                   <View style={styles.imageWrapper}>
                     <Image source={imgVillage} style={styles.icon} />
                   </View>
-                  <Text style={styles.text}>Maximum players:</Text>
+                  <Text style={styles.text}>Max players:</Text>
                 </View>
                 <Select
                   style={styles.input}

@@ -17,7 +17,6 @@ const Settings = () => {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const router = useRouter();
-  const { token } = useContext(AuthContext);
   const queryClient = useQueryClient();
 
   const { mutate: updateQuery } = useMutation<any, Error, User>({

@@ -92,22 +92,6 @@ const GameView = () => {
       <ImageBackground source={imageBackground} style={styles.imageBackground}>
         <View style={styles.container}>
           {/* display all informations on the game after fetching data from backend*/}
-          <Button
-            style={styles.button}
-            onPress={() => {
-              console.log("game.state", game.state);
-              console.log("player.power", player.power);
-              console.log("player.role", player.role);
-              console.log("player.usedPower", player.usedPower);
-              console.log("player.state", player.state);
-            }}
-          >
-            {evaProps => (
-              <Text {...evaProps} style={styles.buttonText}>
-                Show debug
-              </Text>
-            )}
-          </Button>
           <Button onPress={redirectVote} style={styles.button}>
             {evaProps => (
               <Text {...evaProps} style={styles.buttonText}>
@@ -190,24 +174,27 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    paddingVertical: "20%",
   },
   button: {
-    margin: 10,
+    marginVertical: 15,
     width: 200,
     height: 50,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 10,
-    elevation: 8,
+    borderRadius: 20,
+    boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.25)",
+    borderColor: "#834742",
   },
   disabledButton: {
     backgroundColor: "#ceccbd",
+    borderColor: "#b0afa1",
     opacity: 0.8,
   },
   buttonText: {
-    color: "#222222",
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
+    color: "white",
   },
   disabledButtonText: {
     color: "#4e4e4e",
