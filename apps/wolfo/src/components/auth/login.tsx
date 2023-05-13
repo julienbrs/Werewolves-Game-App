@@ -33,7 +33,12 @@ export const Login = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Input placeholder="Username" onChangeText={setName} testID="username-input" />
-      <Input placeholder="Password" onChangeText={setPassword} testID="password-login-input" />
+      <Input
+        placeholder="Password"
+        onChangeText={setPassword}
+        testID="password-login-input"
+        style={styles.password}
+      />
       <Button onPress={handleLogin} style={styles.button} testID="login-button">
         Login
       </Button>
@@ -44,12 +49,15 @@ export const Login = () => {
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 10,
-    overflow: "hidden",
+    borderRadius: 0,
+  },
+  password: {
+    borderBottomEndRadius: 20,
+    borderBottomStartRadius: 20,
   },
   button: {
     marginTop: 20,
-    borderRadius: 10,
-    overflow: "hidden",
+    borderRadius: 20,
+    borderColor: "#834742",
   },
 });
