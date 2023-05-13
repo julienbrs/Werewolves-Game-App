@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button, Input } from "@ui-kitten/components";
+import { Button, Input, Text } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
 import React, { useContext, useState } from "react";
 import { StyleSheet } from "react-native";
@@ -14,7 +14,7 @@ export const Register = () => {
   const { handleSetToken } = useContext(AuthContext);
   const [name, setName] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const { mutate } = useMutation<any, Error, NewUser>({
+  const { mutate, isError, error } = useMutation<any, Error, NewUser>({
     mutationFn: user => createUser(user),
     onSuccess: async data => {
       setTokenApi(data.token);
@@ -48,6 +48,7 @@ export const Register = () => {
       <Button onPress={handleRegister} style={styles.button} testID="register-button">
         Register
       </Button>
+      {isError && <Text style={styles.errorMessage}>{error.message}</Text>}
     </SafeAreaView>
   );
 };
@@ -71,5 +72,12 @@ const styles = StyleSheet.create({
     borderTopStartRadius: 2,
     borderBottomEndRadius: 0,
     borderBottomStartRadius: 0,
+  },
+  errorMessage: {
+    color: "white",
+    textAlign: "center",
+    fontSize: 18,
+    fontWeight: "bold",
+    marginTop: 10,
   },
 });
