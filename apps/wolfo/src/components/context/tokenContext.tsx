@@ -51,8 +51,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             router.replace("/auth");
           } else {
             // Redirect away from the sign-in page.
+            setTokenApi(t);
             handleSetToken(t);
-            console.log("token from storage replace /");
             if (inAuthGroup) router.replace("/");
           }
         });
@@ -73,7 +73,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       return;
     }
     setToken(newToken);
-    setTokenApi(newToken);
     const decodedToken: any = jwtDecode(newToken);
     setName(decodedToken.name);
     setId(decodedToken.id);

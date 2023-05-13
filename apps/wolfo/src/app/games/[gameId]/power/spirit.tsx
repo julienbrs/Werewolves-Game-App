@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Card, Text } from "@ui-kitten/components";
 import { useRouter, useSearchParams } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ImageBackground, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, Player } from "types";
@@ -11,12 +11,13 @@ import { getGame } from "../../../../utils/api/game";
 import { getPlayer, updatePlayer } from "../../../../utils/api/player";
 
 import imageBackground from "../../../../../assets/spiritPower.png";
+import { AuthContext } from "../../../../components/context/tokenContext";
 
 const SpiritView = () => {
   const router = useRouter();
   const { gameId, userId } = useSearchParams();
   const queryClient = useQueryClient();
-
+  const { token } = useContext(AuthContext);
   const [usedPower, setUsedPower] = useState<boolean>(false);
   const [selectedDeadPlayer, setSelectedDeadPlayer] = useState<Player | undefined>();
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
@@ -27,7 +28,7 @@ const SpiritView = () => {
     isLoading,
     isError,
   } = useQuery<Game, Error>({
-    enabled: !isNaN(Number(gameId)),
+    enabled: !isNaN(Number(gameId)) && Boolean(token),
     queryKey: ["mygames", gameId],
     queryFn: () => getGame(Number(gameId)),
     staleTime: 1000 * 60 * 60 * 24, // 1 day
@@ -39,7 +40,7 @@ const SpiritView = () => {
     isLoading: isLoadingPlayer,
     isError: isErrorPlayer,
   } = useQuery<Player, Error>({
-    enabled: !isNaN(Number(gameId)) && userId !== undefined,
+    enabled: !isNaN(Number(gameId)) && Boolean(userId) && Boolean(token),
     queryKey: ["player", userId],
     queryFn: () => getPlayer(Number(gameId), String(userId)),
   });
