@@ -1,26 +1,16 @@
+import { Power } from "database";
 import { Request, Response } from "express";
-import { ChatRoom } from "types";
 import prisma from "../prisma";
-import createChatroom from "../services/chat/createChatroom";
 import { SECRET } from "../utils/env";
 const jwt = require("jsonwebtoken");
 
 const chatroomController = {
-  async create(req: Request, res: Response) {
-    const chatroom: ChatRoom = req.body;
-    createChatroom(chatroom)
-      .then(newChatroom => {
-        res.status(201).json(newChatroom);
-      })
-      .catch(error => {
-        console.error("controllers");
-        console.error("Failed to create chatroom:", error);
-        res.status(400).json(error);
-      });
-  },
-
   // add a writer and a reader to a chatroom
   async addDeadtoSpiritism(req: Request, res: Response) {
+    // #swagger.tags = ['Chatroom']
+    // #swagger.summary = 'Add a dead person to spiritism chatroom'
+    // #swagger.security = [{'bearerAuth': [] }]
+    // #swagger.parameters['chatroom'] = { in: 'body', schema: { $gameId: "gameId", $userDeadId: "userDeadId" }}
     const token = req.headers.authorization?.split(" ")[1];
     const decodedToken = jwt.verify(token, SECRET);
     const userSpiritId = decodedToken.id;
@@ -29,6 +19,7 @@ const chatroomController = {
     const userDeadId = String(req.body.userDeadId);
 
     if (isNaN(chatRoomId) || !userSpiritId || !gameId || !userDeadId) {
+      // #swagger.responses[400] = { description: "Bad request, missing parameters", schema: { $message: "Bad request, missing parameters" } }
       res.status(400).send("Bad request, missing parameters");
       return;
     }
@@ -42,11 +33,13 @@ const chatroomController = {
     });
 
     if (!playerSpiritId) {
+      // #swagger.responses[400] = { description: "Bad request, player spirit id not found", schema: { $message: "Bad request, player spirit id not found" } }
       res.status(400).send("Bad request, player spirit id not found");
       return;
     }
     // Verify that player got spirit power and didn't use it yet
-    if (playerSpiritId.power !== "SPIRIT" || playerSpiritId.usedPower === true) {
+    if (playerSpiritId.power !== Power.SPIRIT || playerSpiritId.usedPower === true) {
+      // #swagger.responses[400] = { description: "Bad request, no spirit power or already used", schema: { $message: "Bad request, no spirit power or already used" } }
       res.status(400).send("Bad request, no spirit power or already used");
       return;
     }
@@ -112,17 +105,22 @@ const chatroomController = {
           },
         },
       });
+      // #swagger.responses[200] = { description: "Add user to chatroom", schema: { $chatroom: { $id: 1, $name: "chatroom name", $gameId: 1, $readers: [{ $playerId: "playerId", $gameId: 1 }], $writers: [{ $playerId: "playerId", $gameId: 1 }] } } }
       res.status(200).json(chatroom);
     } catch (error) {
-      console.error("controllers");
       console.error("Failed to add user to chatroom:", error);
+      // #swagger.responses[400] = { description: "Bad request, failed to add user to chatroom", schema: { $message: "Bad request, failed to add user to chatroom" } }
       res.status(400).json(error);
     }
   },
 
   getTodayMessages: async (req: Request, res: Response) => {
+    // #swagger.tags = ['Chatroom']
+    // #swagger.summary = 'Get today messages from chatroom'
+    // #swagger.security = [{'bearerAuth': [] }]
     const chatRoomId = Number(req.params.id);
     if (isNaN(chatRoomId)) {
+      // #swagger.responses[400] = { description: "Bad chatroom id", schema: { $message: "Bad chatroom id" } }
       res.status(400).send("Bad chatroom id");
       return;
     }
@@ -156,6 +154,7 @@ const chatroomController = {
         },
       },
     });
+    // #swagger.responses[200] = { description: "Get today messages from chatroom", $data: [ { '$ref': '#/definitions/Message' } ] }
     res.status(200).json(messages);
   },
 
@@ -188,6 +187,9 @@ const chatroomController = {
   },
 
   getHistory: async (req: Request, res: Response) => {
+    // #swagger.tags = ['Chatroom']
+    // #swagger.summary = 'Get history'
+    // #swagger.security = [{'bearerAuth': [] }]
     const chatRoomId = Number(req.params.id);
     if (isNaN(chatRoomId)) {
       res.status(400).send("Bad chatroom id");
@@ -211,10 +213,14 @@ const chatroomController = {
         },
       },
     });
+    // #swagger.responses[200] = { description: "Get history", $data: [ { '$ref': '#/definitions/Message' } ] }
     res.status(200).json(messages);
   },
 
   getReaders: async (req: Request, res: Response) => {
+    // #swagger.tags = ['Chatroom']
+    // #swagger.summary = 'Get readers'
+    // #swagger.security = [{'bearerAuth': [] }]
     const chatRoomId = Number(req.params.id);
     if (isNaN(chatRoomId)) {
       res.status(400).send("Bad chatroom id");
@@ -230,6 +236,9 @@ const chatroomController = {
   },
 
   getWriters: async (req: Request, res: Response) => {
+    // #swagger.tags = ['Chatroom']
+    // #swagger.summary = 'Get writers'
+    // #swagger.security = [{'bearerAuth': [] }]
     const chatRoomId = Number(req.params.id);
     if (isNaN(chatRoomId)) {
       res.status(400).send("Bad chatroom id");

@@ -1,12 +1,15 @@
 {
-  "swagger": "2.0",
+  "openapi": "3.0.0",
   "info": {
     "version": "1.0.0",
     "title": "WOLFO API",
     "description": "API for the application wolfo"
   },
-  "host": "${IP}:${PORT}",
-  "basePath": "/",
+  "servers": [
+    {
+      "url": "http://localhost:3000/"
+    }
+  ],
   "tags": [
     {
       "name": "User",
@@ -17,7 +20,7 @@
       "description": "Everything about game"
     },
     {
-      "name": "Chat",
+      "name": "Chatroom",
       "description": "Everything about chat"
     },
     {
@@ -33,176 +36,634 @@
       "description": "Everything about notification"
     }
   ],
-  "schemes": [
-    "http"
-  ],
-  "securityDefinitions": {
-    "Bearer": {
-      "type": "apiKey",
-      "name": "Authorization",
-      "in": "header"
-    }
-  },
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ],
   "paths": {
     "/api/users/": {
       "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Create user",
         "description": "",
         "parameters": [],
         "responses": {
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Create user",
         "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "example": "any"
-                },
-                "password": {
-                  "example": "any"
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "User  ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User  "
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "token"
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "token"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User  "
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "token"
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "token"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Name already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Name already exists"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Name already exists"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
                 }
               }
             }
           }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
         ],
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "any"
+                  },
+                  "password": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
           }
         }
       },
       "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Update user",
         "description": "",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
             "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "example": "any"
-                },
-                "password": {
-                  "example": "any"
-                }
-              }
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "User  ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "new token"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User  "
+                    }
+                  },
+                  "required": [
+                    "token",
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "new token"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User  "
+                    }
+                  },
+                  "required": [
+                    "token",
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Unknown error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Name already exists"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Name already exists"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Unknown error"
+                }
+              },
+              "required": [
+                "message"
+              ],
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "in": {
+                    "example": "any"
+                  },
+                  "description": {
+                    "example": "any"
+                  },
+                  "schema": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
           }
         }
       },
       "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "delete himself",
         "description": "",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/api/users/me": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/api/users/login": {
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
             "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "example": "any"
-                },
-                "password": {
-                  "example": "any"
-                }
-              }
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "User Deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User Deleted"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User Deleted"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "User does not exist in database",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User does not exist in database"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User does not exist in database"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/users/me": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Login from token",
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User not found"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User not found"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/users/login": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Login",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "User logged in",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "new token"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User logged in"
+                    }
+                  },
+                  "required": [
+                    "token",
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "new token"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User logged in"
+                    }
+                  },
+                  "required": [
+                    "token",
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Wrong password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Name not found"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Name not found"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Wrong password"
+                }
+              },
+              "required": [
+                "message"
+              ],
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "in": {
+                    "example": "any"
+                  },
+                  "description": {
+                    "example": "any"
+                  },
+                  "schema": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/games/": {
       "get": {
+        "tags": [
+          "Game"
+        ],
+        "summary": "Get all games not join by state",
         "description": "",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "state",
             "in": "query",
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -210,37 +671,59 @@
             "description": "OK"
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Mauvaise Requête"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "post": {
+        "tags": [
+          "Game"
+        ],
+        "summary": "Create game",
         "description": "",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Créé"
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Mauvaise Requête"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/games/mygames": {
       "get": {
+        "tags": [
+          "Game"
+        ],
+        "summary": "Get all games that I join",
         "description": "",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -248,72 +731,189 @@
             "description": "OK"
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Mauvaise Requête"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/games/{id}/join": {
       "post": {
+        "tags": [
+          "Game"
+        ],
+        "summary": "Join game",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Créé"
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Mauvaise Requête"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/games/{id}/leave": {
       "post": {
+        "tags": [
+          "Game"
+        ],
+        "summary": "Leave game",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Game left",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Game left"
+                    },
+                    "player": {
+                      "$ref": "#/components/schemas/Player"
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "player"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Game left"
+                    },
+                    "player": {
+                      "$ref": "#/components/schemas/Player"
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "player"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Mauvaise Requête",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/games/{id}": {
       "get": {
+        "tags": [
+          "Game"
+        ],
+        "summary": "Get game by id",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -321,9 +921,14 @@
             "description": "OK"
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Mauvaise Requête"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "patch": {
         "description": "",
@@ -332,7 +937,9 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {}
@@ -346,7 +953,9 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {}
@@ -354,31 +963,85 @@
     },
     "/api/chatrooms/{id}/messages": {
       "get": {
+        "tags": [
+          "Chatroom"
+        ],
+        "summary": "Get today messages from chatroom",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Get today messages from chatroom",
+            "$data": [
+              {
+                "$ref": "#/components/schemas/Message"
+              }
+            ]
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad chatroom id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Bad chatroom id"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Bad chatroom id"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Non Autorisé"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "post": {
         "description": "",
@@ -387,70 +1050,96 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
             "schema": {
-              "type": "object",
-              "properties": {
-                "content": {
-                  "example": "any"
-                },
-                "authorId": {
-                  "example": "any"
-                },
-                "gameId": {
-                  "example": "any"
-                }
-              }
+              "type": "string"
             }
           }
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Créé"
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Mauvaise Requête"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erreur Interne du Serveur"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "example": "any"
+                  },
+                  "authorId": {
+                    "example": "any"
+                  },
+                  "gameId": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/chatrooms/{id}/history": {
       "get": {
+        "tags": [
+          "Chatroom"
+        ],
+        "summary": "Get history",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Get history",
+            "$data": [
+              {
+                "$ref": "#/components/schemas/Message"
+              }
+            ]
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Mauvaise Requête"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/chatrooms/{id}/readers": {
       "get": {
+        "tags": [
+          "Chatroom"
+        ],
+        "summary": "Get readers",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -458,20 +1147,31 @@
             "description": "OK"
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Mauvaise Requête"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/chatrooms/{id}/writers": {
       "get": {
+        "tags": [
+          "Chatroom"
+        ],
+        "summary": "Get writers",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -479,9 +1179,14 @@
             "description": "OK"
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Mauvaise Requête"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/chatrooms/{id}/permissions": {
@@ -492,12 +1197,16 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -505,75 +1214,289 @@
             "description": "OK"
           },
           "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/api/chatrooms/": {
-      "post": {
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
+            "description": "Mauvaise Requête"
           }
         }
       }
     },
     "/api/chatrooms/{id}/adduserdead": {
       "post": {
+        "tags": [
+          "Chatroom"
+        ],
+        "summary": "Add a dead person to spiritism chatroom",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
             "schema": {
-              "type": "object",
-              "properties": {
-                "gameId": {
-                  "example": "any"
-                },
-                "userDeadId": {
-                  "example": "any"
-                }
-              }
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Add user to chatroom",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "chatroom": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "chatroom name"
+                        },
+                        "gameId": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "readers": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "playerId": {
+                                "type": "string",
+                                "example": "playerId"
+                              },
+                              "gameId": {
+                                "type": "number",
+                                "example": 1
+                              }
+                            },
+                            "required": [
+                              "playerId",
+                              "gameId"
+                            ]
+                          }
+                        },
+                        "writers": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "playerId": {
+                                "type": "string",
+                                "example": "playerId"
+                              },
+                              "gameId": {
+                                "type": "number",
+                                "example": 1
+                              }
+                            },
+                            "required": [
+                              "playerId",
+                              "gameId"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "gameId",
+                        "readers",
+                        "writers"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "chatroom"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "chatroom": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "chatroom name"
+                        },
+                        "gameId": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "readers": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "playerId": {
+                                "type": "string",
+                                "example": "playerId"
+                              },
+                              "gameId": {
+                                "type": "number",
+                                "example": 1
+                              }
+                            },
+                            "required": [
+                              "playerId",
+                              "gameId"
+                            ]
+                          }
+                        },
+                        "writers": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "playerId": {
+                                "type": "string",
+                                "example": "playerId"
+                              },
+                              "gameId": {
+                                "type": "number",
+                                "example": 1
+                              }
+                            },
+                            "required": [
+                              "playerId",
+                              "gameId"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "gameId",
+                        "readers",
+                        "writers"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "chatroom"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad request, failed to add user to chatroom",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Bad request, missing parameters"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Bad request, missing parameters"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Bad request, failed to add user to chatroom"
+                }
+              },
+              "required": [
+                "message"
+              ],
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "gameId": {
+                    "example": "any"
+                  },
+                  "userDeadId": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
           }
         }
       }
     },
     "/api/games/{gameId}/players/": {
       "get": {
+        "tags": [
+          "Player"
+        ],
+        "summary": "Get all players",
         "description": "",
         "parameters": [
           {
             "name": "gameId",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -581,26 +1504,39 @@
             "description": "OK"
           },
           "404": {
-            "description": "Not Found"
+            "description": "Non Trouvé"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/games/{gameId}/players/{id}": {
       "get": {
+        "tags": [
+          "Player"
+        ],
+        "summary": "Get player by id",
         "description": "",
         "parameters": [
           {
             "name": "gameId",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -608,41 +1544,65 @@
             "description": "OK"
           },
           "404": {
-            "description": "Not Found"
+            "description": "Non Trouvé"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "patch": {
+        "tags": [
+          "Player"
+        ],
+        "summary": "Update player",
         "description": "",
         "parameters": [
           {
             "name": "gameId",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/notifications/": {
       "get": {
+        "tags": [
+          "Notification"
+        ],
+        "summary": "Get all notifications",
         "description": "",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -650,78 +1610,153 @@
             "description": "OK"
           },
           "404": {
-            "description": "Not Found"
+            "description": "Non Trouvé"
           }
-        }
-      },
-      "post": {
-        "description": "",
-        "parameters": [
+        },
+        "security": [
           {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
+            "bearerAuth": []
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/notifications/{id}": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
+        ]
       }
     },
     "/api/games/{gameId}/players/{id}/elections/{electionId}/": {
       "get": {
+        "tags": [
+          "Vote"
+        ],
+        "summary": "Get all votes from an election",
         "description": "",
         "parameters": [
           {
             "name": "gameId",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "electionId",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Vote found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Vote not found"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Vote not found"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            },
+            "schema": {
+              "$ref": "#/components/schemas/Vote",
+              "$message": "Vote found"
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "An error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Election ID must be a number"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Election ID must be a number"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "An error occurred"
+                }
+              },
+              "required": [
+                "message"
+              ],
+              "xml": {
+                "name": "main"
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "post": {
         "description": "",
@@ -730,27 +1765,98 @@
             "name": "gameId",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "electionId",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Vote  ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Vote",
+                  "$message": "Vote  "
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Vote",
+                  "$message": "Vote  "
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "An error occured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "You can't vote for yourself!"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "You can't vote for yourself!"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "An error occured"
+                }
+              },
+              "required": [
+                "message"
+              ],
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
@@ -761,33 +1867,24 @@
             "name": "gameId",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "electionId",
             "in": "path",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
             "schema": {
-              "type": "object",
-              "properties": {
-                "req": {
-                  "example": "any"
-                },
-                "targetId": {
-                  "example": "any"
-                }
-              }
+              "type": "string"
             }
           }
         ],
@@ -796,7 +1893,24 @@
             "description": "OK"
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Mauvaise Requête"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "req": {
+                    "example": "any"
+                  },
+                  "targetId": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -807,19 +1921,25 @@
             "name": "gameId",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "electionId",
             "in": "path",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -827,184 +1947,255 @@
             "description": "OK"
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Mauvaise Requête"
           }
         }
       }
     }
   },
-  "definitions": {
-    "addGame": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "example": "Game X"
+  "components": {
+    "schemas": {
+      "addGame": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Game X"
+          },
+          "state": {
+            "type": "string",
+            "example": "LOBBY"
+          },
+          "minPlayer": {
+            "type": "number",
+            "example": 5
+          },
+          "maxPlayer": {
+            "type": "number",
+            "example": 20
+          },
+          "wolfProb": {
+            "type": "number",
+            "example": 0.5
+          },
+          "seerProb": {
+            "type": "number",
+            "example": 0.5
+          },
+          "spiritProb": {
+            "type": "number",
+            "example": 0.5
+          },
+          "contProb": {
+            "type": "number",
+            "example": 0.5
+          },
+          "insomProb": {
+            "type": "number",
+            "example": 0.5
+          },
+          "startDay": {
+            "type": "string",
+            "example": "2023-04-15T22:26:00+00:00"
+          },
+          "endDay": {
+            "type": "string",
+            "example": "2023-04-15T20:20:20+00:00"
+          },
+          "deadline": {
+            "type": "string",
+            "example": "2023-05-16T20:20:20+00:00"
+          }
         },
-        "state": {
-          "type": "string",
-          "example": "LOBBY"
+        "xml": {
+          "name": "addGame"
+        }
+      },
+      "Game": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Game X"
+          },
+          "state": {
+            "type": "string",
+            "example": "LOBBY"
+          },
+          "minPlayer": {
+            "type": "number",
+            "example": 5
+          },
+          "maxPlayer": {
+            "type": "number",
+            "example": 20
+          },
+          "wolfProb": {
+            "type": "number",
+            "example": 0.5
+          },
+          "seerProb": {
+            "type": "number",
+            "example": 0.5
+          },
+          "spiritProb": {
+            "type": "number",
+            "example": 0.5
+          },
+          "contProb": {
+            "type": "number",
+            "example": 0.5
+          },
+          "insomProb": {
+            "type": "number",
+            "example": 0.5
+          },
+          "startDay": {
+            "type": "string",
+            "example": "2023-04-15T22:26:00+00:00"
+          },
+          "endDay": {
+            "type": "string",
+            "example": "2023-04-15T20:20:20+00:00"
+          },
+          "deadline": {
+            "type": "string",
+            "example": "2023-05-16T20:20:20+00:00"
+          },
+          "id": {
+            "type": "number",
+            "example": 1
+          }
         },
-        "minPlayer": {
-          "type": "number",
-          "example": 5
+        "xml": {
+          "name": "Game"
+        }
+      },
+      "addUser": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Paul"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456"
+          }
         },
-        "maxPlayer": {
-          "type": "number",
-          "example": 20
+        "xml": {
+          "name": "addUser"
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Paul"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456"
+          },
+          "id": {
+            "type": "number",
+            "example": 1
+          }
         },
-        "wolfProb": {
-          "type": "number",
-          "example": 0.5
+        "xml": {
+          "name": "User"
+        }
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "chatRoomId": {
+            "type": "number",
+            "example": 1
+          },
+          "content": {
+            "type": "string",
+            "example": "blabla"
+          },
+          "authorId": {
+            "type": "string",
+            "example": "Paul"
+          },
+          "gameId": {
+            "type": "number",
+            "example": 1
+          },
+          "createdAt": {
+            "type": "object",
+            "properties": {}
+          },
+          "updatedAt": {
+            "type": "object",
+            "properties": {}
+          }
         },
-        "seerProb": {
-          "type": "number",
-          "example": 0.5
+        "xml": {
+          "name": "Message"
+        }
+      },
+      "addChatroom": {
+        "type": "object",
+        "properties": {},
+        "xml": {
+          "name": "addChatroom"
+        }
+      },
+      "Player": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "example": "1"
+          },
+          "gameId": {
+            "type": "number",
+            "example": 1
+          },
+          "role": {
+            "type": "string",
+            "example": "VILLAGER"
+          },
+          "power": {
+            "type": "string",
+            "example": "NONE"
+          },
+          "state": {
+            "type": "string",
+            "example": "ALIVE"
+          },
+          "createdAt": {
+            "type": "object",
+            "properties": {}
+          },
+          "updatedAt": {
+            "type": "object",
+            "properties": {}
+          },
+          "usedPower": {
+            "type": "boolean",
+            "example": false
+          }
         },
-        "spiritProb": {
-          "type": "number",
-          "example": 0.5
-        },
-        "contProb": {
-          "type": "number",
-          "example": 0.5
-        },
-        "insomProb": {
-          "type": "number",
-          "example": 0.5
-        },
-        "startDay": {
-          "type": "string",
-          "example": "2023-04-15T22:26:00+00:00"
-        },
-        "endDay": {
-          "type": "string",
-          "example": "2023-04-15T20:20:20+00:00"
-        },
-        "deadline": {
-          "type": "string",
-          "example": "2023-05-16T20:20:20+00:00"
+        "xml": {
+          "name": "Player"
         }
       }
     },
-    "Game": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "example": "Game X"
-        },
-        "state": {
-          "type": "string",
-          "example": "LOBBY"
-        },
-        "minPlayer": {
-          "type": "number",
-          "example": 5
-        },
-        "maxPlayer": {
-          "type": "number",
-          "example": 20
-        },
-        "wolfProb": {
-          "type": "number",
-          "example": 0.5
-        },
-        "seerProb": {
-          "type": "number",
-          "example": 0.5
-        },
-        "spiritProb": {
-          "type": "number",
-          "example": 0.5
-        },
-        "contProb": {
-          "type": "number",
-          "example": 0.5
-        },
-        "insomProb": {
-          "type": "number",
-          "example": 0.5
-        },
-        "startDay": {
-          "type": "string",
-          "example": "2023-04-15T22:26:00+00:00"
-        },
-        "endDay": {
-          "type": "string",
-          "example": "2023-04-15T20:20:20+00:00"
-        },
-        "deadline": {
-          "type": "string",
-          "example": "2023-05-16T20:20:20+00:00"
-        },
-        "id": {
-          "type": "number",
-          "example": 1
-        }
-      }
-    },
-    "addUser": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "example": "Paul"
-        },
-        "password": {
-          "type": "string",
-          "example": "123456"
-        }
-      }
-    },
-    "User": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "example": "Paul"
-        },
-        "password": {
-          "type": "string",
-          "example": "123456"
-        },
-        "id": {
-          "type": "number",
-          "example": 1
-        }
-      }
-    },
-    "Message": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "number",
-          "example": 1
-        },
-        "chatRoomId": {
-          "type": "number",
-          "example": 1
-        },
-        "content": {
-          "type": "string",
-          "example": "blabla"
-        },
-        "authorId": {
-          "type": "string",
-          "example": "Paul"
-        },
-        "gameId": {
-          "type": "number",
-          "example": 1
-        },
-        "createdAt": {
-          "type": "object",
-          "properties": {}
-        },
-        "updatedAt": {
-          "type": "object",
-          "properties": {}
-        }
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }
