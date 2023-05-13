@@ -39,10 +39,10 @@ const Home = () => {
             />
             <View style={styles.tabViewWrapper}>
               <TabView selectedIndex={tabIndex} onSelect={setTabIndex} style={styles.tabView}>
-                <Tab title="Mes parties">
+                <Tab title="Mes parties" style={styles.title}>
                   <ListMyGames search={search} />
                 </Tab>
-                <Tab title="Parties à rejoindre">
+                <Tab title="Parties à rejoindre" style={styles.title}>
                   <ListGamesLobby search={search} />
                 </Tab>
               </TabView>
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     opacity: 0.95,
     marginBottom: 20,
     borderRadius: 16,
-    boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.25)",
+    boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.15)",
   },
   tabViewWrapper: {
     width: "70%",
@@ -83,12 +83,15 @@ const styles = StyleSheet.create({
   tabView: {
     borderRadius: 16,
   },
+  title: {
+    paddingVertical: 5,
+  },
   button: {
     width: "70%",
     height: 50,
     borderRadius: 16,
     marginBottom: 20,
-    boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.25)",
+    boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.15)",
   },
   rules: {
     backgroundColor: "#d37c4c",

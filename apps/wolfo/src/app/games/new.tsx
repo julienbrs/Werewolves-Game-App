@@ -315,6 +315,9 @@ const NewGame = () => {
               </View>
               <Slider
                 thumbStyle={styles.thumbSlider}
+                allowTouchTrack={true}
+                minimumTrackTintColor="#fffaf5"
+                maximumTrackTintColor="#18181a"
                 animationType="timing"
                 minimumValue={0}
                 maximumValue={100}
@@ -333,6 +336,9 @@ const NewGame = () => {
               </View>
               <Slider
                 thumbStyle={styles.thumbSlider}
+                allowTouchTrack={true}
+                minimumTrackTintColor="#fffaf5"
+                maximumTrackTintColor="#18181a"
                 animationType="timing"
                 minimumValue={0}
                 maximumValue={100}
@@ -351,6 +357,9 @@ const NewGame = () => {
               </View>
               <Slider
                 thumbStyle={styles.thumbSlider}
+                allowTouchTrack={true}
+                minimumTrackTintColor="#fffaf5"
+                maximumTrackTintColor="#18181a"
                 animationType="timing"
                 minimumValue={0}
                 maximumValue={100}
@@ -369,6 +378,9 @@ const NewGame = () => {
               </View>
               <Slider
                 thumbStyle={styles.thumbSlider}
+                allowTouchTrack={true}
+                minimumTrackTintColor="#fffaf5"
+                maximumTrackTintColor="#18181a"
                 animationType="timing"
                 minimumValue={0}
                 maximumValue={100}
@@ -387,6 +399,9 @@ const NewGame = () => {
               </View>
               <Slider
                 thumbStyle={styles.thumbSlider}
+                allowTouchTrack={true}
+                minimumTrackTintColor="#fffaf5"
+                maximumTrackTintColor="#18181a"
                 animationType="timing"
                 minimumValue={0}
                 maximumValue={100}

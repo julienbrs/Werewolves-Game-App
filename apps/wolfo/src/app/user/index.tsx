@@ -129,13 +129,13 @@ const styles = StyleSheet.create({
     width: "100%",
     marginVertical: 10,
     borderRadius: 20,
-    boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.25)",
+    boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.15)",
   },
   input: {
     width: "100%",
     marginVertical: 5,
     borderRadius: 20,
-    boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.25)",
+    boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.15)",
   },
   modifyButton: {
     marginBottom: 20,
