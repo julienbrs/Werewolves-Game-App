@@ -81,7 +81,12 @@ const NewGame = () => {
   const hideTimePicker = (setter: Dispatch<SetStateAction<boolean>>) => {
     setter(false);
   };
-
+  const setTimeWeb = (time: string, setter: Dispatch<SetStateAction<Date>>) => {
+    const [hours, minutes] = time.split(":"); // extraction des heures et minutes
+    const date = new Date(0);
+    date.setHours(Number(hours), Number(minutes), 0, 0); // définit l'heure spécifiée
+    setter(date);
+  };
   const getTimeString = (hours: number, minutes: number): string => {
     return ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2);
   };
@@ -116,7 +121,6 @@ const NewGame = () => {
     }
     const startDayString = getTimeString(startDay.getHours(), startDay.getMinutes()) + ":00";
     const endDayString = getTimeString(endDay.getHours(), endDay.getMinutes()) + ":00";
-
     const game: NewGameType = {
       name: gameName,
       state: StateGame.LOBBY,
@@ -131,7 +135,6 @@ const NewGame = () => {
       contProb: contProb / 100,
       spiritProb: spiritProb / 100,
     };
-    console.log(game.deadline, game.startDay, game.endDay);
     mutate(game);
   };
   return (
@@ -255,7 +258,7 @@ const NewGame = () => {
                 {Platform.OS === "web" ? (
                   <Input
                     style={styles.timeButton}
-                    onChangeText={text => setEndDay(new Date(text))}
+                    onChangeText={text => setTimeWeb(text, setStartDay)}
                     placeholder="HH:MM"
                     testID="startday-input"
                   />
@@ -283,7 +286,7 @@ const NewGame = () => {
                 {Platform.OS === "web" ? (
                   <Input
                     style={styles.timeButton}
-                    onChangeText={text => setEndDay(new Date(text))}
+                    onChangeText={text => setTimeWeb(text, setEndDay)}
                     placeholder="HH:MM"
                     testID="endday-input"
                   />
@@ -472,6 +475,7 @@ const styles = StyleSheet.create({
     width: 15,
   },
   input: {
+    alignSelf: "flex-end",
     margin: 2,
     width: "40%",
   },
