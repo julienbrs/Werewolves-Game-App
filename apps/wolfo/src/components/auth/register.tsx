@@ -1,8 +1,9 @@
+import { FontAwesome5 } from "@expo/vector-icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button, Input } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
 import React, { useContext, useState } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, TouchableWithoutFeedback } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Error, NewUser } from "types";
 import { setTokenApi } from "../../utils/api/api";
@@ -31,6 +32,19 @@ export const Register = () => {
     };
     mutate(user);
   };
+  const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
+  const toggleSecureEntry = () => {
+    setSecureTextEntry(!secureTextEntry);
+  };
+  const renderIcon = (
+    <TouchableWithoutFeedback onPress={toggleSecureEntry}>
+      <FontAwesome5
+        name={secureTextEntry ? "eye-slash" : "eye"}
+        size={18}
+        color={secureTextEntry ? "rgb(166, 176, 191)" : "rgb(83, 86, 89)"}
+      />
+    </TouchableWithoutFeedback>
+  );
   return (
     <SafeAreaView style={styles.container}>
       <Input
@@ -44,6 +58,8 @@ export const Register = () => {
         onChangeText={setPassword}
         testID="password-register-input"
         style={styles.password}
+        secureTextEntry={secureTextEntry}
+        accessoryRight={renderIcon}
       />
       <Button onPress={handleRegister} style={styles.button} testID="register-button">
         Register
