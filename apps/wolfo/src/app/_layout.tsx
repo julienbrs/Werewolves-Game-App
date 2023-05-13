@@ -20,15 +20,16 @@ const queryClient = new QueryClient({
 
 const theme = {
   ...lightTheme,
-  "color-primary-100": "#ffe3d7",
-  "color-primary-200": "#ffc1b3",
-  "color-primary-300": "#ffa28f",
-  "color-primary-400": "#ff876f",
-  "color-primary-500": "#914f49",
-  "color-primary-600": "#db4a34",
-  "color-primary-700": "#b53120",
-  "color-primary-800": "#8f1c13",
-  "color-primary-900": "#741108",
+  "color-primary-100": "#ffdab3",
+  "color-primary-200": "#ffc781",
+  "color-primary-300": "#ffba4d",
+  "color-primary-400": "#ffb320",
+  "color-primary-500": "#C38100", // Golden color
+  "color-primary-600": "#a36f00",
+  "color-primary-700": "#865c00",
+  "color-primary-800": "#6a4900",
+  "color-primary-900": "#4d3500",
+  "color-black": "#141313",
 };
 
 const HomeLayout = () => {

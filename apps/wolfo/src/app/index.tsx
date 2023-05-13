@@ -1,4 +1,5 @@
 import { Button, Input, Tab, TabView } from "@ui-kitten/components";
+import { useFonts } from "expo-font";
 import { useRouter } from "expo-router";
 import React from "react";
 import { ImageBackground, StyleSheet, View } from "react-native";
@@ -9,6 +10,16 @@ const Home = () => {
   const router = useRouter();
   const [search, setSearch] = React.useState<string>("");
   const [tabIndex, setTabIndex] = React.useState<number>(0);
+  const [loaded] = useFonts({
+    Montserrat: require("../../assets/fonts/Montserrat-Regular.ttf"),
+    MontserratBold: require("../../assets/fonts/Montserrat-SemiBold.ttf"),
+    Voyage: require("../../assets/fonts/Voyage.ttf"),
+  });
+
+  if (!loaded) {
+    return null;
+  }
+
   return (
     <>
       <View style={styles.container}>
@@ -104,6 +115,7 @@ const styles = StyleSheet.create({
   },
   title: {
     paddingVertical: 5,
+    fontFamily: "Voyage",
   },
   button: {
     width: "70%",
