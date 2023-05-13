@@ -64,6 +64,21 @@ const userController = {
     const id = decodedToken.id;
 
     const { name, password } = req.body;
+
+    if (!validateUsername(name)) {
+      return res.status(400).json({
+        message:
+          "Username must only contain letters, digits, -, _ and be between 5 and 20 characters long, with at least one letter",
+      });
+    }
+
+    if (!validatePassword(password)) {
+      return res.status(400).json({
+        message:
+          "Password must contain: 1 uppercase, 1 lowercase letter, 1 digit, 1 special character and be between 8 and 255 characters logn",
+      });
+    }
+
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(password, salt);
     prisma.user
