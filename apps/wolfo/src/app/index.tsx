@@ -1,9 +1,8 @@
-import { Button, Input, Tab, TabView } from "@ui-kitten/components";
+import { Button, Input, Tab, TabView, Text } from "@ui-kitten/components";
 import { useFonts } from "expo-font";
 import { useRouter } from "expo-router";
 import React from "react";
-import { ImageBackground, StyleSheet, View } from "react-native";
-import imgBackground from "../../assets/homepage_lobby.png";
+import { StyleSheet, View } from "react-native";
 import { ListGamesLobby, ListMyGames } from "../components/game/gameList";
 
 const Home = () => {
@@ -23,56 +22,58 @@ const Home = () => {
   return (
     <>
       <View style={styles.container}>
-        <ImageBackground source={imgBackground} style={styles.image}>
-          <View style={styles.centeredView}>
-            <Button
-              onPress={() => {}}
-              style={[styles.button, styles.rules]}
-              status="primary"
-              testID="rule-button"
+        <View style={styles.centeredView}>
+          <Button
+            onPress={() => {}}
+            style={[styles.button, styles.rules]}
+            status="primary"
+            testID="rule-button"
+          >
+            {evaProps => (
+              <Text {...evaProps} style={styles.buttonText}>
+                See Player
+              </Text>
+            )}
+          </Button>
+          <Button
+            onPress={() => router.push("/games/new")}
+            style={styles.button}
+            status="primary"
+            testID="new-game-button"
+          >
+            <Text style={styles.buttonText}>New Game</Text>
+          </Button>
+          <Input
+            placeholder="Rechercher une partie"
+            onChangeText={setSearch}
+            value={search}
+            style={styles.searchInput}
+            testID="search-game-input"
+          />
+          <View style={styles.tabViewWrapper}>
+            <TabView
+              selectedIndex={tabIndex}
+              onSelect={index => {
+                if (isNaN(index)) {
+                  return;
+                }
+                setTabIndex(index);
+              }}
+              style={styles.tabView}
             >
-              Rules
-            </Button>
-            <Button
-              onPress={() => router.push("/games/new")}
-              style={styles.button}
-              status="primary"
-              testID="new-game-button"
-            >
-              New game
-            </Button>
-            <Input
-              placeholder="Rechercher une partie"
-              onChangeText={setSearch}
-              value={search}
-              style={styles.searchInput}
-              testID="search-game-input"
-            />
-            <View style={styles.tabViewWrapper}>
-              <TabView
-                selectedIndex={tabIndex}
-                onSelect={index => {
-                  if (isNaN(index)) {
-                    return;
-                  }
-                  setTabIndex(index);
-                }}
-                style={styles.tabView}
-              >
-                <Tab title="Mes parties">
-                  <View style={styles.tab}>
-                    <ListMyGames search={search} />
-                  </View>
-                </Tab>
-                <Tab title="Parties à rejoindre">
-                  <View style={styles.tab}>
-                    <ListGamesLobby search={search} />
-                  </View>
-                </Tab>
-              </TabView>
-            </View>
+              <Tab title="Mes parties">
+                <View style={styles.tab}>
+                  <ListMyGames search={search} />
+                </View>
+              </Tab>
+              <Tab title="Parties à rejoindre">
+                <View style={styles.tab}>
+                  <ListGamesLobby search={search} />
+                </View>
+              </Tab>
+            </TabView>
           </View>
-        </ImageBackground>
+        </View>
       </View>
     </>
   );
@@ -82,18 +83,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-  },
-  image: {
-    flex: 1,
-    resizeMode: "cover",
     justifyContent: "center",
+    alignContent: "center",
+    overflow: "hidden",
+    backgroundColor: "#141313",
   },
   centeredView: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
     alignItems: "center",
   },
   searchInput: {
     width: "70%",
-    color: "brown",
     opacity: 0.95,
     marginBottom: 20,
     borderRadius: 16,
@@ -125,9 +127,18 @@ const styles = StyleSheet.create({
     boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.15)",
   },
   rules: {
-    backgroundColor: "#d37c4c",
-    borderColor: "#d37c4c",
+    backgroundColor: "#FFBCB5",
+    borderColor: "#FFBCB5",
     marginBottom: 60,
+  },
+  buttonText: {
+    fontFamily: "MontserratBold",
+    color: "#141313",
+    fontSize: 16,
+  },
+  text: {
+    fontFamily: "Montserrat",
+    color: "#C38100",
   },
 });
 

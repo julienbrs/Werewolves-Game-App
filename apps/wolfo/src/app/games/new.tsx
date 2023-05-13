@@ -29,8 +29,10 @@ import imgSun from "../../../assets/sun.png";
 import imgBackground from "../../../assets/sunny_village.png";
 import imgVillage from "../../../assets/village.png";
 import imgWolf_Howl from "../../../assets/wolf_howl.png";
+import useFont from "../../utils/hooks/useFont";
 
 const NewGame = () => {
+  const fontsLoaded = useFont();
   const router = useRouter();
   /* General settings */
   const minPlayers = 5;
@@ -113,6 +115,10 @@ const NewGame = () => {
       setGameNameStatus("danger");
     },
   });
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   const newGame = async () => {
     if (gameName.trim() === "") {
