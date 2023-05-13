@@ -110,6 +110,7 @@ pages:
     GIT_DEPTH: 0
   needs: [badges]
   script:
+    - mkdir public/
     - mv apps/api/coverage/* public/ # Copie les badges et le report dans public
     - mv docs/diagrams public/
     - ls -l public/
