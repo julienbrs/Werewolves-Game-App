@@ -1,4 +1,4 @@
-import swaggerAutogen from "swagger-autogen";
+const swaggerAutogen = require("swagger-autogen")({ language: "fr", openapi: "3.0.0" });
 import { Message, NewGame, NewUser } from "types";
 import { BASE_URL, PROTOCOL } from "./env";
 const outputFile = "swagger_output.json";
@@ -39,10 +39,16 @@ const doc = {
     description: "API for the application wolfo",
   },
   securityDefinitions: {
-    Bearer: {
+    /*bearerAuth: {
       type: "apiKey",
       name: "Authorization",
       in: "header",
+      bearerFormat: "JWT",
+    },*/
+    bearerAuth: {
+      type: "http",
+      scheme: "bearer",
+      bearerFormat: "JWT",
     },
   },
   host: BASE_URL, // change en fonction de l'environnement (local : localhost:3000, prod : scalingo.io)
