@@ -16,7 +16,7 @@ import { AuthContext } from "../../../../components/context/tokenContext";
 const SpiritView = () => {
   const router = useRouter();
   const { gameId } = useSearchParams();
-  const { id: userId, token } = useContext(AuthContext);
+  const { id: userId } = useContext(AuthContext);
   const queryClient = useQueryClient();
   const [usedPower, setUsedPower] = useState<boolean>(false);
   const [selectedDeadPlayer, setSelectedDeadPlayer] = useState<Player | undefined>();
@@ -28,7 +28,7 @@ const SpiritView = () => {
     isLoading,
     isError,
   } = useQuery<Game, Error>({
-    enabled: !isNaN(Number(gameId)) && Boolean(token),
+    enabled: !isNaN(Number(gameId)),
     queryKey: ["mygames", gameId],
     queryFn: () => getGame(Number(gameId)),
     staleTime: 1000 * 60 * 60 * 24, // 1 day
@@ -40,7 +40,7 @@ const SpiritView = () => {
     isLoading: isLoadingPlayer,
     isError: isErrorPlayer,
   } = useQuery<Player, Error>({
-    enabled: !isNaN(Number(gameId)) && Boolean(userId) && Boolean(token),
+    enabled: !isNaN(Number(gameId)) && Boolean(userId),
     queryKey: ["player", userId],
     queryFn: () => getPlayer(Number(gameId), String(userId)),
   });

@@ -45,7 +45,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         !inAuthGroup
       ) {
         tokenFromStorage().then(t => {
-          console.log("token from storage", t);
           if (!t) {
             // Redirect to the sign-in page.
             router.replace("/auth");
@@ -53,7 +52,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             // Redirect away from the sign-in page.
             setTokenApi(t);
             handleSetToken(t);
-            if (inAuthGroup) router.replace("/");
+            // on reset la route parce qu'au reload le router a été perdu donc les boutons "back" ne fonctionnent plus
+            router.replace("/");
           }
         });
       } else if (tok && inAuthGroup) {

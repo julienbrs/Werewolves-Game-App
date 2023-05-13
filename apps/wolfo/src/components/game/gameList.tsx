@@ -2,12 +2,11 @@ import { AntDesign } from "@expo/vector-icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Divider, List, Text } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, StateGame } from "types";
 import { getGamesLobby, getMyGames, joinGame, leaveGame } from "../../utils/api/game";
-import { AuthContext } from "../context/tokenContext";
 import Loading from "../loading";
 import { ModalConfirmChoice } from "../modals/modalConfirm";
 import { GameItemInGame, GameItemLobby, GameItemNotJoined } from "./gameItem";
@@ -18,7 +17,6 @@ interface ListProps {
 
 export const ListGamesLobby: React.FC<ListProps> = ({ search }) => {
   const queryClient = useQueryClient();
-  const { token } = useContext(AuthContext);
   const [visible, setVisible] = useState<boolean>(false);
   const [selectedGame, setSelectedGame] = useState<number>(0);
   const toggleVisible = () => setVisible(!visible);
@@ -27,7 +25,6 @@ export const ListGamesLobby: React.FC<ListProps> = ({ search }) => {
     isLoading,
     refetch,
   } = useQuery<Game[]>({
-    enabled: Boolean(token),
     queryKey: ["games"],
     queryFn: getGamesLobby,
     refetchOnMount: true,
@@ -85,7 +82,6 @@ export const ListGamesLobby: React.FC<ListProps> = ({ search }) => {
 export const ListMyGames: React.FC<ListProps> = ({ search }) => {
   const queryClient = useQueryClient();
   const [visible, setVisible] = useState<boolean>(false);
-  const { token } = useContext(AuthContext);
   const [selectedGame, setSelectedGame] = useState<number>(0);
   const toggleVisible = () => setVisible(!visible);
   const router = useRouter();
@@ -96,7 +92,6 @@ export const ListMyGames: React.FC<ListProps> = ({ search }) => {
     isError,
     refetch,
   } = useQuery<Game[]>({
-    enabled: Boolean(token),
     queryKey: ["mygames"],
     queryFn: getMyGames,
     refetchOnMount: true,

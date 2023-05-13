@@ -12,7 +12,6 @@ const SeerView = () => {
   const router = useRouter();
   const { gameId, userId } = useSearchParams();
   const queryClient = useQueryClient();
-
   const {
     data: game,
     isLoading,
@@ -45,8 +44,6 @@ const SeerView = () => {
       setErrorMessageUpdate(error.message);
     },
   });
-
-  // const queryClient = useQueryClient();
 
   const [selectedPlayer, setSelectedPlayer] = useState<Player | undefined>();
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
