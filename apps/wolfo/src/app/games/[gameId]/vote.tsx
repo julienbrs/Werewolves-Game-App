@@ -74,11 +74,7 @@ const Choice = ({
     }
   }
   return (
-    <View
-      style={
-        (styles.container, choicePlayer.userId === currentVote?.targetId ? styles.selected : {})
-      }
-    >
+    <View style={styles.container}>
       {choicePlayer.state === StatePlayer.ALIVE && currentPlayer.state === StatePlayer.ALIVE ? (
         <Pressable
           style={[styles.buttonContent]}
@@ -91,13 +87,25 @@ const Choice = ({
           }}
         >
           {!clicked && (
-            <View style={[styles.buttonViewLeft]}>
+            <View
+              style={[
+                styles.buttonView,
+                styles.buttonViewLeft,
+                choicePlayer.userId === currentVote?.targetId ? styles.selected : {},
+              ]}
+            >
               <Text style={styles.text}>{choicePlayer?.user!.name}</Text>
             </View>
           )}
 
           {clicked && (
-            <View style={[styles.buttonViewRight]}>
+            <View
+              style={[
+                styles.buttonView,
+                styles.buttonViewRight,
+                choicePlayer.userId === currentVote?.targetId ? styles.selected : {},
+              ]}
+            >
               <Button onPress={confirmHandle} style={styles.buttonConfirm}>
                 Confirm
               </Button>
@@ -110,6 +118,7 @@ const Choice = ({
       ) : (
         <View
           style={[
+            styles.buttonView,
             styles.buttonViewLeft,
             choicePlayer.state === StatePlayer.DEAD ? styles.deadPlayer : {},
           ]}
@@ -179,7 +188,7 @@ const Vote = () => {
   }
   return (
     <SafeAreaView>
-      <ScrollView>
+      <ScrollView contentContainerStyle={styles.mainView}>
         {game.state === StateGame.NIGHT && currentPlayer.role !== Role.WOLF && (
           <Text>Can't vote at night. Come back in the morning!</Text>
         )}
@@ -203,6 +212,11 @@ const Vote = () => {
   );
 };
 const styles = StyleSheet.create({
+  mainView: {
+    flexDirection: "column",
+    justifyContent: "center",
+    gap: 5,
+  },
   text: {
     fontWeight: "bold",
   },
@@ -213,50 +227,58 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   container: {
+    position: "relative",
     width: "80%",
     left: "10%",
-    height: 80,
+    height: "18vh",
     overflow: "hidden",
-    borderRadius: 20,
+    borderRadius: 25,
   },
   buttonConfirm: {
+    borderRadius: 25,
     backgroundColor: "green",
   },
   buttonCancel: {
+    borderRadius: 25,
     backgroundColor: "red",
   },
   buttonContent: {
     position: "relative",
     width: "100%",
-    height: "100%",
+    flex: 1,
     display: "flex",
     flexDirection: "row",
     flexWrap: "nowrap",
     // backgroundColor: "red",
   },
+  buttonView: {
+    borderRadius: 25,
+    borderWidth: 5,
+    borderStyle: "solid",
+    borderColor: "rgb(94, 54, 50)",
+    backgroundColor: "rgb(145, 79, 73)",
+  },
   buttonViewLeft: {
-    backgroundColor: "brown",
+    position: "relative",
     display: "flex",
-    paddingVertical: "2.5em",
     textAlign: "center",
     width: "100%",
     height: "100%",
     justifyContent: "center",
   },
   deadPlayer: {
+    borderColor: "rgb(59, 54, 54)",
     backgroundColor: "gray",
   },
   selected: {
-    borderColor: "gold",
-    borderWidth: 3,
-    borderStyle: "solid",
+    borderColor: "rgb(135, 113, 5)",
+    backgroundColor: "rgb(235, 212, 99)",
   },
   buttonViewRight: {
     padding: 20,
     textAlign: "center",
     width: "100%",
     height: "100%",
-    backgroundColor: "#8F4401",
     display: "flex",
     justifyContent: "space-around",
     flexDirection: "row",

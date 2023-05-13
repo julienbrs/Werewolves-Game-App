@@ -32,7 +32,12 @@ export const Login = () => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <Input placeholder="Username" onChangeText={setName} testID="username-input" />
+      <Input
+        placeholder="Username"
+        onChangeText={setName}
+        testID="username-input"
+        style={styles.username}
+      />
       <Input
         placeholder="Password"
         onChangeText={setPassword}
@@ -42,7 +47,7 @@ export const Login = () => {
       <Button onPress={handleLogin} style={styles.button} testID="login-button">
         Login
       </Button>
-      {isError && <Text>{error.message}</Text>}
+      {isError && <Text style={styles.errorMessage}>{error.message}</Text>}
     </SafeAreaView>
   );
 };
@@ -52,12 +57,26 @@ const styles = StyleSheet.create({
     borderRadius: 0,
   },
   password: {
-    borderBottomEndRadius: 20,
-    borderBottomStartRadius: 20,
+    borderTopEndRadius: 0,
+    borderTopStartRadius: 0,
+    borderBottomEndRadius: 14,
+    borderBottomStartRadius: 14,
   },
   button: {
-    marginTop: 20,
+    marginTop: 30,
     borderRadius: 20,
-    borderColor: "#834742",
+  },
+  username: {
+    borderTopEndRadius: 2,
+    borderTopStartRadius: 2,
+    borderBottomEndRadius: 0,
+    borderBottomStartRadius: 0,
+  },
+  errorMessage: {
+    color: "white",
+    textAlign: "center",
+    fontSize: 18,
+    fontWeight: "bold",
+    marginTop: 10,
   },
 });

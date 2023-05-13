@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Divider, List, Text } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, StateGame } from "types";
 import { getGamesLobby, getMyGames, joinGame, leaveGame } from "../../utils/api/game";
@@ -106,14 +107,10 @@ export const ListMyGames: React.FC<ListProps> = ({ search }) => {
   if (isLoading) {
     return <Loading title="Loading mygames" message="loading list of games" />;
   }
-  if (isError) {
-    return <Text>error</Text>;
-  }
   const handleLeave = (gameId: number) => {
     setSelectedGame(gameId);
     toggleVisible();
   };
-
   const filteredGames = games?.filter((game: Game) =>
     game.name.toLowerCase().includes(search.toLowerCase())
   );
@@ -126,7 +123,7 @@ export const ListMyGames: React.FC<ListProps> = ({ search }) => {
   };
   return (
     <SafeAreaView>
-      {games ? (
+      {!isError && games.length !== 0 ? (
         <List
           data={filteredGames}
           renderItem={listGame}
@@ -135,9 +132,12 @@ export const ListMyGames: React.FC<ListProps> = ({ search }) => {
           refreshing={isLoading}
         />
       ) : (
-        <Button onPress={refetch}>
-          <AntDesign name="reload1" size={24} color="black" />
-        </Button>
+        <View style={styles.view}>
+          {isError && <Text style={styles.text}>An error occured. Please try refreshing.</Text>}
+          <Button onPress={async () => await refetch()}>
+            <AntDesign name="reload1" size={24} color="black" />
+          </Button>
+        </View>
       )}
       <ModalConfirmChoice
         title="Validation"
@@ -151,3 +151,13 @@ export const ListMyGames: React.FC<ListProps> = ({ search }) => {
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  view: {
+    borderRadius: 16,
+    backgroundColor: "white",
+  },
+  text: {
+    padding: "1em",
+  },
+});

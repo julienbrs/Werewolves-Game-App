@@ -33,8 +33,18 @@ export const Register = () => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <Input placeholder="Name" onChangeText={setName} testID="name-input" />
-      <Input placeholder="Password" onChangeText={setPassword} testID="password-register-input" />
+      <Input
+        placeholder="Username"
+        onChangeText={setName}
+        testID="name-input"
+        style={styles.username}
+      />
+      <Input
+        placeholder="Password"
+        onChangeText={setPassword}
+        testID="password-register-input"
+        style={styles.password}
+      />
       <Button onPress={handleRegister} style={styles.button} testID="register-button">
         Register
       </Button>
@@ -44,12 +54,22 @@ export const Register = () => {
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 10,
-    overflow: "hidden",
+    borderRadius: 0,
+  },
+  password: {
+    borderTopEndRadius: 0,
+    borderTopStartRadius: 0,
+    borderBottomEndRadius: 14,
+    borderBottomStartRadius: 14,
   },
   button: {
-    marginTop: 20,
-    borderRadius: 10,
-    overflow: "hidden",
+    marginTop: 30,
+    borderRadius: 20,
+  },
+  username: {
+    borderTopEndRadius: 2,
+    borderTopStartRadius: 2,
+    borderBottomEndRadius: 0,
+    borderBottomStartRadius: 0,
   },
 });
