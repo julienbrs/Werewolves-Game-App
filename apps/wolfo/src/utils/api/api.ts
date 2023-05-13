@@ -12,6 +12,7 @@ export const setToken = (newToken: string | null) => {
   token = newToken;
 };
 export const getToken = () => token;
+
 api.interceptors.request.use(
   async config => {
     if (token) {

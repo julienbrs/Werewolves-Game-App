@@ -17,9 +17,9 @@ const SpiritView = () => {
   const { gameId, userId } = useSearchParams();
   const queryClient = useQueryClient();
 
-  const [usedPower, setUsedPower] = useState(currentPlayer?.usedPower);
+  const [usedPower, setUsedPower] = useState<boolean>(false);
   const [selectedDeadPlayer, setSelectedDeadPlayer] = useState<Player | undefined>();
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
 
   // get game data
   const {
@@ -58,7 +58,7 @@ const SpiritView = () => {
   });
 
   useEffect(() => {
-    setUsedPower(currentPlayer?.usedPower);
+    setUsedPower(currentPlayer!.usedPower);
   }, [currentPlayer]);
 
   const handlePlayerClick = async (player: Player) => {
