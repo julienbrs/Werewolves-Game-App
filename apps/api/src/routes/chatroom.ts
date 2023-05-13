@@ -9,7 +9,6 @@ router.get("/:id/readers", chatroomController.getReaders);
 router.get("/:id/writers", chatroomController.getWriters);
 router.get("/:id/permissions", chatroomController.getPermissions);
 router.post("/:id/messages", chatroomController.sendMessage);
-router.post("/", chatroomController.create);
 router.post("/:id/adduserdead", chatroomController.addDeadtoSpiritism);
 
 export default router;

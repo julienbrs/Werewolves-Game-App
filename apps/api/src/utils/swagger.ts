@@ -1,4 +1,5 @@
 const swaggerAutogen = require("swagger-autogen")({ language: "fr", openapi: "3.0.0" });
+import { Player, Power, Role, StatePlayer } from "database";
 import { Message, NewGame, NewUser } from "types";
 import { BASE_URL, PROTOCOL } from "./env";
 const outputFile = "swagger_output.json";
@@ -32,6 +33,19 @@ const message: Message = {
   createdAt: new Date(),
   updatedAt: new Date(),
 };
+
+const player: Player = {
+  userId: "1",
+  gameId: 1,
+  role: Role.VILLAGER,
+  power: Power.NONE,
+  state: StatePlayer.ALIVE,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  usedPower: false,
+};
+
+const addChatroom = {};
 const doc = {
   info: {
     version: "1.0.0",
@@ -66,7 +80,7 @@ const doc = {
       description: "Everything about game",
     },
     {
-      name: "Chat",
+      name: "Chatroom",
       description: "Everything about chat",
     },
     {
@@ -88,6 +102,8 @@ const doc = {
     addUser,
     User: { ...addUser, id: 1 },
     Message: message,
+    addChatroom,
+    Player: player,
   },
 };
 

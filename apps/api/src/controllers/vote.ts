@@ -3,9 +3,13 @@ import { Vote } from "types";
 import prisma from "../prisma";
 const voteController = {
   async get(req: Request, res: Response) {
+    // #swagger.tags = ['Vote']
+    // #swagger.summary = 'Get all votes from an election'
+    // #swagger.security = [{'bearerAuth': [] }]
     const { id } = req.params;
     const electionId = +req.params.electionId;
     if (isNaN(electionId)) {
+      // #swagger.responses[400] = { description: "Election ID must be a number", schema: { $message: "Election ID must be a number" } }
       return res.status(400).json({ message: "Election ID must be a number" });
     }
 
@@ -13,12 +17,15 @@ const voteController = {
       .findUnique({ where: { voterId_electionId: { voterId: id, electionId } } })
       .then(vote => {
         if (vote === null) {
+          // #swagger.responses[200] = { description: "Vote not found", schema: { $message: "Vote not found" } }
           return res.status(200).json({ message: "Vote not found" });
         }
+        // #swagger.responses[200] = { description: "Vote found", schema: { $ref : '#/definitions/Vote', $message: "Vote found" }}
         return res.status(200).json({ vote, message: "Vote found" });
       })
       .catch(_ => {
         console.log(_);
+        // #swagger.responses[400] = { description: "An error occurred", schema: { $message: "An error occurred" } }
         return res.status(400).json({ message: "An error occurred" });
       });
   },
@@ -26,14 +33,17 @@ const voteController = {
     const { voterId, targetId, gameId }: Vote = req.body;
     const electionId = +req.params.electionId;
     if (voterId === targetId) {
+      // #swagger.responses[400] = { description: "You can't vote for yourself!", schema: { $message: "You can't vote for yourself!" } }
       return res.status(400).json({ message: "You can't vote for yourself!" });
     }
     if (voterId !== req.params.id) {
       console.log(voterId);
       console.log(req.params.id);
+      // #swagger.responses[400] = { description: "You can't vote in someone else's stead!", schema: { $message: "You can't vote in someone else's stead!" } }
       return res.status(400).json({ message: "You can't vote in someone else's stead!" });
     }
     if (isNaN(electionId)) {
+      // #swagger.responses[400] = { description: "Election ID must be a number", schema: { $message: "Election ID must be a number" } }
       return res.status(400).json({ message: "Election ID must be a number" });
     }
     const data = {
@@ -52,19 +62,27 @@ const voteController = {
       .create({
         data,
       })
-      .then(vote => res.status(201).json({ vote, message: "Vote created" }))
+      .then(vote => {
+        // #swagger.responses[201] = { description: "Vote created", schema: { $ref : '#/definitions/Vote', $message: "Vote created" }}
+        res.status(201).json({ vote, message: "Vote created" });
+      })
       //return l'user + son token avec status 201
       .catch(error => {
         console.log(error);
         if (error.code === "P2002" && error.meta.target.includes("voterId")) {
           console.log("Vote already exists");
+          // #swagger.responses[400] = { description: "Vote already exists", schema: { $message: "Vote already exists" } }
           res.status(400).json({ message: "Vote already exists" });
         } else {
+          // #swagger.responses[400] = { description: "An error occured", schema: { $message: "An error occured" } }
           res.status(400).json({ message: "An error occured" });
         }
       });
   },
   async getAll(req: Request, res: Response) {
+    // #swagger.tags = ['Vote']
+    // #swagger.summary = 'Get all votes from an election'
+    // #swagger.security = [{'bearerAuth': [] }]
     const electionId = +req.params?.electionId;
     /* Caller would already have gameId and electionId, so not returning them */
     const votes = await prisma.vote.findMany({
