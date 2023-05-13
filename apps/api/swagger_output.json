@@ -20,7 +20,7 @@
       "description": "Everything about game"
     },
     {
-      "name": "Chat",
+      "name": "Chatroom",
       "description": "Everything about chat"
     },
     {
@@ -645,6 +645,10 @@
     },
     "/api/games/": {
       "get": {
+        "tags": [
+          "Game"
+        ],
+        "summary": "Get all games not join by state",
         "description": "",
         "parameters": [
           {
@@ -669,9 +673,18 @@
           "400": {
             "description": "Mauvaise Requête"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "post": {
+        "tags": [
+          "Game"
+        ],
+        "summary": "Create game",
         "description": "",
         "parameters": [
           {
@@ -689,11 +702,20 @@
           "400": {
             "description": "Mauvaise Requête"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/games/mygames": {
       "get": {
+        "tags": [
+          "Game"
+        ],
+        "summary": "Get all games that I join",
         "description": "",
         "parameters": [
           {
@@ -711,11 +733,20 @@
           "400": {
             "description": "Mauvaise Requête"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/games/{id}/join": {
       "post": {
+        "tags": [
+          "Game"
+        ],
+        "summary": "Join game",
         "description": "",
         "parameters": [
           {
@@ -741,11 +772,20 @@
           "400": {
             "description": "Mauvaise Requête"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/games/{id}/leave": {
       "post": {
+        "tags": [
+          "Game"
+        ],
+        "summary": "Leave game",
         "description": "",
         "parameters": [
           {
@@ -766,16 +806,105 @@
         ],
         "responses": {
           "201": {
-            "description": "Créé"
+            "description": "Game left",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Game left"
+                    },
+                    "player": {
+                      "$ref": "#/components/schemas/Player"
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "player"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Game left"
+                    },
+                    "player": {
+                      "$ref": "#/components/schemas/Player"
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "player"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Mauvaise Requête"
+            "description": "Mauvaise Requête",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/games/{id}": {
       "get": {
+        "tags": [
+          "Game"
+        ],
+        "summary": "Get game by id",
         "description": "",
         "parameters": [
           {
@@ -794,7 +923,12 @@
           "400": {
             "description": "Mauvaise Requête"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "patch": {
         "description": "",
@@ -829,6 +963,10 @@
     },
     "/api/chatrooms/{id}/messages": {
       "get": {
+        "tags": [
+          "Chatroom"
+        ],
+        "summary": "Get today messages from chatroom",
         "description": "",
         "parameters": [
           {
@@ -849,15 +987,61 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Get today messages from chatroom",
+            "$data": [
+              {
+                "$ref": "#/components/schemas/Message"
+              }
+            ]
           },
           "400": {
-            "description": "Mauvaise Requête"
+            "description": "Bad chatroom id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Bad chatroom id"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Bad chatroom id"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           },
           "401": {
             "description": "Non Autorisé"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "post": {
         "description": "",
@@ -906,6 +1090,10 @@
     },
     "/api/chatrooms/{id}/history": {
       "get": {
+        "tags": [
+          "Chatroom"
+        ],
+        "summary": "Get history",
         "description": "",
         "parameters": [
           {
@@ -919,16 +1107,30 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Get history",
+            "$data": [
+              {
+                "$ref": "#/components/schemas/Message"
+              }
+            ]
           },
           "400": {
             "description": "Mauvaise Requête"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/chatrooms/{id}/readers": {
       "get": {
+        "tags": [
+          "Chatroom"
+        ],
+        "summary": "Get readers",
         "description": "",
         "parameters": [
           {
@@ -947,11 +1149,20 @@
           "400": {
             "description": "Mauvaise Requête"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/chatrooms/{id}/writers": {
       "get": {
+        "tags": [
+          "Chatroom"
+        ],
+        "summary": "Get writers",
         "description": "",
         "parameters": [
           {
@@ -970,7 +1181,12 @@
           "400": {
             "description": "Mauvaise Requête"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/chatrooms/{id}/permissions": {
@@ -1003,22 +1219,12 @@
         }
       }
     },
-    "/api/chatrooms/": {
-      "post": {
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "201": {
-            "description": "Créé"
-          },
-          "400": {
-            "description": "Mauvaise Requête"
-          }
-        }
-      }
-    },
     "/api/chatrooms/{id}/adduserdead": {
       "post": {
+        "tags": [
+          "Chatroom"
+        ],
+        "summary": "Add a dead person to spiritism chatroom",
         "description": "",
         "parameters": [
           {
@@ -1039,12 +1245,224 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Add user to chatroom",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "chatroom": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "chatroom name"
+                        },
+                        "gameId": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "readers": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "playerId": {
+                                "type": "string",
+                                "example": "playerId"
+                              },
+                              "gameId": {
+                                "type": "number",
+                                "example": 1
+                              }
+                            },
+                            "required": [
+                              "playerId",
+                              "gameId"
+                            ]
+                          }
+                        },
+                        "writers": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "playerId": {
+                                "type": "string",
+                                "example": "playerId"
+                              },
+                              "gameId": {
+                                "type": "number",
+                                "example": 1
+                              }
+                            },
+                            "required": [
+                              "playerId",
+                              "gameId"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "gameId",
+                        "readers",
+                        "writers"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "chatroom"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "chatroom": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "example": "chatroom name"
+                        },
+                        "gameId": {
+                          "type": "number",
+                          "example": 1
+                        },
+                        "readers": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "playerId": {
+                                "type": "string",
+                                "example": "playerId"
+                              },
+                              "gameId": {
+                                "type": "number",
+                                "example": 1
+                              }
+                            },
+                            "required": [
+                              "playerId",
+                              "gameId"
+                            ]
+                          }
+                        },
+                        "writers": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "playerId": {
+                                "type": "string",
+                                "example": "playerId"
+                              },
+                              "gameId": {
+                                "type": "number",
+                                "example": 1
+                              }
+                            },
+                            "required": [
+                              "playerId",
+                              "gameId"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "gameId",
+                        "readers",
+                        "writers"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "chatroom"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Mauvaise Requête"
+            "description": "Bad request, failed to add user to chatroom",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Bad request, missing parameters"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Bad request, missing parameters"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Bad request, failed to add user to chatroom"
+                }
+              },
+              "required": [
+                "message"
+              ],
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1066,6 +1484,10 @@
     },
     "/api/games/{gameId}/players/": {
       "get": {
+        "tags": [
+          "Player"
+        ],
+        "summary": "Get all players",
         "description": "",
         "parameters": [
           {
@@ -1084,11 +1506,20 @@
           "404": {
             "description": "Non Trouvé"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/games/{gameId}/players/{id}": {
       "get": {
+        "tags": [
+          "Player"
+        ],
+        "summary": "Get player by id",
         "description": "",
         "parameters": [
           {
@@ -1115,9 +1546,18 @@
           "404": {
             "description": "Non Trouvé"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "patch": {
+        "tags": [
+          "Player"
+        ],
+        "summary": "Update player",
         "description": "",
         "parameters": [
           {
@@ -1141,11 +1581,20 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/notifications/": {
       "get": {
+        "tags": [
+          "Notification"
+        ],
+        "summary": "Get all notifications",
         "description": "",
         "parameters": [
           {
@@ -1163,51 +1612,20 @@
           "404": {
             "description": "Non Trouvé"
           }
-        }
-      },
-      "post": {
-        "description": "",
-        "parameters": [
+        },
+        "security": [
           {
-            "name": "authorization",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
+            "bearerAuth": []
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/notifications/{id}": {
-      "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "404": {
-            "description": "Non Trouvé"
-          }
-        }
+        ]
       }
     },
     "/api/games/{gameId}/players/{id}/elections/{electionId}/": {
       "get": {
+        "tags": [
+          "Vote"
+        ],
+        "summary": "Get all votes from an election",
         "description": "",
         "parameters": [
           {
@@ -1237,12 +1655,108 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Vote found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Vote not found"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Vote not found"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            },
+            "schema": {
+              "$ref": "#/components/schemas/Vote",
+              "$message": "Vote found"
+            }
           },
           "400": {
-            "description": "Mauvaise Requête"
+            "description": "An error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Election ID must be a number"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Election ID must be a number"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "An error occurred"
+                }
+              },
+              "required": [
+                "message"
+              ],
+              "xml": {
+                "name": "main"
+              }
+            }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "post": {
         "description": "",
@@ -1274,10 +1788,75 @@
         ],
         "responses": {
           "201": {
-            "description": "Créé"
+            "description": "Vote  ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Vote",
+                  "$message": "Vote  "
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Vote",
+                  "$message": "Vote  "
+                }
+              }
+            }
           },
           "400": {
-            "description": "Mauvaise Requête"
+            "description": "An error occured",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "You can't vote for yourself!"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "You can't vote for yourself!"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "An error occured"
+                }
+              },
+              "required": [
+                "message"
+              ],
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
@@ -1562,6 +2141,53 @@
         },
         "xml": {
           "name": "Message"
+        }
+      },
+      "addChatroom": {
+        "type": "object",
+        "properties": {},
+        "xml": {
+          "name": "addChatroom"
+        }
+      },
+      "Player": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "example": "1"
+          },
+          "gameId": {
+            "type": "number",
+            "example": 1
+          },
+          "role": {
+            "type": "string",
+            "example": "VILLAGER"
+          },
+          "power": {
+            "type": "string",
+            "example": "NONE"
+          },
+          "state": {
+            "type": "string",
+            "example": "ALIVE"
+          },
+          "createdAt": {
+            "type": "object",
+            "properties": {}
+          },
+          "updatedAt": {
+            "type": "object",
+            "properties": {}
+          },
+          "usedPower": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "xml": {
+          "name": "Player"
         }
       }
     },

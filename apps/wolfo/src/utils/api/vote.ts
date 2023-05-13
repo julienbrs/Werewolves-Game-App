@@ -2,6 +2,14 @@ import { Player, Vote } from "types";
 import api from "./api";
 
 const voteApi = {
+  getVotes: async (players: Player[], player: Player, electionId: Number) => {
+    const { data } = await api.post(
+      `/games/${player.gameId}/players/${player.userId}/elections/${electionId}/all`,
+      players
+    );
+    console.log(data);
+    return data?.votes ? data.votes : null;
+  },
   getVote: async (player: Player, electionId: Number) => {
     const { data } = await api.get(
       `/games/${player.gameId}/players/${player.userId}/elections/${electionId}`
