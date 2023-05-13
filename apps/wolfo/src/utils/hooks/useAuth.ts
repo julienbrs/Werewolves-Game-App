@@ -1,9 +1,9 @@
 import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
-import { getToken, setToken } from "../api/api";
+import { getTokenApi, setTokenApi } from "../api/api";
 // le fetch original
 const useAuth = async (): Promise<string | null> => {
-  let token = getToken();
+  let token = getTokenApi();
   if (token === null) {
     if (Platform.OS === "web") {
       token = localStorage.getItem("token");
@@ -11,8 +11,9 @@ const useAuth = async (): Promise<string | null> => {
       token = await SecureStore.getItemAsync("token");
     }
   }
+  console.log("token", token);
   if (token !== null) {
-    setToken(token);
+    setTokenApi(token);
   }
   return Promise.resolve(token);
 };

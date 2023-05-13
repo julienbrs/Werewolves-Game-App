@@ -7,7 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Error, User } from "types";
 import imgBackground from "../../../assets/homepage_lobby.png";
 import { AuthContext } from "../../components/context/tokenContext";
-import { setToken } from "../../utils/api/api";
+import { setTokenApi } from "../../utils/api/api";
 import { deleteUser, updateUser } from "../../utils/api/user";
 
 const Settings = () => {
@@ -32,14 +32,14 @@ const Settings = () => {
   const { mutate: deleteQuery } = useMutation<any, Error>({
     mutationFn: deleteUser,
     onSuccess: async () => {
-      setToken(null);
+      setTokenApi(null);
       handleSetToken(null);
       await queryClient.invalidateQueries();
       router.back();
     },
   });
   const logout = async () => {
-    setToken(null);
+    setTokenApi(null);
     handleSetToken(null);
     await queryClient.invalidateQueries();
     router.back();

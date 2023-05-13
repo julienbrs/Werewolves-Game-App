@@ -5,7 +5,7 @@ import React, { useContext, useState } from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Error, NewUser } from "types";
-import { setToken } from "../../utils/api/api";
+import { setTokenApi } from "../../utils/api/api";
 import { login } from "../../utils/api/user";
 import { AuthContext } from "../context/tokenContext";
 export const Login = () => {
@@ -17,7 +17,7 @@ export const Login = () => {
   const { mutate, isError, error } = useMutation<any, Error, NewUser>({
     mutationFn: user => login(user),
     onSuccess: async data => {
-      setToken(data.token);
+      setTokenApi(data.token);
       handleSetToken(data.token);
       await queryClient.invalidateQueries(["token"]);
       router.replace("/");
