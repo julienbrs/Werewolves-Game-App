@@ -1,21 +1,19 @@
 import { Button, Input, Tab, TabView, Text } from "@ui-kitten/components";
-import { useFonts } from "expo-font";
 import { useRouter } from "expo-router";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { ListGamesLobby, ListMyGames } from "../components/game/gameList";
+import useFont from "../utils/hooks/useFont";
+
+import imageHome from "../../assets/images/menu_home.png";
 
 const Home = () => {
   const router = useRouter();
   const [search, setSearch] = React.useState<string>("");
   const [tabIndex, setTabIndex] = React.useState<number>(0);
-  const [loaded] = useFonts({
-    Montserrat: require("../../assets/fonts/Montserrat-Regular.ttf"),
-    MontserratBold: require("../../assets/fonts/Montserrat-SemiBold.ttf"),
-    Voyage: require("../../assets/fonts/Voyage.ttf"),
-  });
+  const fontsLoaded = useFont();
 
-  if (!loaded) {
+  if (!fontsLoaded) {
     return null;
   }
 
@@ -23,6 +21,9 @@ const Home = () => {
     <>
       <View style={styles.container}>
         <View style={styles.centeredView}>
+          <Image source={imageHome} style={styles.image} />
+          <View style={styles.mainWrapper}>{""}</View>
+          <Text style={styles.h2}>Home</Text>
           <Button
             onPress={() => {}}
             style={[styles.button, styles.rules]}
@@ -31,7 +32,7 @@ const Home = () => {
           >
             {evaProps => (
               <Text {...evaProps} style={styles.buttonText}>
-                See Player
+                Rules
               </Text>
             )}
           </Button>
@@ -41,7 +42,11 @@ const Home = () => {
             status="primary"
             testID="new-game-button"
           >
-            <Text style={styles.buttonText}>New Game</Text>
+            {evaProps => (
+              <Text {...evaProps} style={styles.buttonText}>
+                New Game
+              </Text>
+            )}
           </Button>
           <Input
             placeholder="Rechercher une partie"
@@ -139,6 +144,26 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: "Montserrat",
     color: "#C38100",
+  },
+  h2: {
+    backgroundColor: "#141313",
+    fontFamily: "Voyage",
+    fontSize: 37,
+    color: "#C38100",
+    marginTop: -28,
+    marginBottom: "15%",
+    paddingHorizontal: 10,
+    zIndex: 1,
+  },
+  mainWrapper: {
+    borderColor: "#C38100",
+    width: "80%",
+    borderWidth: 1,
+  },
+  image: {
+    width: 300,
+    height: 150,
+    marginBottom: "20%",
   },
 });
 
