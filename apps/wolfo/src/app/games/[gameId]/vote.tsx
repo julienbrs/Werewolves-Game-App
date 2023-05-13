@@ -86,7 +86,7 @@ const Choice = ({
         (styles.container, choicePlayer.userId === currentVote?.targetId ? styles.selected : {})
       }
     >
-      {choicePlayer.state === StatePlayer.ALIVE ? (
+      {choicePlayer.state === StatePlayer.ALIVE && currentPlayer.state === StatePlayer.ALIVE ? (
         <Animated.View style={[styles.buttonContent, buttonContentShifted]}>
           <Pressable
             style={styles.pressableView}
@@ -124,7 +124,10 @@ const Choice = ({
         </Animated.View>
       ) : (
         <View
-          style={[styles.buttonViewLeft, styles.deadPlayer]}
+          style={[
+            styles.buttonViewLeft,
+            choicePlayer.state === StatePlayer.DEAD ? styles.deadPlayer : {},
+          ]}
           onLayout={event => {
             const { width } = event.nativeEvent.layout;
             setWidth(width);
