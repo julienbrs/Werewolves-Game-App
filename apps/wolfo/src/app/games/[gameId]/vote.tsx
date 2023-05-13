@@ -1,11 +1,12 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@ui-kitten/components";
 import { useRouter, useSearchParams } from "expo-router";
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, Player, Role, StateGame, StatePlayer, Vote as VoteType } from "types";
+import { AuthContext } from "../../../components/context/tokenContext";
 import Loading from "../../../components/loading";
 import { getGame } from "../../../utils/api/game";
 import { getPlayer } from "../../../utils/api/player";
@@ -122,13 +123,14 @@ const Choice = ({
 
 const Vote = () => {
   const { gameId, userId } = useSearchParams();
+  const { token } = useContext(AuthContext);
   const router = useRouter();
   const {
     data: game,
     isLoading,
     isError,
   } = useQuery<Game, Error>({
-    enabled: Boolean(gameId),
+    enabled: Boolean(gameId) && Boolean(token),
     queryKey: ["mygames", gameId],
     queryFn: () => getGame(Number(gameId)),
   });
@@ -137,7 +139,7 @@ const Vote = () => {
     isLoading: isLoadingPlayer,
     isError: isErrorPlayer,
   } = useQuery<Player, Error>({
-    enabled: Boolean(game) && Boolean(userId),
+    enabled: Boolean(game) && Boolean(userId) && Boolean(token),
     queryKey: ["player", userId],
     queryFn: () => getPlayer(game?.id!, Array.isArray(userId) ? userId[0] : userId!),
   });
