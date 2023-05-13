@@ -15,9 +15,9 @@ import { AuthContext } from "../../../../components/context/tokenContext";
 
 const SpiritView = () => {
   const router = useRouter();
-  const { gameId, userId } = useSearchParams();
+  const { gameId } = useSearchParams();
+  const { id: userId, token } = useContext(AuthContext);
   const queryClient = useQueryClient();
-  const { token } = useContext(AuthContext);
   const [usedPower, setUsedPower] = useState<boolean>(false);
   const [selectedDeadPlayer, setSelectedDeadPlayer] = useState<Player | undefined>();
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
