@@ -7,6 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Error, User } from "types";
 import imgBackground from "../../../assets/homepage_lobby.png";
 import { AuthContext } from "../../components/context/tokenContext";
+import { ModalConfirmChoice } from "../../components/modals/modalConfirm";
 import { setTokenApi } from "../../utils/api/api";
 import { deleteUser, updateUser } from "../../utils/api/user";
 
@@ -18,6 +19,8 @@ const Settings = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const router = useRouter();
   const queryClient = useQueryClient();
+  const [visibleDelete, setVisibleDelete] = useState<boolean>(false);
+  const [visibleModify, setVisibleModify] = useState<boolean>(false);
 
   const { mutate: updateQuery } = useMutation<any, Error, User>({
     mutationFn: userUpdated => updateUser(userUpdated),
@@ -79,14 +82,14 @@ const Settings = () => {
             />
 
             <Button
-              onPress={handleModify}
+              onPress={() => setVisibleModify(true)}
               testID="update-account-button"
               style={[styles.button, styles.modifyButton]}
             >
               Modifier le compte
             </Button>
             <Button
-              onPress={() => deleteQuery()}
+              onPress={() => setVisibleDelete(true)}
               testID="delete-account-button"
               style={styles.button}
             >
@@ -99,6 +102,21 @@ const Settings = () => {
           </View>
         </ImageBackground>
       </View>
+      <ModalConfirmChoice
+        title="Confirm modification"
+        description="Voulez vous modifier vos informations?"
+        visible={visibleModify}
+        setVisible={setVisibleModify}
+        confirmFunction={handleModify}
+      />
+
+      <ModalConfirmChoice
+        title="Delete your account"
+        description="Voulez vous supprimer votre compte?"
+        visible={visibleDelete}
+        setVisible={setVisibleDelete}
+        confirmFunction={deleteQuery}
+      />
     </SafeAreaView>
   );
 };
