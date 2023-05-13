@@ -109,12 +109,10 @@ pages:
   variables:
     GIT_DEPTH: 0
   needs: [badges]
-  only:
-    changes:
-      - "src/**/*"
   script:
     - mv apps/api/coverage/* public/ # Copie les badges et le report dans public
     - mv docs/diagrams public/
+    - ls -l public/
   artifacts:
     paths:
       - public
