@@ -27,6 +27,7 @@ const Choice = ({
   electionId,
   currentVote,
 }: ChoiceProps) => {
+  const [clicked, setClicked] = useState(false);
   const queryClient = useQueryClient();
   const [Width, setWidth] = useState(0);
   const shiftAnim = useRef(new Animated.Value(0)).current;
@@ -58,7 +59,7 @@ const Choice = ({
         .catch(_ => console.log("An error occurred"));
     }
     setActivePlayer(null);
-    stopAnimation();
+    setClicked(false);
   };
   const cancelHandle = async () => {
     if (currentVote?.targetId === choicePlayer.userId) {
@@ -68,17 +69,12 @@ const Choice = ({
       });
     }
     setActivePlayer(null);
-    stopAnimation();
-  };
-  const stopAnimation = () => {
-    Animated.timing(shiftAnim, {
-      toValue: 0,
-      duration: 1000,
-      useNativeDriver: true,
-    }).start();
+    setClicked(true);
   };
   if (choicePlayer !== activePlayer) {
-    stopAnimation();
+    if (clicked) {
+      setClicked(false);
+    }
   }
   return (
     <View
@@ -87,21 +83,17 @@ const Choice = ({
       }
     >
       {choicePlayer.state === StatePlayer.ALIVE && currentPlayer.state === StatePlayer.ALIVE ? (
-        <Animated.View style={[styles.buttonContent, buttonContentShifted]}>
-          <Pressable
-            style={styles.pressableView}
-            onPress={() => {
-              if (choicePlayer === activePlayer) {
-                return;
-              }
-              setActivePlayer(choicePlayer);
-              Animated.timing(shiftAnim, {
-                toValue: Width,
-                duration: 1000,
-                useNativeDriver: true,
-              }).start();
-            }}
-          >
+        <Pressable
+          style={[styles.buttonContent]}
+          onPress={() => {
+            if (choicePlayer === activePlayer) {
+              return;
+            }
+            setActivePlayer(choicePlayer);
+            setClicked(true);
+          }}
+        >
+          {!clicked && (
             <View
               style={[styles.buttonViewLeft]}
               onLayout={event => {
@@ -111,17 +103,19 @@ const Choice = ({
             >
               <Text style={styles.text}>{choicePlayer?.user!.name}</Text>
             </View>
-          </Pressable>
+          )}
 
-          <View style={[styles.buttonViewRight]}>
-            <Button onPress={confirmHandle} style={styles.buttonConfirm}>
-              Confirm
-            </Button>
-            <Button onPress={cancelHandle} style={styles.buttonCancel}>
-              Cancel
-            </Button>
-          </View>
-        </Animated.View>
+          {clicked && (
+            <View style={[styles.buttonViewRight]}>
+              <Button onPress={confirmHandle} style={styles.buttonConfirm}>
+                Confirm
+              </Button>
+              <Button onPress={cancelHandle} style={styles.buttonCancel}>
+                Cancel
+              </Button>
+            </View>
+          )}
+        </Pressable>
       ) : (
         <View
           style={[
@@ -197,6 +191,7 @@ const Vote = () => {
         )}
         {game?.players.map(
           (player: Player) =>
+            currentPlayer.userId !== player.userId &&
             (game.state === StateGame.DAY ||
               (currentPlayer.role === Role.WOLF && player.role !== Role.WOLF)) && (
               <Choice
@@ -238,19 +233,17 @@ const styles = StyleSheet.create({
   },
   buttonContent: {
     position: "relative",
-    width: "200%",
+    width: "100%",
     height: "100%",
     display: "flex",
     flexDirection: "row",
     flexWrap: "nowrap",
     // backgroundColor: "red",
   },
-  pressableView: {
-    width: "50%",
-  },
   buttonViewLeft: {
     backgroundColor: "brown",
     display: "flex",
+    paddingVertical: "2.5em",
     textAlign: "center",
     width: "100%",
     height: "100%",
@@ -267,7 +260,7 @@ const styles = StyleSheet.create({
   buttonViewRight: {
     padding: 20,
     textAlign: "center",
-    width: "50%",
+    width: "100%",
     height: "100%",
     backgroundColor: "#8F4401",
     display: "flex",
