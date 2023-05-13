@@ -3,9 +3,15 @@ import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Login } from "../../components/auth/login";
 import { Register } from "../../components/auth/register";
+import useFont from "../../utils/hooks/useFont";
 
 const Auth = () => {
+  const fontsLoaded = useFont();
   const [tabIndex, setTabIndex] = useState<number>(0);
+
+  if (!fontsLoaded) {
+    return null;
+  }
   return (
     <View style={styles.container}>
       <View style={styles.tabViewWrapper}>
