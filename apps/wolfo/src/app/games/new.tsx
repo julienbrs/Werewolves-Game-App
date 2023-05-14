@@ -51,10 +51,10 @@ const NewGame = () => {
 
   /* Probabilities */
   const [wolfProb, setWolfProb] = useState<number>(33);
-  const [seerProb, setSeerProb] = useState<number>(0);
-  const [insomProb, setInsomProb] = useState<number>(0);
-  const [contProb, setContProb] = useState<number>(0);
-  const [spiritProb, setSpiritProb] = useState<number>(0);
+  const [seerProb, setSeerProb] = useState<number>(15);
+  const [insomProb, setInsomProb] = useState<number>(15);
+  const [contProb, setContProb] = useState<number>(15);
+  const [spiritProb, setSpiritProb] = useState<number>(15);
 
   const toggleView = () => {
     setIsVisible(!isVisible);
