@@ -72,7 +72,7 @@ test-backend:
       - apps/api/coverage/
 
 test-frontend:
-  image: cypress/base:16.18.1
+  #image: cypress/base:16.18.1
   services:
   - postgres:12
   variables:
@@ -84,7 +84,6 @@ test-frontend:
   stage: test
   parallel: 2 # Uses 2 parallel instances
   script:
-    - apt-get install -y curl
     - pnpm db:push
     - pnpm dev > /dev/null 2>&1 & # lance l'api en mode dev
     - cd apps/wolfo

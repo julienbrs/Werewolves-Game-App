@@ -61,7 +61,6 @@ export const ListGamesLobby: React.FC<ListProps> = ({ search }) => {
         // si web le scrollview intégré à list marche pas donc on bidouille un scrollview + reload button
         Platform.OS === "web" ? (
           <ScrollView>
-
             <List
               nestedScrollEnabled
               data={filteredGames}
