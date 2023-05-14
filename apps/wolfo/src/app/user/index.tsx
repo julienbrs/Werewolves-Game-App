@@ -59,7 +59,9 @@ const Settings = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.centeredView}>
         <View style={styles.wrapperTitle}>
-          <View style={styles.line}>{""}</View>
+          <View style={styles.line}>
+            <Text> </Text>
+          </View>
           <Text style={styles.h2}>Settings</Text>
           <Text style={styles.textName}>{name}</Text>
         </View>
