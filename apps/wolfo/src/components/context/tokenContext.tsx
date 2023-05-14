@@ -30,7 +30,7 @@ const tokenFromStorage = async () => {
 
   if (token !== null) {
     const decodedToken: any = jwtDecode(token);
-    const expTimestamp = decodedToken.payload.exp;
+    const expTimestamp = decodedToken.exp;
     const expDate = new Date(expTimestamp * 1000);
     if (expDate <= new Date()) {
       return null;
