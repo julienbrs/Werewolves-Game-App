@@ -147,7 +147,7 @@ const GameView = () => {
       </View>
       {/* display all informations on the game after fetching data from backend*/}
       <View style={styles.mainWrapper}>
-        <Text style={styles.h2}>What's your next move?</Text>
+        <Text style={styles.h2}>What will you do?</Text>
         <View style={styles.wrapper}>
           <Button onPress={redirectVote} style={styles.button} disabled={false}>
             {evaProps => (
