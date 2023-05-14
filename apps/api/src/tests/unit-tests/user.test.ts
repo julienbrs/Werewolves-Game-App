@@ -89,7 +89,7 @@ describe("scénario création de compte -> update d'un autre compte avec meme no
     test("Test account creation", async () => {
       const response = await request
         .post("/api/users/")
-        .send({ name: "test", password: "Mot2passe?" });
+        .send({ name: "testtt", password: "Mot2passe?" });
       expect(response.statusCode).toBe(201);
       expect(response.body.message).toBe("User created");
       expect(response.body).toHaveProperty("token");
@@ -113,7 +113,7 @@ describe("scénario création de compte -> update d'un autre compte avec meme no
         .patch("/api/users/")
         .set("Authorization", `Bearer ${token}`)
         .set("Content-Type", "application/json")
-        .send({ name: "test", password: "Mot2passe?" });
+        .send({ name: "testtt", password: "Mot2passe?" });
       expect(response.statusCode).toBe(400);
       expect(response.body.message).toBe("Name already exists");
     });
@@ -121,7 +121,7 @@ describe("scénario création de compte -> update d'un autre compte avec meme no
   describe("delete /api/users/", () => {
     test("Now delete test user", async () => {
       token = (
-        await request.post("/api/users/login").send({ name: "test", password: "Mot2passe?" })
+        await request.post("/api/users/login").send({ name: "testtt", password: "Mot2passe?" })
       ).body.token;
       const response = await request
         .delete("/api/users/")
