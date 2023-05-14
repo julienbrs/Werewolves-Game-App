@@ -383,8 +383,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 15,
-    fontWeight: "bold",
     color: "#141313",
+    fontFamily: "MontserratBold",
   },
   disabledButtonText: {
     color: "#141313",

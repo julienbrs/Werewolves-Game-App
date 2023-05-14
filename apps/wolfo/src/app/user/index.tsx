@@ -2,14 +2,15 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button, Input, Text } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
 import React, { useContext, useState } from "react";
-import { ImageBackground, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Error, User } from "types";
-import imgBackground from "../../../assets/homepage_lobby.png";
 import { AuthContext } from "../../components/context/tokenContext";
 import { ModalConfirmChoice } from "../../components/modals/modalConfirm";
 import { setTokenApi } from "../../utils/api/api";
 import { deleteUser, updateUser } from "../../utils/api/user";
+
+import sunSeer from "../../../assets/images/sun_asset.png";
 
 const Settings = () => {
   const { name: defaultName, id, handleSetToken } = useContext(AuthContext);
@@ -57,50 +58,69 @@ const Settings = () => {
   };
 
   return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <ImageBackground source={imgBackground} style={styles.image}>
-          <View style={styles.centeredView}>
-            <Text style={styles.title}>{name}'s settings</Text>
-            <Input
-              placeholder="Username"
-              onChangeText={setName}
-              testID="update-username-input"
-              style={styles.input}
-            />
-            <Input
-              placeholder="Password"
-              onChangeText={setPassword}
-              testID="update-password-input"
-              style={styles.input}
-            />
-            <Input
-              placeholder="Confirm password"
-              onChangeText={setConfirmPassword}
-              testID="confirm-update-password-input"
-              style={styles.input}
-            />
+    <SafeAreaView style={styles.container}>
+      <View style={styles.centeredView}>
+        <View style={styles.wrapperTitle}>
+          <View style={styles.line}>{""}</View>
+          <Text style={styles.h2}>Settings</Text>
+          <Text style={styles.textName}>{name}</Text>
+        </View>
+        <Input
+          placeholder="Username"
+          onChangeText={setName}
+          testID="update-username-input"
+          style={styles.input}
+        />
+        <Input
+          placeholder="Password"
+          onChangeText={setPassword}
+          testID="update-password-input"
+          style={styles.input}
+        />
+        <Input
+          placeholder="Confirm password"
+          onChangeText={setConfirmPassword}
+          testID="confirm-update-password-input"
+          style={styles.input}
+        />
 
-            <Button
-              onPress={() => setVisibleModify(true)}
-              testID="update-account-button"
-              style={[styles.button, styles.modifyButton]}
-            >
-              Modifier le compte
-            </Button>
-            <Button
-              onPress={() => setVisibleDelete(true)}
-              testID="delete-account-button"
-              style={styles.button}
-            >
-              Supprimer le compte
-            </Button>
-            <Button onPress={() => logout()} testID="logout-button" style={styles.button}>
-              Se déconnecter
-            </Button>
-            {errorMessage && <Text>{errorMessage}</Text>}
-          </View>
-        </ImageBackground>
+        <Button
+          onPress={() => setVisibleModify(true)}
+          testID="update-account-button"
+          style={[styles.button, styles.modifyButton]}
+        >
+          {evaProps => (
+            <Text {...evaProps} style={styles.buttonText}>
+              Modify account
+            </Text>
+          )}
+        </Button>
+        <Button
+          onPress={() => setVisibleDelete(true)}
+          testID="delete-account-button"
+          style={styles.button}
+        >
+          {evaProps => (
+            <Text {...evaProps} style={styles.buttonText}>
+              Delete account
+            </Text>
+          )}
+        </Button>
+        <Button
+          onPress={() => logout()}
+          testID="logout-button"
+          style={[styles.button, styles.logout]}
+        >
+          {evaProps => (
+            <Text {...evaProps} style={styles.buttonText}>
+              Logout
+            </Text>
+          )}
+        </Button>
+
+        <Image source={sunSeer} style={styles.image} />
+
+        {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
       </View>
       <ModalConfirmChoice
         title="Confirm modification"
@@ -125,18 +145,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-  },
-  image: {
-    flex: 1,
-    resizeMode: "cover",
-    justifyContent: "center",
+    backgroundColor: "#141313",
     alignItems: "center",
   },
   centeredView: {
     alignItems: "center",
     justifyContent: "center",
     width: "70%",
-    paddingTop: "15%",
+    paddingTop: "10%",
   },
   title: {
     fontSize: 20,
@@ -149,6 +165,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.15)",
   },
+  logout: {
+    marginBottom: "20%",
+  },
   input: {
     width: "100%",
     marginVertical: 5,
@@ -156,9 +175,52 @@ const styles = StyleSheet.create({
     boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.15)",
   },
   modifyButton: {
-    marginBottom: 20,
-    backgroundColor: "#d37c4c",
-    borderColor: "#d37c4c",
+    marginBottom: "10%",
+    backgroundColor: "#FFBCB5",
+    borderColor: "#FFBCB5",
+  },
+  wrapperTitle: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: "10%",
+    marginBottom: 40,
+  },
+  line: {
+    borderColor: "#C38100",
+    borderWidth: 1,
+    width: "150%",
+  },
+  image: {
+    width: 200,
+    height: 200,
+  },
+  h2: {
+    backgroundColor: "#141313",
+    fontFamily: "Voyage",
+    fontSize: 37,
+    color: "#C38100",
+    zIndex: 1,
+    marginTop: -30,
+    paddingHorizontal: 10,
+  },
+  buttonText: {
+    fontSize: 17,
+    // fontWeight: "bold",
+    fontFamily: "MontserratBold",
+    color: "#141313",
+  },
+  errorText: {
+    fontSize: 17,
+    fontFamily: "MontserratBold",
+    color: "#FFBCB5",
+    marginTop: 10,
+  },
+  textName: {
+    fontSize: 20,
+    fontFamily: "MontserratBold",
+    color: "#C38100",
   },
 });
 
