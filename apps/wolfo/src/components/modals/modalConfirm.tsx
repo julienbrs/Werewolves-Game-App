@@ -17,12 +17,7 @@ export const ModalConfirmChoice = ({
   confirmFunction,
 }: ModalConfirmChoiceProps) => {
   return (
-    <Modal
-      backdropStyle={styles.backdrop}
-      visible={visible}
-      onBackdropPress={() => setVisible(false)}
-      animationType="slide"
-    >
+    <Modal visible={visible} onBackdropPress={() => setVisible(false)} animationType="slide">
       <Card style={styles.modalView}>
         <Text style={styles.modalTitle}>{title}</Text>
         <Text style={styles.modalText}>{description}</Text>
@@ -57,9 +52,6 @@ export const ModalConfirmChoice = ({
 };
 
 const styles = StyleSheet.create({
-  backdrop: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
   modalView: {
     margin: 20,
     backgroundColor: "#141313",
