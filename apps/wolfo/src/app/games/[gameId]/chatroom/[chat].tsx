@@ -25,6 +25,7 @@ const ChatRoomView = () => {
   const { chat, gameId } = useSearchParams();
   const { id: userId } = useContext(AuthContext);
   const fontsLoaded = useFont();
+  const [chatLoaded, setChatLoaded] = useState(false);
 
   const [textReason, setTextReason] = useState<string>("");
 
@@ -62,6 +63,35 @@ const ChatRoomView = () => {
     staleTime: 1000 * 60 * 5,
   });
 
+  const fetchMessages = async () => {
+    if (data?.read === true) {
+      try {
+        const messages: Message[] = await getMessages(Number(chat));
+        const convertedMessages: any = messages.map((msg: Message) => ({
+          _id: msg.id,
+          text: msg.content,
+          createdAt: new Date(msg.createdAt),
+          authorId: msg.authorId,
+          user: {
+            _id: msg.authorId,
+            name: msg.author?.user?.name,
+          },
+        }));
+
+        setMessagesList(convertedMessages.reverse());
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+      }
+    } else {
+      console.error("You don't have permission to view this chatroom");
+    }
+  };
+
+  if (!chatLoaded && data?.read === true) {
+    fetchMessages();
+    setChatLoaded(true);
+  }
+
   useEffect(() => {
     const setUpAssets = () => {
       if (player?.power === "INSOMNIAC") {
@@ -86,32 +116,7 @@ const ChatRoomView = () => {
       return;
     }
 
-    const fetchMessages = async () => {
-      if (data?.read === true) {
-        try {
-          const messages: Message[] = await getMessages(Number(chat));
-          const convertedMessages: any = messages.map((msg: Message) => ({
-            _id: msg.id,
-            text: msg.content,
-            createdAt: new Date(msg.createdAt),
-            authorId: msg.authorId,
-            user: {
-              _id: msg.authorId,
-              name: msg.author?.user?.name,
-            },
-          }));
-
-          setMessagesList(convertedMessages.reverse());
-        } catch (error) {
-          console.error("Error fetching messages:", error);
-        }
-      } else {
-        console.error("You don't have permission to view this chatroom");
-      }
-    };
     setUpAssets();
-
-    fetchMessages();
 
     if (socket) {
       socket.on("connect", () => {

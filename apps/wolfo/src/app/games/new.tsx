@@ -149,7 +149,7 @@ const NewGame = () => {
         <Layout level="1" style={[styles.container]}>
           <View style={styles.viewWrapper}>
             <View style={styles.wrapperTitle}>
-              <View style={styles.line}>{""}</View>
+              <View style={styles.line}> </View>
               <Text style={styles.h2}>New Game</Text>
             </View>
             <View style={styles.wrapperSelect}>

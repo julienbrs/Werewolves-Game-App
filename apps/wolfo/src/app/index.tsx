@@ -22,7 +22,7 @@ const Home = () => {
       <View style={styles.centeredView}>
         {/*<Image source={imageHome} style={styles.image} />*/}
         <View style={styles.mainWrapper}>
-          <Text>{""}</Text>
+          <Text> </Text>
         </View>
         <Text style={styles.h2}>Home</Text>
         <Button
