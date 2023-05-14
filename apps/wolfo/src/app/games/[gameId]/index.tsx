@@ -23,6 +23,7 @@ import dayIcon from "../../../../assets/UI/day.png";
 import deadIcon from "../../../../assets/UI/dead.png";
 import nightIcon from "../../../../assets/UI/night.png";
 import ModalPlayers from "../../../components/modals/modalPlayers";
+import End from "./end";
 
 const powerIcons = {
   INSOMNIAC: eyeIcon,
@@ -118,6 +119,9 @@ const GameView = () => {
   const handleSeePlayer = () => {
     setModalVisible(true);
   };
+  if (game.state === StateGame.END) {
+    return <End />;
+  }
   return (
     <ScrollView>
       <Stack.Screen options={{ title: game.name, headerRight: () => null }} />
