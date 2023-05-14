@@ -66,6 +66,7 @@ const Choice = ({ choicePlayer, currentPlayer, electionId, nbVotes, currentVote 
         <Text
           style={[
             styles.text,
+            styles.name,
             choicePlayer.userId === currentVote?.targetId ? styles.selected : {},
           ]}
         >
@@ -88,7 +89,7 @@ const Choice = ({ choicePlayer, currentPlayer, electionId, nbVotes, currentVote 
             }
           }}
         >
-          <Text style={styles.text}>
+          <Text style={[styles.text, styles.buttonText]}>
             {choicePlayer.userId === currentVote?.targetId ? "Cancel" : "Vote"}
           </Text>
         </Pressable>
@@ -174,39 +175,52 @@ const Vote = () => {
   }
   return (
     <SafeAreaView style={styles.background}>
-      <ScrollView contentContainerStyle={styles.mainView}>
-        {game.state === StateGame.NIGHT && currentPlayer.role !== Role.WOLF && (
-          <Text>Can't vote at night. Come back in the morning!</Text>
+      <ScrollView>
+        {game.state === StateGame.NIGHT && currentPlayer.role !== Role.WOLF ? (
+          <Text style={[styles.text, styles.title]}>
+            Can't vote at night. Come back in the morning!
+          </Text>
+        ) : (
+          <Text style={[styles.text, styles.title]}>It's time to vote!</Text>
         )}
-        {game?.players.map(
-          (player: Player, i: number) =>
-            currentPlayer.userId !== player.userId &&
-            (game.state === StateGame.DAY ||
-              (currentPlayer.role === Role.WOLF && player.role !== Role.WOLF)) && (
-              <Choice
-                key={player.userId}
-                choicePlayer={player}
-                currentPlayer={currentPlayer as Player}
-                nbVotes={votes[i].length}
-                electionId={game?.curElecId!}
-                currentVote={currentVote}
-              />
-            )
-        )}
+        <View style={styles.mainView}>
+          {game?.players.map(
+            (player: Player, i: number) =>
+              currentPlayer.userId !== player.userId &&
+              (game.state === StateGame.DAY ||
+                (currentPlayer.role === Role.WOLF && player.role !== Role.WOLF)) && (
+                <Choice
+                  key={player.userId}
+                  choicePlayer={player}
+                  currentPlayer={currentPlayer as Player}
+                  nbVotes={votes[i].length}
+                  electionId={game?.curElecId!}
+                  currentVote={currentVote}
+                />
+              )
+          )}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
   background: {
+    display: "flex",
     backgroundColor: "#141313",
-    height: "100%",
+    flex: 1,
   },
   mainView: {
+    marginTop: "10%",
+    marginBottom: "10%",
     flexDirection: "column",
     justifyContent: "center",
     position: "relative",
     borderWidth: 2,
+    display: "flex",
+    flex: 1,
+    width: "80%",
+    left: "10%",
     borderBottomWidth: 0,
     borderColor: "#C38100",
     backgroundColor: "#141313",
@@ -216,6 +230,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     overflow: "visible",
+  },
+  name: {
+    fontSize: 18,
+  },
+  title: {
+    fontSize: 28,
   },
   containerBorder: {
     borderStyle: "solid",
@@ -228,9 +248,8 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     flexWrap: "nowrap",
+    height: 60,
     // width: "80%",
-    // left: "10%",
-    height: "50%",
     borderBottomWidth: 2,
     borderColor: "transparent",
     borderStyle: "solid",
@@ -253,9 +272,12 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderStyle: "solid",
     borderColor: "transparent",
-    // backgroundColor: "red",
+    backgroundColor: "#C38100",
     height: "100%",
     width: "15%",
+  },
+  buttonText: {
+    color: "#141313",
   },
   buttonView: {
     paddingVertical: "3%",
