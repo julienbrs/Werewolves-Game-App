@@ -160,11 +160,17 @@ const GameView = () => {
           <View style={styles.wrapper}>
             <Button
               onPress={redirectVote}
-              style={[styles.button, styles.disabledButton]}
               disabled={
                 !game.curElecId ||
                 (game.state === StateGame.NIGHT && player.role !== Role.WOLF) ||
                 player.state === StatePlayer.DEAD
+              }
+              style={
+                !game.curElecId ||
+                (game.state === StateGame.NIGHT && player.role !== Role.WOLF) ||
+                player.state === StatePlayer.DEAD
+                  ? [styles.button, styles.disabledButton]
+                  : styles.button
               }
             >
               {evaProps => (
