@@ -142,6 +142,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     backgroundColor: "#141313",
     alignItems: "center",
+    height: "100%",
   },
   centeredView: {
     alignItems: "center",
