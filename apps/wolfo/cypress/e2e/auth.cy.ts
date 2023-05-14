@@ -1,11 +1,11 @@
 describe("Authentification", () => {
   const newUser = {
     name: "newuser",
-    password: "newpass",
+    password: "Mot2passe?1",
   };
   const updateUser = {
     name: "updateuser",
-    password: "updatepass",
+    password: "Mot2passe?2",
   };
 
   beforeEach(() => {
