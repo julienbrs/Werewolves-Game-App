@@ -138,7 +138,7 @@ const ChatRoomView = () => {
           createdAt: new Date(msg.createdAt),
           user: {
             _id: msg.authorId,
-            name: author,
+            name: author.name,
           },
         };
         setMessagesList(previousMessages => [convertedMessage, ...previousMessages]);
@@ -148,7 +148,6 @@ const ChatRoomView = () => {
 
       return () => {
         socket.off("newMessage", handleNewMessage);
-        socket.disconnect();
       };
     }
   }, [chat, userId, socket, data, game, player, fontsLoaded, router]);
