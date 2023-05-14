@@ -326,7 +326,7 @@
         "tags": [
           "User"
         ],
-        "summary": "delete himself",
+        "summary": "delete user by anonymizing him and making him dead in all games where he is alive",
         "description": "",
         "parameters": [
           {
@@ -339,7 +339,7 @@
         ],
         "responses": {
           "200": {
-            "description": "User Deleted",
+            "description": "User deleted",
             "content": {
               "application/json": {
                 "schema": {
@@ -347,7 +347,7 @@
                   "properties": {
                     "message": {
                       "type": "string",
-                      "example": "User Deleted"
+                      "example": "User deleted"
                     }
                   },
                   "required": [
@@ -364,7 +364,7 @@
                   "properties": {
                     "message": {
                       "type": "string",
-                      "example": "User Deleted"
+                      "example": "User deleted"
                     }
                   },
                   "required": [
@@ -378,7 +378,7 @@
             }
           },
           "400": {
-            "description": "User does not exist in database",
+            "description": "Error while deleting",
             "content": {
               "application/json": {
                 "schema": {
@@ -386,7 +386,7 @@
                   "properties": {
                     "message": {
                       "type": "string",
-                      "example": "User does not exist in database"
+                      "example": "Error while deleting"
                     }
                   },
                   "required": [
@@ -403,7 +403,7 @@
                   "properties": {
                     "message": {
                       "type": "string",
-                      "example": "User does not exist in database"
+                      "example": "Error while deleting"
                     }
                   },
                   "required": [

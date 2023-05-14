@@ -40,7 +40,7 @@ describe("Scénario création de deux comptes avec meme nom", () => {
       .set("Authorization", `Bearer ${token}`)
       .set("Content-Type", "application/json");
     expect(response.statusCode).toBe(200);
-    expect(response.body.message).toBe("User Deleted");
+    expect(response.body.message).toBe("User deleted");
   });
 });
 
@@ -123,7 +123,7 @@ describe("scénario création de compte -> update d'un autre compte avec meme no
         .set("Authorization", `Bearer ${token}`)
         .set("Content-Type", "application/json");
       expect(response.statusCode).toBe(200);
-      expect(response.body.message).toBe("User Deleted");
+      expect(response.body.message).toBe("User deleted");
     });
   });
 });
@@ -180,5 +180,5 @@ afterAll(async () => {
     .set("Authorization", `Bearer ${token}`)
     .set("Content-Type", "application/json");
   expect(response.statusCode).toBe(200);
-  expect(response.body.message).toBe("User Deleted");
+  expect(response.body.message).toBe("User deleted");
 });

@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button, Input, Text } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
 import React, { useContext, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Error, User } from "types";
 import { AuthContext } from "../../components/context/tokenContext";
@@ -56,92 +56,89 @@ const Settings = () => {
   };
 
   return (
-    <ScrollView>
-      <SafeAreaView style={styles.container}>
-        <View style={styles.centeredView}>
-          <View style={styles.wrapperTitle}>
-            <View style={styles.line}>{""}</View>
-            <Text style={styles.h2}>Settings</Text>
-            <Text style={styles.textName}>{name}</Text>
-          </View>
-          <Input
-            placeholder="Username"
-            onChangeText={setName}
-            testID="update-username-input"
-            style={styles.input}
-          />
-          <Input
-            placeholder="Password"
-            onChangeText={setPassword}
-            testID="update-password-input"
-            style={styles.input}
-          />
-          <Input
-            placeholder="Confirm password"
-            onChangeText={setConfirmPassword}
-            testID="confirm-update-password-input"
-            style={styles.input}
-          />
-
-          <Button
-            onPress={() => setVisibleModify(true)}
-            testID="update-account-button"
-            style={[styles.button, styles.modifyButton]}
-          >
-            {evaProps => (
-              <Text {...evaProps} style={[styles.buttonText, styles.modifyText]}>
-                Modify account
-              </Text>
-            )}
-          </Button>
-          <Button
-            onPress={() => setVisibleDelete(true)}
-            testID="delete-account-button"
-            style={styles.button}
-          >
-            {evaProps => (
-              <Text {...evaProps} style={styles.buttonText}>
-                Delete account
-              </Text>
-            )}
-          </Button>
-          <Button
-            onPress={() => logout()}
-            testID="logout-button"
-            style={[styles.button, styles.logout]}
-          >
-            {evaProps => (
-              <Text {...evaProps} style={styles.buttonText}>
-                Logout
-              </Text>
-            )}
-          </Button>
-
-          {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
+    <SafeAreaView style={styles.container}>
+      <View style={styles.centeredView}>
+        <View style={styles.wrapperTitle}>
+          <View style={styles.line}>{""}</View>
+          <Text style={styles.h2}>Settings</Text>
+          <Text style={styles.textName}>{name}</Text>
         </View>
-        <ModalConfirmChoice
-          title="Confirm modification"
-          description="Voulez vous modifier vos informations?"
-          visible={visibleModify}
-          setVisible={setVisibleModify}
-          confirmFunction={handleModify}
+        <Input
+          placeholder="Username"
+          onChangeText={setName}
+          testID="update-username-input"
+          style={styles.input}
+        />
+        <Input
+          placeholder="Password"
+          onChangeText={setPassword}
+          testID="update-password-input"
+          style={styles.input}
+        />
+        <Input
+          placeholder="Confirm password"
+          onChangeText={setConfirmPassword}
+          testID="confirm-update-password-input"
+          style={styles.input}
         />
 
-        <ModalConfirmChoice
-          title="Delete your account"
-          description="Voulez vous supprimer votre compte?"
-          visible={visibleDelete}
-          setVisible={setVisibleDelete}
-          confirmFunction={deleteQuery}
-        />
-      </SafeAreaView>
-    </ScrollView>
+        <Button
+          onPress={() => setVisibleModify(true)}
+          testID="update-account-button"
+          style={[styles.button, styles.modifyButton]}
+        >
+          {evaProps => (
+            <Text {...evaProps} style={styles.buttonText}>
+              Modify account
+            </Text>
+          )}
+        </Button>
+        <Button
+          onPress={() => setVisibleDelete(true)}
+          testID="delete-account-button"
+          style={styles.button}
+        >
+          {evaProps => (
+            <Text {...evaProps} style={styles.buttonText}>
+              Delete account
+            </Text>
+          )}
+        </Button>
+        <Button
+          onPress={() => logout()}
+          testID="logout-button"
+          style={[styles.button, styles.logout]}
+        >
+          {evaProps => (
+            <Text {...evaProps} style={styles.buttonText}>
+              Logout
+            </Text>
+          )}
+        </Button>
+
+        {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
+      </View>
+      <ModalConfirmChoice
+        title="Confirm modification"
+        description="Voulez vous modifier vos informations?"
+        visible={visibleModify}
+        setVisible={setVisibleModify}
+        confirmFunction={handleModify}
+      />
+
+      <ModalConfirmChoice
+        title="Delete your account"
+        description="Voulez vous supprimer votre compte?"
+        visible={visibleDelete}
+        setVisible={setVisibleDelete}
+        confirmFunction={deleteQuery}
+      />
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: "column",
     backgroundColor: "#141313",
     alignItems: "center",
