@@ -60,11 +60,17 @@ const Choice = ({ choicePlayer, currentPlayer, electionId, nbVotes, currentVote 
       <View
         style={[
           styles.buttonView,
-          choicePlayer.userId === currentVote?.targetId ? styles.selected : {},
           choicePlayer.state === StatePlayer.DEAD ? styles.deadPlayer : {},
         ]}
       >
-        <Text style={styles.text}>{choicePlayer?.user!.name}</Text>
+        <Text
+          style={[
+            styles.text,
+            choicePlayer.userId === currentVote?.targetId ? styles.selected : {},
+          ]}
+        >
+          {choicePlayer?.user!.name}
+        </Text>
       </View>
       {choicePlayer.state === StatePlayer.ALIVE && currentPlayer.state === StatePlayer.ALIVE ? (
         <Pressable
@@ -209,6 +215,7 @@ const styles = StyleSheet.create({
     color: "#C38100",
     fontWeight: "bold",
     textAlign: "center",
+    overflow: "visible",
   },
   containerBorder: {
     borderStyle: "solid",
@@ -223,7 +230,7 @@ const styles = StyleSheet.create({
     flexWrap: "nowrap",
     // width: "80%",
     // left: "10%",
-    height: "10vh",
+    height: "50%",
     borderBottomWidth: 2,
     borderColor: "transparent",
     borderStyle: "solid",
@@ -233,11 +240,11 @@ const styles = StyleSheet.create({
   },
   buttonConfirm: {
     // borderRadius: 25,
-    backgroundColor: "green",
+    // backgroundColor: "green",
   },
   buttonCancel: {
     // borderRadius: 25,
-    backgroundColor: "red",
+    // backgroundColor: "red",
   },
   buttonContent: {
     position: "relative",
@@ -248,10 +255,10 @@ const styles = StyleSheet.create({
     borderColor: "transparent",
     // backgroundColor: "red",
     height: "100%",
-    paddingHorizontal: "1.5em",
-    width: "8%",
+    width: "15%",
   },
   buttonView: {
+    paddingVertical: "3%",
     flexGrow: 1,
     flexShrink: 1,
     borderLeftWidth: 3,
@@ -262,7 +269,7 @@ const styles = StyleSheet.create({
     position: "relative",
     display: "flex",
     textAlign: "center",
-    height: "102%",
+    height: "100%",
     justifyContent: "center",
   },
   deadPlayer: {
@@ -274,6 +281,7 @@ const styles = StyleSheet.create({
     // backgroundColor: "rgb(235, 212, 99)",
     textDecorationLine: "underline",
     textDecorationColor: "#C38100",
+    fontStyle: "italic",
   },
   voteCount: {
     borderColor: "transparent",
