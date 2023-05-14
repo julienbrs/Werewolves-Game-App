@@ -118,7 +118,6 @@ const GameView = () => {
   const handleSeePlayer = () => {
     setModalVisible(true);
   };
-
   return (
     <ScrollView>
       <Stack.Screen options={{ title: game.name, headerRight: () => null }} />
@@ -159,7 +158,7 @@ const GameView = () => {
         <View style={styles.mainWrapper}>
           <Text style={styles.h2}>What to do?</Text>
           <View style={styles.wrapper}>
-            <Button onPress={redirectVote} style={styles.button} disabled={false}>
+            <Button onPress={redirectVote} style={styles.button} disabled={!game.curElecId}>
               {evaProps => (
                 <Text {...evaProps} style={styles.buttonText}>
                   Vote
@@ -171,9 +170,7 @@ const GameView = () => {
             <Button
               style={styles.button}
               onPress={redirectPower}
-              disabled={
-                player.usedPower && player.power !== Power.SPIRIT && player.power !== Power.NONE
-              }
+              disabled={player.power === Power.NONE || player.usedPower}
             >
               {evaProps => (
                 <Text {...evaProps} style={styles.buttonText}>
