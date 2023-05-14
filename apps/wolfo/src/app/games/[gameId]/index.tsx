@@ -157,7 +157,7 @@ const GameView = () => {
         </View>
         {/* display all informations on the game after fetching data from backend*/}
         <View style={styles.mainWrapper}>
-          <Text style={styles.h2}>What will you do?</Text>
+          <Text style={styles.h2}>What to do?</Text>
           <View style={styles.wrapper}>
             <Button onPress={redirectVote} style={styles.button} disabled={false}>
               {evaProps => (
@@ -252,6 +252,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#141313",
+    paddingBottom: 25,
   },
   wrapper: {
     flexDirection: "row",
@@ -261,11 +262,16 @@ export const styles = StyleSheet.create({
     marginVertical: 10,
   },
   mainWrapper: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "80%",
     borderColor: "#C38100",
     borderWidth: 1,
     paddingHorizontal: 25,
-    paddingTop: 20,
-    paddingBottom: 10,
+    paddingTop: 10,
+    paddingBottom: 0,
   },
   centeredView: {
     flex: 1,
@@ -294,7 +300,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   title: {
-    marginBottom: "10%",
+    marginBottom: "7%",
     fontFamily: "Voyage",
     fontSize: 45,
     color: "#C38100",
@@ -304,8 +310,8 @@ export const styles = StyleSheet.create({
     fontFamily: "Voyage",
     fontSize: 37,
     color: "#C38100",
-    marginTop: -50,
-    marginBottom: 30,
+    marginTop: -40,
+    marginBottom: 25,
   },
   smallText: {
     fontSize: 14,
@@ -315,7 +321,7 @@ export const styles = StyleSheet.create({
   button: {
     marginVertical: 5,
     width: 150,
-    height: 40,
+    height: 50,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 24,
@@ -334,10 +340,10 @@ export const styles = StyleSheet.create({
     color: "#141313",
   },
   icon: {
-    width: 24,
-    height: 24,
-    marginBottom: 8,
-    marginTop: 20,
+    width: 20,
+    height: 20,
+    marginBottom: 0,
+    marginTop: 22,
   },
 });
 
