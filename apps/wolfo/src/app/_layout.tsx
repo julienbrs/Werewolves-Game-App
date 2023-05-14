@@ -9,6 +9,7 @@ import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AuthProvider } from "../components/context/tokenContext";
 
+import { StatusBar } from "expo-status-bar";
 import BellIcon from "../../assets/UI/bell.png";
 import UserIcon from "../../assets/UI/min_player.png";
 
@@ -42,6 +43,7 @@ const HomeLayout = () => {
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <SafeAreaProvider>
+            <StatusBar style="light" />
             <View style={styles.background}>
               <Stack
                 screenOptions={{

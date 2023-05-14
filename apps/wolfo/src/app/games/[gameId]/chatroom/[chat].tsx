@@ -6,7 +6,7 @@ import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
 import { Day, GiftedChat, IMessage, InputToolbar } from "react-native-gifted-chat";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import io, { Socket } from "socket.io-client";
-import { Game, Message, NewMessage, Player } from "types";
+import { Game, Message, NewMessage, Player, StateGame } from "types";
 import { getMessages, getPermissions } from "../../../../utils/api/chat";
 import { getGame } from "../../../../utils/api/game";
 import { getPlayer } from "../../../../utils/api/player";
@@ -107,6 +107,7 @@ const ChatRoomView = () => {
         }
       } else {
         console.error("You don't have permission to view this chatroom");
+        router.back();
       }
     };
     setUpAssets();
@@ -146,7 +147,7 @@ const ChatRoomView = () => {
         socket.disconnect();
       };
     }
-  }, [chat, userId, socket, data, game, player, fontsLoaded]);
+  }, [chat, userId, socket, data, game, player, fontsLoaded, router]);
 
   const onSend = (msgList: IMessage[] = []) => {
     console.log("in onsend, we got: data", data);
@@ -186,7 +187,7 @@ const ChatRoomView = () => {
     <SafeAreaProvider style={styles.container}>
       <Stack.Screen
         options={{
-          title: `Chatroom day/night (à changer)`,
+          title: `Chatroom ${game?.state === StateGame.NIGHT ? "Night" : "Day"}`,
           headerRight: () => null,
         }}
       />

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Button, Text } from "@ui-kitten/components";
 import { Stack, useRouter, useSearchParams } from "expo-router";
 import { useContext, useState } from "react";
-import React, { Image, Modal, StyleSheet, View } from "react-native";
+import React, { Image, Modal, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, Player, Power, Role, StateGame } from "types";
 import { AuthContext } from "../../../components/context/tokenContext";
@@ -119,167 +119,169 @@ const GameView = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <ScrollView>
       <Stack.Screen options={{ title: game.name, headerRight: () => null }} />
-      <View style={styles.wrapper}>
-        <Text style={styles.title}>{game.name}</Text>
-      </View>
-      <View style={styles.wrapperTitle}>
-        <Image
-          source={game.state === StateGame.DAY ? dayIcon : nightIcon}
-          style={styles.icon}
-          resizeMode="contain"
-        />
-        <Text style={[styles.text]}>
-          It's {game.state === StateGame.DAY ? "day" : "night"} time
-        </Text>
-        <Image
-          source={player.state === "ALIVE" ? aliveIcon : deadIcon}
-          style={styles.icon}
-          resizeMode="contain"
-        />
-        <Text style={styles.text}> {player.state === "ALIVE" ? "Alive" : "Dead"}</Text>
-        <Image
-          source={player.role === Role.VILLAGER ? villagerIcon : wolfIcon}
-          style={styles.icon}
-          resizeMode="contain"
-        />
-        <Text style={styles.text}>{`You are a ${player.role}`}</Text>
-        {player.power !== null && (
-          <Image source={powerIcons[player.power!]} style={styles.icon} resizeMode="contain" />
-        )}
-
-        {(player.power !== null && (
-          <Text style={styles.text}>{`Your power is ${player.power}`}</Text>
-        )) || <Text style={styles.text}>{`You don't have any power`}</Text>}
-      </View>
-      {/* display all informations on the game after fetching data from backend*/}
-      <View style={styles.mainWrapper}>
-        <Text style={styles.h2}>What will you do?</Text>
+      <SafeAreaView style={styles.container}>
         <View style={styles.wrapper}>
-          <Button onPress={redirectVote} style={styles.button} disabled={false}>
-            {evaProps => (
-              <Text {...evaProps} style={styles.buttonText}>
-                Vote
-              </Text>
-            )}
-          </Button>
+          <Text style={styles.title}>{game.name}</Text>
         </View>
-        <View style={styles.wrapper}>
-          <Button
-            style={styles.button}
-            onPress={redirectPower}
-            disabled={
-              player.usedPower && player.power !== Power.SPIRIT && player.power !== Power.NONE
-            }
-          >
-            {evaProps => (
-              <Text {...evaProps} style={styles.buttonText}>
-                Power
-              </Text>
-            )}
-          </Button>
+        <View style={styles.wrapperTitle}>
+          <Image
+            source={game.state === StateGame.DAY ? dayIcon : nightIcon}
+            style={styles.icon}
+            resizeMode="contain"
+          />
+          <Text style={[styles.text]}>
+            It's {game.state === StateGame.DAY ? "day" : "night"} time
+          </Text>
+          <Image
+            source={player.state === "ALIVE" ? aliveIcon : deadIcon}
+            style={styles.icon}
+            resizeMode="contain"
+          />
+          <Text style={styles.text}> {player.state === "ALIVE" ? "Alive" : "Dead"}</Text>
+          <Image
+            source={player.role === Role.VILLAGER ? villagerIcon : wolfIcon}
+            style={styles.icon}
+            resizeMode="contain"
+          />
+          <Text style={styles.text}>{`You are a ${player.role}`}</Text>
+          {player.power !== null && (
+            <Image source={powerIcons[player.power!]} style={styles.icon} resizeMode="contain" />
+          )}
+
+          {(player.power !== null && (
+            <Text style={styles.text}>{`Your power is ${player.power}`}</Text>
+          )) || <Text style={styles.text}>{`You don't have any power`}</Text>}
         </View>
-
-        <View style={styles.wrapper}>
-          <Button style={styles.button} onPress={handleSeePlayer}>
-            {evaProps => (
-              <Text {...evaProps} style={styles.buttonText}>
-                See Player
-              </Text>
-            )}
-          </Button>
-        </View>
-
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalTitle}>{game.players.length} players in game</Text>
-              <View style={styles.iconWrapper}>
-                <Image source={aliveIcon} style={styles.icon} />
-                <Text style={styles.text}>Alive players :</Text>
-              </View>
-              <Text style={styles.modalText}>
-                {game.players
-                  .filter((p: Player) => p.state === "ALIVE")
-                  .map((p: Player) => p.user?.name)
-                  .join(", ")}
-              </Text>
-              <View style={styles.iconWrapper}>
-                <Image source={deadIcon} style={styles.icon} />
-                <Text style={styles.text}>Dead players :</Text>
-              </View>
-              <Text style={styles.modalText}>
-                {game.players
-                  .filter((p: Player) => p.state === "DEAD")
-                  .map((p: Player) => p.user?.name)
-                  .join(", ")}
-              </Text>
-
-              <Button onPress={() => setModalVisible(!modalVisible)}>
-                {evaProps => (
-                  <Text {...evaProps} style={styles.smallText}>
-                    Close
-                  </Text>
-                )}
-              </Button>
-            </View>
+        {/* display all informations on the game after fetching data from backend*/}
+        <View style={styles.mainWrapper}>
+          <Text style={styles.h2}>What will you do?</Text>
+          <View style={styles.wrapper}>
+            <Button onPress={redirectVote} style={styles.button} disabled={false}>
+              {evaProps => (
+                <Text {...evaProps} style={styles.buttonText}>
+                  Vote
+                </Text>
+              )}
+            </Button>
           </View>
-        </Modal>
-
-        <View style={styles.wrapper}>
-          <Button
-            style={
-              game.state === StateGame.NIGHT && player.role !== Role.WOLF
-                ? [styles.button, styles.disabledButton]
-                : styles.button
-            }
-            onPress={redirectChat}
-            disabled={game.state === StateGame.NIGHT && player.role !== Role.WOLF}
-          >
-            {evaProps => (
-              <Text
-                {...evaProps}
-                style={
-                  game.state === StateGame.NIGHT && player.role !== Role.WOLF
-                    ? [styles.buttonText, styles.disabledButtonText]
-                    : styles.buttonText
-                }
-              >
-                Chat
-              </Text>
-            )}
-          </Button>
-        </View>
-
-        <View style={styles.wrapper}>
-          {spiritPerm?.write === true && player.state === "DEAD" && (
+          <View style={styles.wrapper}>
             <Button
               style={styles.button}
-              onPress={() =>
-                router.push({
-                  pathname: `/games/${gameId}/chatroom/${game.spiritChatRoomId}`,
-                  params: { gameId, userId },
-                })
+              onPress={redirectPower}
+              disabled={
+                player.usedPower && player.power !== Power.SPIRIT && player.power !== Power.NONE
               }
             >
               {evaProps => (
                 <Text {...evaProps} style={styles.buttonText}>
-                  Spirit Chat
+                  Power
                 </Text>
               )}
             </Button>
-          )}
+          </View>
+
+          <View style={styles.wrapper}>
+            <Button style={styles.button} onPress={handleSeePlayer}>
+              {evaProps => (
+                <Text {...evaProps} style={styles.buttonText}>
+                  See Player
+                </Text>
+              )}
+            </Button>
+          </View>
+
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(!modalVisible);
+            }}
+          >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.modalTitle}>{game.players.length} players in game</Text>
+                <View style={styles.iconWrapper}>
+                  <Image source={aliveIcon} style={styles.icon} />
+                  <Text style={styles.text}>Alive players :</Text>
+                </View>
+                <Text style={styles.modalText}>
+                  {game.players
+                    .filter((p: Player) => p.state === "ALIVE")
+                    .map((p: Player) => p.user?.name)
+                    .join(", ")}
+                </Text>
+                <View style={styles.iconWrapper}>
+                  <Image source={deadIcon} style={styles.icon} />
+                  <Text style={styles.text}>Dead players :</Text>
+                </View>
+                <Text style={styles.modalText}>
+                  {game.players
+                    .filter((p: Player) => p.state === "DEAD")
+                    .map((p: Player) => p.user?.name)
+                    .join(", ")}
+                </Text>
+
+                <Button onPress={() => setModalVisible(!modalVisible)}>
+                  {evaProps => (
+                    <Text {...evaProps} style={styles.smallText}>
+                      Close
+                    </Text>
+                  )}
+                </Button>
+              </View>
+            </View>
+          </Modal>
+
+          <View style={styles.wrapper}>
+            <Button
+              style={
+                game.state === StateGame.NIGHT && player.role !== Role.WOLF
+                  ? [styles.button, styles.disabledButton]
+                  : styles.button
+              }
+              onPress={redirectChat}
+              disabled={game.state === StateGame.NIGHT && player.role !== Role.WOLF}
+            >
+              {evaProps => (
+                <Text
+                  {...evaProps}
+                  style={
+                    game.state === StateGame.NIGHT && player.role !== Role.WOLF
+                      ? [styles.buttonText, styles.disabledButtonText]
+                      : styles.buttonText
+                  }
+                >
+                  Chat
+                </Text>
+              )}
+            </Button>
+          </View>
+
+          <View style={styles.wrapper}>
+            {spiritPerm?.write === true && player.state === "DEAD" && (
+              <Button
+                style={styles.button}
+                onPress={() =>
+                  router.push({
+                    pathname: `/games/${gameId}/chatroom/${game.spiritChatRoomId}`,
+                    params: { gameId, userId },
+                  })
+                }
+              >
+                {evaProps => (
+                  <Text {...evaProps} style={styles.buttonText}>
+                    Spirit Chat
+                  </Text>
+                )}
+              </Button>
+            )}
+          </View>
         </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ScrollView>
   );
 };
 

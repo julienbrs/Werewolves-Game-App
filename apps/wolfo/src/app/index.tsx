@@ -1,10 +1,11 @@
 import { Button, Input, Tab, TabView, Text } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, ScrollView, StyleSheet, View } from "react-native";
 import { ListGamesLobby, ListMyGames } from "../components/game/gameList";
 import useFont from "../utils/hooks/useFont";
 
+import { SafeAreaView } from "react-native-safe-area-context";
 import imageHome from "../../assets/images/menu_home.png";
 
 const Home = () => {
@@ -18,8 +19,8 @@ const Home = () => {
   }
 
   return (
-    <>
-      <View style={styles.container}>
+    <ScrollView>
+      <SafeAreaView style={styles.container}>
         <View style={styles.centeredView}>
           <Image source={imageHome} style={styles.image} />
           <View style={styles.mainWrapper}>{""}</View>
@@ -79,8 +80,8 @@ const Home = () => {
             </TabView>
           </View>
         </View>
-      </View>
-    </>
+      </SafeAreaView>
+    </ScrollView>
   );
 };
 
@@ -98,6 +99,8 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    paddingTop: "5%",
+    paddingBottom: "10%",
   },
   searchInput: {
     width: "70%",
