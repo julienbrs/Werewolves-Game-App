@@ -26,7 +26,9 @@ const Home = () => {
         </View>
         <Text style={styles.h2}>Home</Text>
         <Button
-          onPress={() => {}}
+          onPress={() => {
+            router.push("/rules");
+          }}
           style={[styles.button, styles.rules]}
           status="primary"
           testID="rule-button"

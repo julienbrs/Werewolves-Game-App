@@ -1,6 +1,7 @@
 import { Button, Card, Modal, Text } from "@ui-kitten/components";
 import React from "react";
 import { StyleSheet, View } from "react-native";
+import useFont from "../../utils/hooks/useFont";
 
 interface ModalConfirmChoiceProps {
   title: string;
@@ -16,6 +17,11 @@ export const ModalConfirmChoice = ({
   setVisible,
   confirmFunction,
 }: ModalConfirmChoiceProps) => {
+  const fontsLoaded = useFont();
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <Modal visible={visible} onBackdropPress={() => setVisible(false)} animationType="slide">
       <Card style={styles.modalView}>
@@ -28,6 +34,7 @@ export const ModalConfirmChoice = ({
               confirmFunction();
             }}
             style={styles.button}
+            testID="modal-confirm"
           >
             {evaProps => (
               <Text {...evaProps} style={[styles.buttonText, styles.confirmText]}>
@@ -38,6 +45,7 @@ export const ModalConfirmChoice = ({
           <Button
             onPress={() => setVisible(false)}
             style={{ ...styles.button, ...styles.cancelButton }}
+            testID="modal-cancel"
           >
             {evaProps => (
               <Text {...evaProps} style={[styles.buttonText, styles.cancelText]}>
@@ -58,8 +66,8 @@ const styles = StyleSheet.create({
     borderColor: "#C38100",
     borderWidth: 2,
     borderRadius: 24,
-    paddingHorizontal: 35,
-    paddingVertical: 20,
+    paddingHorizontal: 5,
+    paddingVertical: 14,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -87,6 +95,7 @@ const styles = StyleSheet.create({
   },
   button: {
     justifyContent: "center",
+    marginHorizontal: 10,
     marginTop: 10,
     alignItems: "center",
     borderRadius: 24,

@@ -164,15 +164,31 @@ const GameView = () => {
           <View style={styles.wrapper}>
             <Button
               onPress={redirectVote}
-              style={styles.button}
               disabled={
                 !game.curElecId ||
                 (game.state === StateGame.NIGHT && player.role !== Role.WOLF) ||
                 player.state === StatePlayer.DEAD
               }
+              style={
+                !game.curElecId ||
+                (game.state === StateGame.NIGHT && player.role !== Role.WOLF) ||
+                player.state === StatePlayer.DEAD
+                  ? [styles.button, styles.disabledButton]
+                  : styles.button
+              }
             >
               {evaProps => (
-                <Text {...evaProps} style={styles.buttonText}>
+                // style depending on disabled or not
+                <Text
+                  {...evaProps}
+                  style={
+                    !game.curElecId ||
+                    (game.state === StateGame.NIGHT && player.role !== Role.WOLF) ||
+                    player.state === StatePlayer.DEAD
+                      ? [styles.buttonText, styles.disabledButtonText]
+                      : styles.buttonText
+                  }
+                >
                   Vote
                 </Text>
               )}
@@ -337,8 +353,10 @@ export const styles = StyleSheet.create({
     boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.15)",
   },
   disabledButton: {
-    backgroundColor: "#ceccbd",
-    opacity: 0.8,
+    backgroundColor: "#2c2b2b",
+    borderColor: "#C38100",
+    borderWidth: 1,
+    opacity: 0.9,
   },
   buttonText: {
     fontSize: 15,
@@ -346,7 +364,7 @@ export const styles = StyleSheet.create({
     fontFamily: "MontserratBold",
   },
   disabledButtonText: {
-    color: "#141313",
+    color: "#6b4c0c",
   },
   icon: {
     width: 20,
