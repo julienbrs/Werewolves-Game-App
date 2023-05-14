@@ -88,7 +88,7 @@ const Settings = () => {
           style={[styles.button, styles.modifyButton]}
         >
           {evaProps => (
-            <Text {...evaProps} style={styles.buttonText}>
+            <Text {...evaProps} style={styles.modifyText}>
               Modify account
             </Text>
           )}
@@ -202,6 +202,8 @@ const styles = StyleSheet.create({
     color: "#141313",
   },
   modifyText: {
+    fontSize: 17,
+    fontFamily: "MontserratBold",
     color: "#C38100",
   },
   errorText: {
