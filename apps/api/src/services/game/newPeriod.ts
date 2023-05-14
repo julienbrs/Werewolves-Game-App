@@ -13,6 +13,7 @@ const newPeriod = async (day: boolean, gameId: number) => {
           name: true,
           curElecId: true,
           state: true,
+          spiritChatRoomId: true,
           players: {
             select: {
               userId: true,
@@ -51,6 +52,55 @@ const newPeriod = async (day: boolean, gameId: number) => {
           curElecId: newElec.id,
         },
       });
+
+      // vire les gens de la spirit
+      if (game.spiritChatRoomId && day) {
+        const spiritChat = await transaction.chatRoom.findUnique({
+          where: { id: game.spiritChatRoomId },
+          include: {
+            writers: {
+              select: {
+                playerId: true,
+                player: {
+                  select: {
+                    power: true,
+                  },
+                },
+              },
+            },
+            readers: true,
+          },
+        });
+        spiritChat?.writers
+          .filter(writer => writer.player.power !== Power.SPIRIT)
+          .map(writer => writer.playerId)
+          .forEach(async playerId => {
+            await transaction.chatRoom.update({
+              where: { id: game.spiritChatRoomId! },
+              data: {
+                writers: {
+                  disconnect: {
+                    playerId_gameId_chatRoomId: {
+                      playerId,
+                      gameId,
+                      chatRoomId: game.spiritChatRoomId!,
+                    },
+                  },
+                },
+                readers: {
+                  disconnect: {
+                    playerId_gameId_chatRoomId: {
+                      playerId,
+                      gameId,
+                      chatRoomId: game.spiritChatRoomId!,
+                    },
+                  },
+                },
+              },
+            });
+          });
+      }
+
       await transaction.player.updateMany({
         where: {
           gameId,
