@@ -310,8 +310,8 @@ export const styles = StyleSheet.create({
     fontFamily: "Voyage",
     fontSize: 37,
     color: "#C38100",
-    marginTop: -50,
-    marginBottom: 30,
+    marginTop: -40,
+    marginBottom: 25,
   },
   smallText: {
     fontSize: 14,
