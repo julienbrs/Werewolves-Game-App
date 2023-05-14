@@ -3,7 +3,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Divider, List, Text } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
 import React, { useContext, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, StateGame } from "types";
 import { getGamesLobby, getMyGames, joinGame, leaveGame } from "../../utils/api/game";
@@ -55,16 +56,33 @@ export const ListGamesLobby: React.FC<ListProps> = ({ search }) => {
     <GameItemNotJoined key={item.id} game={item} handleFunction={handleJoin} />
   );
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.listContainer}>
       {games ? (
-        <List
-          nestedScrollEnabled
-          data={filteredGames}
-          renderItem={listGame}
-          ItemSeparatorComponent={Divider}
-          onRefresh={refetch}
-          refreshing={isLoading}
-        />
+        // si web le scrollview intégré à list marche pas donc on bidouille un scrollview + reload button
+        Platform.OS === "web" ? (
+          <ScrollView>
+            <Button onPress={() => refetch()}>
+              <AntDesign name="reload1" size={10} color="black" />
+            </Button>
+            <List
+              nestedScrollEnabled
+              data={filteredGames}
+              renderItem={listGame}
+              ItemSeparatorComponent={Divider}
+              onRefresh={refetch}
+              refreshing={isLoading}
+            />
+          </ScrollView>
+        ) : (
+          <List
+            nestedScrollEnabled
+            data={filteredGames}
+            renderItem={listGame}
+            ItemSeparatorComponent={Divider}
+            onRefresh={refetch}
+            refreshing={isLoading}
+          />
+        )
       ) : (
         <Button onPress={() => refetch()}>
           <AntDesign name="reload1" size={10} color="black" />
@@ -130,14 +148,31 @@ export const ListMyGames: React.FC<ListProps> = ({ search }) => {
   return (
     <SafeAreaView style={styles.listContainer}>
       {!isError && games.length !== 0 ? (
-        <List
-          nestedScrollEnabled
-          data={filteredGames}
-          renderItem={listGame}
-          ItemSeparatorComponent={Divider}
-          onRefresh={refetch}
-          refreshing={isLoading}
-        />
+        // si web le scrollview intégré à list marche pas donc on bidouille un scrollview + reload button
+        Platform.OS === "web" ? (
+          <ScrollView>
+            <Button onPress={() => refetch()}>
+              <AntDesign name="reload1" size={10} color="black" />
+            </Button>
+            <List
+              nestedScrollEnabled
+              data={filteredGames}
+              renderItem={listGame}
+              ItemSeparatorComponent={Divider}
+              onRefresh={refetch}
+              refreshing={isLoading}
+            />
+          </ScrollView>
+        ) : (
+          <List
+            nestedScrollEnabled
+            data={filteredGames}
+            renderItem={listGame}
+            ItemSeparatorComponent={Divider}
+            onRefresh={refetch}
+            refreshing={isLoading}
+          />
+        )
       ) : (
         <View style={styles.view}>
           {isError && <Text style={styles.text}>An error occured. Please try refreshing.</Text>}
@@ -161,7 +196,7 @@ export const ListMyGames: React.FC<ListProps> = ({ search }) => {
 
 const styles = StyleSheet.create({
   listContainer: {
-    width: "100%",
+    flex: Platform.OS === "web" ? 1 : undefined,
   },
   view: {
     borderRadius: 24,
