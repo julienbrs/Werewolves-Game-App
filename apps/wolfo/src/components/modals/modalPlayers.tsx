@@ -26,7 +26,7 @@ export const ModalPlayers = ({ game, modalVisible, setModalVisible }: ModalPlaye
           <Text style={styles.modalTitle}>{game.players.length} players in game</Text>
           <View style={styles.iconWrapper}>
             <Image source={aliveIcon} style={styles.icon} />
-            <Text style={styles.text}>Alive players :</Text>
+            <Text style={styles.h2}>Alive players :</Text>
           </View>
           <Text style={styles.modalText}>
             {game.players
@@ -36,7 +36,7 @@ export const ModalPlayers = ({ game, modalVisible, setModalVisible }: ModalPlaye
           </Text>
           <View style={styles.iconWrapper}>
             <Image source={deadIcon} style={styles.icon} />
-            <Text style={styles.text}>Dead players :</Text>
+            <Text style={styles.h2}>Dead players :</Text>
           </View>
           <Text style={styles.modalText}>
             {game.players
@@ -45,9 +45,9 @@ export const ModalPlayers = ({ game, modalVisible, setModalVisible }: ModalPlaye
               .join(", ")}
           </Text>
 
-          <Button onPress={() => setModalVisible(!modalVisible)}>
+          <Button onPress={() => setModalVisible(!modalVisible)} style={styles.button}>
             {evaProps => (
-              <Text {...evaProps} style={styles.smallText}>
+              <Text {...evaProps} style={styles.textClose}>
                 Close
               </Text>
             )}
@@ -67,9 +67,12 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: "#141313",
+    borderColor: "#C38100",
+    borderWidth: 2,
     borderRadius: 20,
-    padding: 35,
+    paddingHorizontal: 35,
+    paddingVertical: 20,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -81,15 +84,25 @@ const styles = StyleSheet.create({
     elevation: 5,
     width: "70%",
   },
+  button: {
+    justifyContent: "center",
+    marginTop: 10,
+    alignItems: "center",
+    borderRadius: 24,
+    boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.15)",
+  },
   modalTitle: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontFamily: "MontserratBold",
     marginBottom: 15,
     textAlign: "center",
+    color: "#C38100",
   },
   modalText: {
     marginBottom: 15,
     textAlign: "center",
+    color: "#C38100",
+    fontFamily: "Montserrat",
   },
   text: {
     fontSize: 14,
@@ -97,13 +110,20 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#C38100",
   },
-  smallText: {
+  h2: {
     fontSize: 14,
-    fontWeight: "500",
-    marginBottom: -10,
+    fontFamily: "MontserratBold",
+    textAlign: "center",
+    color: "#C38100",
+  },
+  textClose: {
+    fontSize: 14,
+    fontFamily: "MontserratBold",
+    textAlign: "center",
+    color: "#141313",
   },
   iconWrapper: {
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
