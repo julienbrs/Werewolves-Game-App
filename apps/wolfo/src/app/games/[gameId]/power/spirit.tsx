@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
   chatButton: {
     width: "70%",
     alignSelf: "center",
-    borderRadius: 16,
+    borderRadius: 24,
     marginVertical: 20,
     backgroundColor: "#69140E",
     borderColor: "#69140E",
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
   playerButton: {
     width: "70%",
     alignSelf: "center",
-    borderRadius: 20,
+    borderRadius: 24,
     backgroundColor: "#C38100",
     marginBottom: 16,
   },

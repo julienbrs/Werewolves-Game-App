@@ -103,13 +103,13 @@ const styles = StyleSheet.create({
     width: "70%",
     opacity: 0.95,
     marginBottom: 20,
-    borderRadius: 16,
+    borderRadius: 24,
     boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.15)",
   },
   tabViewWrapper: {
     width: "70%",
     alignSelf: "center",
-    borderRadius: 16,
+    borderRadius: 24,
     overflow: "hidden",
   },
   tabView: {
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   button: {
     width: "70%",
     height: 50,
-    borderRadius: 16,
+    borderRadius: 24,
     marginBottom: 20,
     boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.15)",
   },

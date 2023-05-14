@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   view: {
-    borderRadius: 16,
+    borderRadius: 24,
   },
   text: {
     padding: "1em",

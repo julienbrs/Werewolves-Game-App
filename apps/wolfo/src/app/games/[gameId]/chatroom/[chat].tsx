@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     width: "80%",
     backgroundColor: "rgba(255, 255, 255, 0.2)",
     padding: 16,
-    borderRadius: 16,
+    borderRadius: 24,
     textAlign: "center",
   },
   cardText: {

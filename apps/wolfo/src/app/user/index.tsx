@@ -88,7 +88,7 @@ const Settings = () => {
           style={[styles.button, styles.modifyButton]}
         >
           {evaProps => (
-            <Text {...evaProps} style={styles.buttonText}>
+            <Text {...evaProps} style={styles.modifyText}>
               Modify account
             </Text>
           )}
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   button: {
     width: "100%",
     marginVertical: 10,
-    borderRadius: 20,
+    borderRadius: 24,
     boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.15)",
   },
   logout: {
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
   input: {
     width: "100%",
     marginVertical: 5,
-    borderRadius: 20,
+    borderRadius: 24,
     boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.15)",
   },
   modifyButton: {
@@ -202,6 +202,8 @@ const styles = StyleSheet.create({
     color: "#141313",
   },
   modifyText: {
+    fontSize: 17,
+    fontFamily: "MontserratBold",
     color: "#C38100",
   },
   errorText: {
