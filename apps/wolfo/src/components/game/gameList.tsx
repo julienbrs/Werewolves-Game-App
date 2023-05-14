@@ -151,9 +151,6 @@ export const ListMyGames: React.FC<ListProps> = ({ search }) => {
         // si web le scrollview intégré à list marche pas donc on bidouille un scrollview + reload button
         Platform.OS === "web" ? (
           <ScrollView>
-            <Button onPress={() => refetch()}>
-              <AntDesign name="reload1" size={10} color="black" />
-            </Button>
             <List
               nestedScrollEnabled
               data={filteredGames}
@@ -162,6 +159,9 @@ export const ListMyGames: React.FC<ListProps> = ({ search }) => {
               onRefresh={refetch}
               refreshing={isLoading}
             />
+            <Button onPress={() => refetch()}>
+              <AntDesign name="reload1" size={10} color="black" />
+            </Button>
           </ScrollView>
         ) : (
           <List
