@@ -55,7 +55,7 @@ const Choice = ({ choicePlayer, currentPlayer, electionId, nbVotes, currentVote 
   return (
     <View style={styles.container}>
       <View style={styles.voteCount}>
-        <Text>{nbVotes}</Text>
+        <Text style={styles.text}>{nbVotes}</Text>
       </View>
       <View
         style={[
@@ -167,7 +167,7 @@ const Vote = () => {
     return;
   }
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.background}>
       <ScrollView contentContainerStyle={styles.mainView}>
         {game.state === StateGame.NIGHT && currentPlayer.role !== Role.WOLF && (
           <Text>Can't vote at night. Come back in the morning!</Text>
@@ -192,12 +192,21 @@ const Vote = () => {
   );
 };
 const styles = StyleSheet.create({
+  background: {
+    backgroundColor: "#141313",
+    height: "100%",
+  },
   mainView: {
     flexDirection: "column",
     justifyContent: "center",
-    gap: 5,
+    position: "relative",
+    borderWidth: 2,
+    borderBottomWidth: 0,
+    borderColor: "#C38100",
+    backgroundColor: "#141313",
   },
   text: {
+    color: "#C38100",
     fontWeight: "bold",
     textAlign: "center",
   },
@@ -214,7 +223,11 @@ const styles = StyleSheet.create({
     flexWrap: "nowrap",
     // width: "80%",
     // left: "10%",
-    height: "18vh",
+    height: "10vh",
+    borderBottomWidth: 2,
+    borderColor: "transparent",
+    borderStyle: "solid",
+    borderBottomColor: "#C38100",
     overflow: "hidden",
     // borderRadius: 25,
   },
@@ -230,21 +243,26 @@ const styles = StyleSheet.create({
     position: "relative",
     display: "flex",
     justifyContent: "center",
+    borderWidth: 2,
+    borderStyle: "solid",
+    borderColor: "transparent",
     // backgroundColor: "red",
-    height: "clamp(3em, 100%, 8em)",
+    height: "100%",
     paddingHorizontal: "1.5em",
     width: "8%",
   },
   buttonView: {
     flexGrow: 1,
-    borderWidth: 5,
+    flexShrink: 1,
+    borderLeftWidth: 3,
+    borderRightWidth: 2,
     borderStyle: "solid",
-    borderColor: "rgb(94, 54, 50)",
-    backgroundColor: "rgb(145, 79, 73)",
+    borderColor: "#C38100",
+    borderTopColor: "transparent",
     position: "relative",
     display: "flex",
     textAlign: "center",
-    height: "clamp(3em, 100%, 8em)",
+    height: "102%",
     justifyContent: "center",
   },
   deadPlayer: {
@@ -252,16 +270,15 @@ const styles = StyleSheet.create({
     backgroundColor: "gray",
   },
   selected: {
-    borderColor: "rgb(135, 113, 5)",
-    backgroundColor: "rgb(235, 212, 99)",
+    // borderColor: "rgb(135, 113, 5)",
+    // backgroundColor: "rgb(235, 212, 99)",
+    textDecorationLine: "underline",
+    textDecorationColor: "#C38100",
   },
   voteCount: {
-    borderWidth: 5,
-    borderStyle: "solid",
-    borderColor: "rgb(59, 54, 54)",
-    height: "clamp(3em, 100%, 8em)",
+    borderColor: "transparent",
+    height: "100%",
     aspectRatio: 1,
-    backgroundColor: "gray",
     display: "flex",
     justifyContent: "center",
     textAlign: "center",
