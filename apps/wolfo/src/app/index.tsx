@@ -1,12 +1,11 @@
 import { Button, Input, Tab, TabView, Text } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { ListGamesLobby, ListMyGames } from "../components/game/gameList";
 import useFont from "../utils/hooks/useFont";
 
 import { SafeAreaView } from "react-native-safe-area-context";
-import imageHome from "../../assets/images/menu_home.png";
 
 const Home = () => {
   const router = useRouter();
@@ -21,7 +20,7 @@ const Home = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.centeredView}>
-        <Image source={imageHome} style={styles.image} />
+        {/*<Image source={imageHome} style={styles.image} />*/}
         <View style={styles.mainWrapper}>{""}</View>
         <Text style={styles.h2}>Home</Text>
         <Button
