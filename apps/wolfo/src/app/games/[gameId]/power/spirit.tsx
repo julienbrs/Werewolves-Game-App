@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
     fontFamily: "MontserratBold",
   },
   wrapperTitle: {
-    width: "80%",
+    width: "85%",
     alignItems: "center",
     marginBottom: "15%",
     borderColor: "#C38100",
@@ -273,10 +273,10 @@ const styles = StyleSheet.create({
     color: "#141313",
   },
   icon: {
-    width: 24,
-    height: 24,
-    marginBottom: 8,
-    marginTop: 20,
+    width: 20,
+    height: 20,
+    marginBottom: 7,
+    marginTop: 18,
   },
 });
 
