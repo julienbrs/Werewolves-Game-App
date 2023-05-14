@@ -4,11 +4,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ApplicationProvider } from "@ui-kitten/components";
 import { Stack, useRouter } from "expo-router";
 import React from "react";
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Image, Platform, StyleSheet, TouchableOpacity, View } from "react-native";
 
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AuthProvider } from "../components/context/tokenContext";
 
+import { StatusBar } from "expo-status-bar";
 import BellIcon from "../../assets/UI/bell.png";
 import UserIcon from "../../assets/UI/min_player.png";
 
@@ -42,6 +43,7 @@ const HomeLayout = () => {
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <SafeAreaProvider>
+            <StatusBar style="light" />
             <View style={styles.background}>
               <Stack
                 screenOptions={{
@@ -107,7 +109,7 @@ const styles = StyleSheet.create({
   image: {
     width: 30,
     height: 30,
-    marginHorizontal: 30,
+    marginHorizontal: Platform.OS === "web" ? 30 : 0,
   },
 });
 

@@ -326,7 +326,7 @@
         "tags": [
           "User"
         ],
-        "summary": "delete himself",
+        "summary": "delete user by anonymizing him and making him dead in all games where he is alive",
         "description": "",
         "parameters": [
           {
@@ -339,7 +339,7 @@
         ],
         "responses": {
           "200": {
-            "description": "User Deleted",
+            "description": "User deleted",
             "content": {
               "application/json": {
                 "schema": {
@@ -347,7 +347,7 @@
                   "properties": {
                     "message": {
                       "type": "string",
-                      "example": "User Deleted"
+                      "example": "User deleted"
                     }
                   },
                   "required": [
@@ -364,7 +364,7 @@
                   "properties": {
                     "message": {
                       "type": "string",
-                      "example": "User Deleted"
+                      "example": "User deleted"
                     }
                   },
                   "required": [
@@ -378,7 +378,7 @@
             }
           },
           "400": {
-            "description": "User does not exist in database",
+            "description": "Error while deleting",
             "content": {
               "application/json": {
                 "schema": {
@@ -386,7 +386,7 @@
                   "properties": {
                     "message": {
                       "type": "string",
-                      "example": "User does not exist in database"
+                      "example": "Error while deleting"
                     }
                   },
                   "required": [
@@ -403,7 +403,7 @@
                   "properties": {
                     "message": {
                       "type": "string",
-                      "example": "User does not exist in database"
+                      "example": "Error while deleting"
                     }
                   },
                   "required": [
@@ -668,7 +668,47 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Games not joined",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "games": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Game"
+                      }
+                    }
+                  },
+                  "required": [
+                    "games"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "games": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Game"
+                      }
+                    }
+                  },
+                  "required": [
+                    "games"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Mauvaise Requête"
@@ -697,10 +737,80 @@
         ],
         "responses": {
           "201": {
-            "description": "Créé"
+            "description": "Game  ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "game": {
+                      "$ref": "#/components/schemas/Game"
+                    }
+                  },
+                  "required": [
+                    "game"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "game": {
+                      "$ref": "#/components/schemas/Game"
+                    }
+                  },
+                  "required": [
+                    "game"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Mauvaise Requête"
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -728,10 +838,86 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "My games",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "games": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Game"
+                      }
+                    }
+                  },
+                  "required": [
+                    "games"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "games": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Game"
+                      }
+                    }
+                  },
+                  "required": [
+                    "games"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Mauvaise Requête"
+            "description": "Mauvaise Requête",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -767,10 +953,90 @@
         ],
         "responses": {
           "201": {
-            "description": "Créé"
+            "description": "Game join",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Game join"
+                    },
+                    "player": {
+                      "$ref": "#/components/schemas/Player"
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "player"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Game join"
+                    },
+                    "player": {
+                      "$ref": "#/components/schemas/Player"
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "player"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Mauvaise Requête"
+            "description": "Mauvaise Requête",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -918,10 +1184,80 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Game found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "game": {
+                      "$ref": "#/components/schemas/Game"
+                    }
+                  },
+                  "required": [
+                    "game"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "game": {
+                      "$ref": "#/components/schemas/Game"
+                    }
+                  },
+                  "required": [
+                    "game"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           },
           "400": {
-            "description": "Mauvaise Requête"
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1501,10 +1837,22 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Player"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Player"
+                }
+              }
+            }
           },
           "404": {
-            "description": "Non Trouvé"
+            "description": "Players not found"
           }
         },
         "security": [
@@ -1541,10 +1889,22 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Player"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Player"
+                }
+              }
+            }
           },
           "404": {
-            "description": "Non Trouvé"
+            "description": "Player not found"
           }
         },
         "security": [
@@ -1579,7 +1939,19 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Player"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Player"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -1950,6 +2322,54 @@
             "description": "Mauvaise Requête"
           }
         }
+      }
+    },
+    "/api/games/{gameId}/players/{id}/elections/{electionId}/all": {
+      "post": {
+        "tags": [
+          "Vote"
+        ],
+        "summary": "Get all votes from an election",
+        "description": "",
+        "parameters": [
+          {
+            "name": "gameId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "electionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Mauvaise Requête"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     }
   },

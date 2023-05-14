@@ -1,11 +1,11 @@
 import { Button, Input, Tab, TabView, Text } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { ListGamesLobby, ListMyGames } from "../components/game/gameList";
 import useFont from "../utils/hooks/useFont";
 
-import imageHome from "../../assets/images/menu_home.png";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Home = () => {
   const router = useRouter();
@@ -18,69 +18,67 @@ const Home = () => {
   }
 
   return (
-    <>
-      <View style={styles.container}>
-        <View style={styles.centeredView}>
-          <Image source={imageHome} style={styles.image} />
-          <View style={styles.mainWrapper}>{""}</View>
-          <Text style={styles.h2}>Home</Text>
-          <Button
-            onPress={() => {}}
-            style={[styles.button, styles.rules]}
-            status="primary"
-            testID="rule-button"
+    <SafeAreaView style={styles.container}>
+      <View style={styles.centeredView}>
+        {/*<Image source={imageHome} style={styles.image} />*/}
+        <View style={styles.mainWrapper}>{""}</View>
+        <Text style={styles.h2}>Home</Text>
+        <Button
+          onPress={() => {}}
+          style={[styles.button, styles.rules]}
+          status="primary"
+          testID="rule-button"
+        >
+          {evaProps => (
+            <Text {...evaProps} style={styles.buttonText}>
+              Rules
+            </Text>
+          )}
+        </Button>
+        <Button
+          onPress={() => router.push("/games/new")}
+          style={styles.button}
+          status="primary"
+          testID="new-game-button"
+        >
+          {evaProps => (
+            <Text {...evaProps} style={styles.buttonText}>
+              New Game
+            </Text>
+          )}
+        </Button>
+        <Input
+          placeholder="Search a game"
+          onChangeText={setSearch}
+          value={search}
+          style={styles.searchInput}
+          testID="search-game-input"
+        />
+        <View style={styles.tabViewWrapper}>
+          <TabView
+            selectedIndex={tabIndex}
+            onSelect={index => {
+              if (isNaN(index)) {
+                return;
+              }
+              setTabIndex(index);
+            }}
+            style={styles.tabView}
           >
-            {evaProps => (
-              <Text {...evaProps} style={styles.buttonText}>
-                Rules
-              </Text>
-            )}
-          </Button>
-          <Button
-            onPress={() => router.push("/games/new")}
-            style={styles.button}
-            status="primary"
-            testID="new-game-button"
-          >
-            {evaProps => (
-              <Text {...evaProps} style={styles.buttonText}>
-                New Game
-              </Text>
-            )}
-          </Button>
-          <Input
-            placeholder="Rechercher une partie"
-            onChangeText={setSearch}
-            value={search}
-            style={styles.searchInput}
-            testID="search-game-input"
-          />
-          <View style={styles.tabViewWrapper}>
-            <TabView
-              selectedIndex={tabIndex}
-              onSelect={index => {
-                if (isNaN(index)) {
-                  return;
-                }
-                setTabIndex(index);
-              }}
-              style={styles.tabView}
-            >
-              <Tab title="Mes parties">
-                <View style={styles.tab}>
-                  <ListMyGames search={search} />
-                </View>
-              </Tab>
-              <Tab title="Parties à rejoindre">
-                <View style={styles.tab}>
-                  <ListGamesLobby search={search} />
-                </View>
-              </Tab>
-            </TabView>
-          </View>
+            <Tab title="Games joined">
+              <View style={styles.tab}>
+                <ListMyGames search={search} />
+              </View>
+            </Tab>
+            <Tab title="Games not joined">
+              <View style={styles.tab}>
+                <ListGamesLobby search={search} />
+              </View>
+            </Tab>
+          </TabView>
         </View>
       </View>
-    </>
+    </SafeAreaView>
   );
 };
 
@@ -98,6 +96,8 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    paddingTop: "5%",
+    paddingBottom: "10%",
   },
   searchInput: {
     width: "70%",

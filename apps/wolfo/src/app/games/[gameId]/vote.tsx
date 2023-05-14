@@ -178,6 +178,7 @@ const Vote = () => {
             (game.state === StateGame.DAY ||
               (currentPlayer.role === Role.WOLF && player.role !== Role.WOLF)) && (
               <Choice
+                key={player.userId}
                 choicePlayer={player}
                 currentPlayer={currentPlayer as Player}
                 nbVotes={votes[i].length}

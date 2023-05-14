@@ -25,13 +25,6 @@ describe("Scénario création de deux comptes avec meme nom", () => {
       token = response.body.token;
     });
   });
-  describe("GET /api/users/", () => {
-    test("Test number of users", async () => {
-      const response = await request.get("/api/users/");
-      expect(response.statusCode).toBe(200);
-      expect(response.body.length).toBe(2);
-    });
-  });
   describe("POST /api/users/ johndoe", () => {
     test("Test double account creation", async () => {
       const response = await request
@@ -47,12 +40,7 @@ describe("Scénario création de deux comptes avec meme nom", () => {
       .set("Authorization", `Bearer ${token}`)
       .set("Content-Type", "application/json");
     expect(response.statusCode).toBe(200);
-    expect(response.body.message).toBe("User Deleted");
-  });
-  test("Re-test number of users after delete", async () => {
-    const response = await request.get("/api/users/");
-    expect(response.statusCode).toBe(200);
-    expect(response.body.length).toBe(1);
+    expect(response.body.message).toBe("User deleted");
   });
 });
 
@@ -135,7 +123,7 @@ describe("scénario création de compte -> update d'un autre compte avec meme no
         .set("Authorization", `Bearer ${token}`)
         .set("Content-Type", "application/json");
       expect(response.statusCode).toBe(200);
-      expect(response.body.message).toBe("User Deleted");
+      expect(response.body.message).toBe("User deleted");
     });
   });
 });
@@ -151,7 +139,7 @@ describe("POST /api/users/login", () => {
   });
 });
 
-describe("POST /api/users/login", () => {
+describe("POST /api/users/login 1", () => {
   test("login wrong password", async () => {
     const response = await request
       .post("/api/users/login")
@@ -162,7 +150,7 @@ describe("POST /api/users/login", () => {
   });
 });
 
-describe("POST /api/users/login", () => {
+describe("POST /api/users/login 2", () => {
   test("We reset the token to the right one (userone)", async () => {
     const response = await request
       .post("/api/users/login")
@@ -192,5 +180,5 @@ afterAll(async () => {
     .set("Authorization", `Bearer ${token}`)
     .set("Content-Type", "application/json");
   expect(response.statusCode).toBe(200);
-  expect(response.body.message).toBe("User Deleted");
+  expect(response.body.message).toBe("User deleted");
 });

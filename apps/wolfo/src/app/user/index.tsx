@@ -2,15 +2,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button, Input, Text } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
 import React, { useContext, useState } from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Error, User } from "types";
 import { AuthContext } from "../../components/context/tokenContext";
 import { ModalConfirmChoice } from "../../components/modals/modalConfirm";
 import { setTokenApi } from "../../utils/api/api";
 import { deleteUser, updateUser } from "../../utils/api/user";
-
-import sunSeer from "../../../assets/images/sun_asset.png";
 
 const Settings = () => {
   const { name: defaultName, id, handleSetToken } = useContext(AuthContext);
@@ -118,8 +116,6 @@ const Settings = () => {
           )}
         </Button>
 
-        <Image source={sunSeer} style={styles.image} />
-
         {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
       </View>
       <ModalConfirmChoice
@@ -143,7 +139,6 @@ const Settings = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: "column",
     backgroundColor: "#141313",
     alignItems: "center",
@@ -152,12 +147,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     width: "70%",
-    paddingTop: "10%",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 20,
+    paddingTop: "5%",
+    paddingBottom: "5%",
   },
   button: {
     width: "100%",
@@ -176,8 +167,8 @@ const styles = StyleSheet.create({
   },
   modifyButton: {
     marginBottom: "10%",
-    backgroundColor: "#FFBCB5",
-    borderColor: "#FFBCB5",
+    backgroundColor: "#141313",
+    borderColor: "#C38100",
   },
   wrapperTitle: {
     display: "flex",
@@ -207,9 +198,11 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 17,
-    // fontWeight: "bold",
     fontFamily: "MontserratBold",
     color: "#141313",
+  },
+  modifyText: {
+    color: "#C38100",
   },
   errorText: {
     fontSize: 17,
