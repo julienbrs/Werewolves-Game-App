@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingTop: "5%",
-    paddingBottom: "10%",
+    paddingBottom: "2%",
   },
   searchInput: {
     width: "70%",
@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
     borderRadius: 0,
   },
   tab: {
+    maxHeight: 200,
     borderBottomLeftRadius: 16,
     borderBottomRightRadius: 16,
     overflow: "hidden",
