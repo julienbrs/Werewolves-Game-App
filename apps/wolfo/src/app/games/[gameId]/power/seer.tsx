@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Text } from "@ui-kitten/components";
 import { useRouter, useSearchParams } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, Player } from "types";
 import Loading from "../../../../components/loading";
@@ -72,49 +72,51 @@ const SeerView = () => {
 
   return (
     <SafeAreaView style={styles.background}>
-      <View style={styles.centeredView}>
-        <View style={styles.wrapper}>
-          <Text style={styles.title}>Seer Power</Text>
-        </View>
+      <ScrollView>
+        <View style={styles.centeredView}>
+          <View style={styles.wrapper}>
+            <Text style={styles.title}>Seer Power</Text>
+          </View>
 
-        <View style={styles.wrapperTitle}>
-          <Text style={[styles.text]}>
-            Powers of the Seer allows them to delve into the secrets of the night, gazing into the
-            abyss to uncover the true nature of a chosen player.
-          </Text>
-        </View>
-
-        <View style={styles.mainWrapper}>
-          <Text style={styles.h2}>Unveil the hidden truth.</Text>
-          {game.players &&
-            game.players
-              .filter((player: Player) => player.userId !== userId)
-              .map((player: Player) => (
-                <Button
-                  key={player.userId}
-                  onPress={() => handlePlayerClick(player)}
-                  disabled={isButtonDisabled}
-                  style={styles.playerButton}
-                >
-                  {evaProps => (
-                    <Text {...evaProps} style={styles.buttonText}>
-                      {player.user?.name}
-                    </Text>
-                  )}
-                </Button>
-              ))}
-          <Text style={styles.smallText}>Selected player:</Text>
-          {selectedPlayer ? (
-            <Text style={styles.textPlayer}>
-              {`${selectedPlayer.user?.name} is a `}
-              {selectedPlayer.role !== undefined ? selectedPlayer.role : ""}
-              {selectedPlayer.power !== "NONE" ? `, ${selectedPlayer.power}` : ""}
+          <View style={styles.wrapperTitle}>
+            <Text style={[styles.text]}>
+              Powers of the Seer allows them to delve into the secrets of the night, gazing into the
+              abyss to uncover the true nature of a chosen player.
             </Text>
-          ) : (
-            <Text style={styles.textPlayer}>No player selected</Text>
-          )}
+          </View>
+
+          <View style={styles.mainWrapper}>
+            <Text style={styles.h2}>Unveil the truth</Text>
+            {game.players &&
+              game.players
+                .filter((player: Player) => player.userId !== userId)
+                .map((player: Player) => (
+                  <Button
+                    key={player.userId}
+                    onPress={() => handlePlayerClick(player)}
+                    disabled={isButtonDisabled}
+                    style={styles.playerButton}
+                  >
+                    {evaProps => (
+                      <Text {...evaProps} style={styles.buttonText}>
+                        {player.user?.name}
+                      </Text>
+                    )}
+                  </Button>
+                ))}
+            <Text style={styles.smallText}>Selected player:</Text>
+            {selectedPlayer ? (
+              <Text style={styles.textPlayer}>
+                {`${selectedPlayer.user?.name} is a `}
+                {selectedPlayer.role !== undefined ? selectedPlayer.role : ""}
+                {selectedPlayer.power !== "NONE" ? `, ${selectedPlayer.power}` : ""}
+              </Text>
+            ) : (
+              <Text style={styles.textPlayer}>No player selected</Text>
+            )}
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -142,9 +144,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   playerButton: {
-    width: "70%",
+    width: 150,
     alignSelf: "center",
-    borderRadius: 20,
+    borderRadius: 24,
     backgroundColor: "#C38100",
     marginBottom: 16,
   },
@@ -174,6 +176,7 @@ const styles = StyleSheet.create({
   h2: {
     backgroundColor: "#141313",
     fontFamily: "Voyage",
+    paddingHorizontal: 5,
     fontSize: 37,
     color: "#C38100",
     marginTop: -50,

@@ -1,3 +1,4 @@
+import { FontAwesome5 } from "@expo/vector-icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button, Input, Text } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
@@ -8,7 +9,6 @@ import { Error, NewUser } from "types";
 import { setTokenApi } from "../../utils/api/api";
 import { login } from "../../utils/api/user";
 import { AuthContext } from "../context/tokenContext";
-import { FontAwesome5 } from "@expo/vector-icons";
 
 export const Login = () => {
   const router = useRouter();
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 30,
-    borderRadius: 20,
+    borderRadius: 24,
   },
   username: {
     borderTopEndRadius: 2,
