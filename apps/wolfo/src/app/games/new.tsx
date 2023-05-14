@@ -148,6 +148,10 @@ const NewGame = () => {
         {/* Page de création de la partie */}
         <Layout level="1" style={[styles.container]}>
           <View style={styles.viewWrapper}>
+            <View style={styles.wrapperTitle}>
+              <View style={styles.line}>{""}</View>
+              <Text style={styles.h2}>New Game</Text>
+            </View>
             <View style={styles.wrapperSelect}>
               <View style={styles.wrapperImageText}>
                 <View style={styles.imageWrapper}>
@@ -454,6 +458,13 @@ const styles = StyleSheet.create({
     flex: 1,
     height: "100%",
   },
+  wrapperTitle: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: "10%",
+  },
   viewWrapper: {
     display: "flex",
     flexDirection: "column",
@@ -553,6 +564,21 @@ const styles = StyleSheet.create({
   imageBackground: {
     flex: 1,
     resizeMode: "cover",
+  },
+  line: {
+    borderColor: "#C38100",
+    borderWidth: 1,
+    width: "80%",
+  },
+  h2: {
+    backgroundColor: "#141313",
+    fontFamily: "Voyage",
+    fontSize: 37,
+    color: "#C38100",
+    zIndex: 1,
+    marginTop: -30,
+    paddingHorizontal: 10,
+    marginBottom: 50,
   },
 });
 
