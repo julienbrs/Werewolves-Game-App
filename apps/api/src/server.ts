@@ -30,23 +30,6 @@ io.on("connection", (socket: Socket) => {
     console.log("user disconnected");
   });
 
-  /* export type Message = {
-  id: number;
-  chatRoomId: number;
-  content: string;
-  authorId: string;
-  gameId: number;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-export type NewMessage = {
-  chatRoomId: number;
-  content: string;
-  authorId: string;
-  gameId: number;
-}; */
-
   socket.on("messagePosted", async (args: [NewMessage, boolean]) => {
     const [message, gotPermission] = args;
     if (!gotPermission) {
@@ -82,6 +65,7 @@ export type NewMessage = {
         },
       });
 
+      console.log("args of messagePosted:", [messageObj, author]);
       io.to(`chatRoom-${message.chatRoomId}`).emit("newMessage", [messageObj, author]);
     } catch (error) {
       console.error("Error creating and sending message:", error);
