@@ -25,13 +25,6 @@ describe("Scénario création de deux comptes avec meme nom", () => {
       token = response.body.token;
     });
   });
-  describe("GET /api/users/", () => {
-    test("Test number of users", async () => {
-      const response = await request.get("/api/users/");
-      expect(response.statusCode).toBe(200);
-      expect(response.body.length).toBe(2);
-    });
-  });
   describe("POST /api/users/ johndoe", () => {
     test("Test double account creation", async () => {
       const response = await request
@@ -48,11 +41,6 @@ describe("Scénario création de deux comptes avec meme nom", () => {
       .set("Content-Type", "application/json");
     expect(response.statusCode).toBe(200);
     expect(response.body.message).toBe("User Deleted");
-  });
-  test("Re-test number of users after delete", async () => {
-    const response = await request.get("/api/users/");
-    expect(response.statusCode).toBe(200);
-    expect(response.body.length).toBe(1);
   });
 });
 

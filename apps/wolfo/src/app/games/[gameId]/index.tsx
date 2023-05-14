@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Button, Text } from "@ui-kitten/components";
 import { Stack, useRouter, useSearchParams } from "expo-router";
 import { useContext, useState } from "react";
-import React, { Image, Modal, ScrollView, StyleSheet, View } from "react-native";
+import React, { Image, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, Player, Power, Role, StateGame } from "types";
 import { AuthContext } from "../../../components/context/tokenContext";
@@ -22,6 +22,7 @@ import aliveIcon from "../../../../assets/UI/alive.png";
 import dayIcon from "../../../../assets/UI/day.png";
 import deadIcon from "../../../../assets/UI/dead.png";
 import nightIcon from "../../../../assets/UI/night.png";
+import ModalPlayers from "../../../components/modals/modalPlayers";
 
 const powerIcons = {
   INSOMNIAC: eyeIcon,
@@ -192,48 +193,7 @@ const GameView = () => {
             </Button>
           </View>
 
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              setModalVisible(!modalVisible);
-            }}
-          >
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                <Text style={styles.modalTitle}>{game.players.length} players in game</Text>
-                <View style={styles.iconWrapper}>
-                  <Image source={aliveIcon} style={styles.icon} />
-                  <Text style={styles.text}>Alive players :</Text>
-                </View>
-                <Text style={styles.modalText}>
-                  {game.players
-                    .filter((p: Player) => p.state === "ALIVE")
-                    .map((p: Player) => p.user?.name)
-                    .join(", ")}
-                </Text>
-                <View style={styles.iconWrapper}>
-                  <Image source={deadIcon} style={styles.icon} />
-                  <Text style={styles.text}>Dead players :</Text>
-                </View>
-                <Text style={styles.modalText}>
-                  {game.players
-                    .filter((p: Player) => p.state === "DEAD")
-                    .map((p: Player) => p.user?.name)
-                    .join(", ")}
-                </Text>
-
-                <Button onPress={() => setModalVisible(!modalVisible)}>
-                  {evaProps => (
-                    <Text {...evaProps} style={styles.smallText}>
-                      Close
-                    </Text>
-                  )}
-                </Button>
-              </View>
-            </View>
-          </Modal>
+          <ModalPlayers game={game} modalVisible={modalVisible} setModalVisible={setModalVisible} />
 
           <View style={styles.wrapper}>
             <Button
@@ -285,7 +245,7 @@ const GameView = () => {
   );
 };
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
