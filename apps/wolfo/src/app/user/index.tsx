@@ -182,8 +182,8 @@ const styles = StyleSheet.create({
   },
   line: {
     borderColor: "#C38100",
-    borderWidth: 1,
-    width: "150%",
+    borderBottomWidth: 2,
+    width: "280%",
   },
   image: {
     width: 200,
