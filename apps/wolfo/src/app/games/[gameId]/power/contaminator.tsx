@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Text } from "@ui-kitten/components";
 import { useRouter, useSearchParams } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, Player } from "types";
 
@@ -85,48 +85,52 @@ const ContaminatorView = () => {
 
   return (
     <SafeAreaView style={styles.background}>
-      <View style={styles.centeredView}>
-        <View style={styles.wrapper}>
-          <Text style={styles.title}>Contaminator Power</Text>
-        </View>
-        <View style={styles.wrapperTitle}>
-          <Text style={[styles.text]}>
-            The Contaminator possesses a sinister ability to corrupt the innocent villagers, turning
-            them into bloodthirsty wolves. With a touch of darkness, they sow the seeds of
-            transformation, infecting the unsuspecting and plunging them into the depths of the
-            wolf's realm.
-          </Text>
-        </View>
-
-        <View style={styles.mainWrapper}>
-          <Text style={styles.h2}>Unleash the blight.</Text>
-          {game?.players &&
-            game.players
-              .filter((player: Player) => player.role === "VILLAGER")
-              .map((player: Player) => (
-                <Button
-                  key={player.userId}
-                  onPress={async () => {
-                    handlePlayerClick(player);
-                  }}
-                  style={styles.playerButton}
-                  disabled={isButtonDisabled}
-                >
-                  {player.user?.name}
-                </Button>
-              ))}
-
-          <Text style={styles.smallText}>Selected player:</Text>
-          {selectedPlayer ? (
-            <Text style={styles.textPlayer}>
-              {selectedPlayer.user?.name!}
-              {` is now a wolf...`}
+      <ScrollView>
+        <View style={styles.centeredView}>
+          <View style={styles.wrapper}>
+            <Text style={styles.title}>Contaminator Power</Text>
+          </View>
+          <View style={styles.wrapperTitle}>
+            <Text style={[styles.text]}>
+              The Contaminator possesses a sinister ability to corrupt the innocent villagers,
+              turning them into bloodthirsty wolves
             </Text>
-          ) : (
-            <Text style={styles.textPlayer}>No player selected</Text>
-          )}
+          </View>
+
+          <View style={styles.mainWrapper}>
+            <Text style={styles.h2}>Unleash viruses</Text>
+            {game?.players &&
+              game.players
+                .filter((player: Player) => player.role === "VILLAGER")
+                .map((player: Player) => (
+                  <Button
+                    key={player.userId}
+                    onPress={async () => {
+                      handlePlayerClick(player);
+                    }}
+                    style={styles.playerButton}
+                    disabled={isButtonDisabled}
+                  >
+                    {evaProps => (
+                      <Text {...evaProps} style={styles.buttonText}>
+                        {player.user?.name}
+                      </Text>
+                    )}
+                  </Button>
+                ))}
+
+            <Text style={styles.smallText}>Selected player:</Text>
+            {selectedPlayer ? (
+              <Text style={styles.textPlayer}>
+                {selectedPlayer.user?.name!}
+                {` is now a wolf...`}
+              </Text>
+            ) : (
+              <Text style={styles.textPlayer}>No player selected</Text>
+            )}
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -139,11 +143,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#141313",
   },
   playerButton: {
-    width: "70%",
+    width: 150,
     alignSelf: "center",
     borderRadius: 24,
     backgroundColor: "#C38100",
     marginBottom: 16,
+  },
+  buttonText: {
+    fontSize: 15,
+    color: "#141313",
+    fontFamily: "MontserratBold",
   },
   smallText: {
     fontSize: 14,
@@ -162,7 +171,7 @@ const styles = StyleSheet.create({
   title: {
     marginBottom: "10%",
     fontFamily: "Voyage",
-    fontSize: 45,
+    fontSize: 40,
     color: "#C38100",
   },
   wrapper: {
@@ -176,6 +185,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    marginBottom: "5%",
   },
   text: {
     fontSize: 14,
