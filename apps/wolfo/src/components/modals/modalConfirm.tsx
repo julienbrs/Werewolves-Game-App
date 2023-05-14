@@ -28,6 +28,7 @@ export const ModalConfirmChoice = ({
               confirmFunction();
             }}
             style={styles.button}
+            testID="modal-confirm"
           >
             {evaProps => (
               <Text {...evaProps} style={[styles.buttonText, styles.confirmText]}>
@@ -38,6 +39,7 @@ export const ModalConfirmChoice = ({
           <Button
             onPress={() => setVisible(false)}
             style={{ ...styles.button, ...styles.cancelButton }}
+            testID="modal-cancel"
           >
             {evaProps => (
               <Text {...evaProps} style={[styles.buttonText, styles.cancelText]}>
