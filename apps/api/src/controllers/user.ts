@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import { Player, StatePlayer } from "database";
 import { Request, Response } from "express";
 import prisma from "../prisma";
 import { SECRET } from "../utils/env";
@@ -144,26 +145,50 @@ const userController = {
   },
   async deleteUser(req: Request, res: Response) {
     // #swagger.tags = ['User']
-    // #swagger.summary = 'delete himself'
+    // #swagger.summary = 'delete user by anonymizing him and making him dead in all games where he is alive'
     // #swagger.security = [{'bearerAuth': [] }]
-
     const token = req.headers.authorization?.split(" ")[1];
     const decodedToken = jwt.verify(token, SECRET);
     const id = decodedToken.id;
-    prisma.user
-      .delete({
-        where: {
-          id,
-        },
-      })
-      .then(() => {
-        // #swagger.responses[200] = { description: "User Deleted", schema: { $message: "User Deleted" } }
-        res.json({ message: "User Deleted" });
+
+    await prisma
+      .$transaction(async transaction => {
+        const players = await transaction.player.findMany({
+          where: {
+            userId: id,
+          },
+        });
+        const playersTransaction = players
+          .filter((player: Player) => player.state === StatePlayer.ALIVE)
+          .map((player: Player) => {
+            transaction.player.update({
+              where: {
+                userId_gameId: { userId: player.userId, gameId: player.gameId },
+              },
+              data: {
+                state: StatePlayer.DEAD,
+              },
+            });
+          });
+        await Promise.all(playersTransaction);
+        await transaction.user.update({
+          where: {
+            id,
+          },
+          data: {
+            name: "deleted user",
+            password: "deleted user",
+          },
+        });
       })
       .catch(error => {
         console.log(error);
-        // #swagger.responses[400] = { description: "User does not exist in database", schema: { $message: "User does not exist in database" } }
-        res.status(400).json({ message: "User does not exist in database" });
+        // #swagger.responses[400] = { description: "Error while deleting", schema: { $message: "Error while deleting" } }
+        res.status(400).json(error);
+      })
+      .then(() => {
+        // #swagger.responses[200] = { description: "User deleted", schema: { $message: "User deleted" } }
+        res.json({ message: "User deleted" });
       });
   },
 };
