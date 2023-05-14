@@ -21,7 +21,9 @@ const Home = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.centeredView}>
         {/*<Image source={imageHome} style={styles.image} />*/}
-        <View style={styles.mainWrapper}>{""}</View>
+        <View style={styles.mainWrapper}>
+          <Text>{""}</Text>
+        </View>
         <Text style={styles.h2}>Home</Text>
         <Button
           onPress={() => {}}
