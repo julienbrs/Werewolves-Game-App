@@ -13,6 +13,7 @@ import { deleteUser, updateUser } from "../../utils/api/user";
 const Settings = () => {
   const { name: defaultName, id, handleSetToken } = useContext(AuthContext);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [isError, setIsError] = useState<boolean>(false);
   const [name, setName] = useState<string>(defaultName);
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -48,6 +49,7 @@ const Settings = () => {
   };
   const handleModify = async () => {
     if (password !== confirmPassword) {
+      setIsError(true);
       setErrorMessage("Passwords don't match");
       return;
     }
@@ -59,7 +61,9 @@ const Settings = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.centeredView}>
         <View style={styles.wrapperTitle}>
-          <View style={styles.line} />
+          <View style={styles.line}>
+            <Text>{""}</Text>
+          </View>
           <Text style={styles.h2}>Settings</Text>
           <Text style={styles.textName}>{name}</Text>
         </View>
@@ -116,7 +120,7 @@ const Settings = () => {
           )}
         </Button>
 
-        {errorMessage && <Text style={styles.errorText}>{errorMessage}</Text>}
+        {isError && <Text style={styles.errorText}>{errorMessage}</Text>}
       </View>
       <ModalConfirmChoice
         title="Confirm modification"
