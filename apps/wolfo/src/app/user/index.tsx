@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   button: {
     width: "100%",
     marginVertical: 10,
-    borderRadius: 20,
+    borderRadius: 24,
     boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.15)",
   },
   logout: {
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
   input: {
     width: "100%",
     marginVertical: 5,
-    borderRadius: 20,
+    borderRadius: 24,
     boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.15)",
   },
   modifyButton: {

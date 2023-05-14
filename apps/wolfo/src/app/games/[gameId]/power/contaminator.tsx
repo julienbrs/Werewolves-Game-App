@@ -2,8 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Text } from "@ui-kitten/components";
 import { useRouter, useSearchParams } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet } from "react-native";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, Player } from "types";
 
@@ -142,7 +141,7 @@ const styles = StyleSheet.create({
   playerButton: {
     width: "70%",
     alignSelf: "center",
-    borderRadius: 20,
+    borderRadius: 24,
     backgroundColor: "#C38100",
     marginBottom: 16,
   },

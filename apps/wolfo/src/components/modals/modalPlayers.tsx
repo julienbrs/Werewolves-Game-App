@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#141313",
     borderColor: "#C38100",
     borderWidth: 2,
-    borderRadius: 20,
+    borderRadius: 24,
     paddingHorizontal: 35,
     paddingVertical: 20,
     alignItems: "center",

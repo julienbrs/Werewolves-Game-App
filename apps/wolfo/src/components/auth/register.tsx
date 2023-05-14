@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 30,
-    borderRadius: 20,
+    borderRadius: 24,
   },
   username: {
     borderTopEndRadius: 2,
