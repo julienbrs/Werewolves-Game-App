@@ -2,14 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, Text } from "@ui-kitten/components";
 import { Stack, useRouter, useSearchParams } from "expo-router";
 import { default as React, useContext, useEffect, useState } from "react";
-import {
-  Button,
-  ImageBackground,
-  KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
-  View,
-} from "react-native";
+import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
 import { Day, GiftedChat, IMessage, InputToolbar } from "react-native-gifted-chat";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import io, { Socket } from "socket.io-client";
@@ -22,18 +15,17 @@ const IP = process.env.IP || "localhost";
 const PORT = process.env.PORT || 3000;
 const socketEndpoint = `http://${IP}:${PORT}`;
 
-import { default as imgChatroomDay } from "../../../../../assets/chatroom_day.png";
-import imgChatroomInsomniac from "../../../../../assets/chatroom_insomniac.png";
-import imgChatroomNight from "../../../../../assets/chatroom_night.png";
-import imgChatroomSpirit from "../../../../../assets/chatroom_spirit.png";
 import { AuthContext } from "../../../../components/context/tokenContext";
+import useFont from "../../../../utils/hooks/useFont";
 
 const ChatRoomView = () => {
   //console.log(usePathname());
   const [messagesList, setMessagesList] = useState<IMessage[]>([]);
-  const [imageBackground, setImgBackground] = useState(imgChatroomDay);
+  // const [imageBackground, setImgBackground] = useState(imgChatroomDay);
   const { chat, gameId } = useSearchParams();
   const { id: userId } = useContext(AuthContext);
+  const fontsLoaded = useFont();
+
   const [textReason, setTextReason] = useState<string>("");
 
   const router = useRouter();
@@ -74,23 +66,23 @@ const ChatRoomView = () => {
     const setUpAssets = () => {
       if (player?.power === "INSOMNIAC") {
         if (player?.usedPower === true) {
-          setImgBackground(imgChatroomInsomniac);
+          // setImgBackground(imgChatroomInsomniac);
         } else {
           setTextReason("You can use your power to spy werewolves, go to power menu.");
         }
       } else if (player?.power === "SPIRIT" && game?.spiritChatRoomId === Number(chat)) {
-        setImgBackground(imgChatroomSpirit);
+        // setImgBackground(imgChatroomSpirit);
       } else if (game?.state === "NIGHT") {
-        setImgBackground(imgChatroomNight);
+        // setImgBackground(imgChatroomNight);
         if (player?.role === "VILLAGER") {
           setTextReason("You are a villager. You can't see anything at night.");
         }
       } else {
-        setImgBackground(imgChatroomDay);
+        // setImgBackground(imgChatroomDay);
       }
     };
 
-    if (!chat) {
+    if (!chat || !fontsLoaded) {
       return;
     }
 
@@ -98,24 +90,17 @@ const ChatRoomView = () => {
       if (data?.read === true) {
         try {
           const messages: Message[] = await getMessages(Number(chat));
-          const convertedMessages: any = messages.map(
-            (msg: {
-              id: any;
-              content: any;
-              createdAt: string | number | Date;
-              authorId: string;
-              author: { user: { name: any } };
-            }) => ({
-              _id: msg.id,
-              text: msg.content,
-              createdAt: new Date(msg.createdAt),
-              authorId: msg.authorId,
-              user: {
-                _id: msg.authorId,
-                name: msg.author.user.name,
-              },
-            })
-          );
+          const convertedMessages: any = messages.map((msg: Message) => ({
+            _id: msg.id,
+            text: msg.content,
+            createdAt: new Date(msg.createdAt),
+            authorId: msg.authorId,
+            user: {
+              _id: msg.authorId,
+              name: msg.author?.user?.name,
+            },
+          }));
+
           setMessagesList(convertedMessages.reverse());
         } catch (error) {
           console.error("Error fetching messages:", error);
@@ -161,7 +146,7 @@ const ChatRoomView = () => {
         socket.disconnect();
       };
     }
-  }, [chat, userId, socket, data, game, player]);
+  }, [chat, userId, socket, data, game, player, fontsLoaded]);
 
   const onSend = (msgList: IMessage[] = []) => {
     console.log("in onsend, we got: data", data);
@@ -198,56 +183,47 @@ const ChatRoomView = () => {
   };
 
   return (
-    <SafeAreaProvider>
-      <ImageBackground source={imageBackground} style={styles.imageBackground}>
-        <Stack.Screen
-          options={{
-            title: `Chatroom day/night (à changer)`,
-            headerRight: () => null,
-          }}
-        />
-        <Button
-          onPress={() => {
-            console.log("data:", data);
-          }}
-          title="permissions"
-        />
-
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.keyboard}
-        >
-          {data.read === true ? (
-            <GiftedChat
-              messages={messagesList}
-              onSend={messages => onSend(messages)}
-              user={{ _id: String(userId) }}
-              renderUsernameOnMessage={true}
-              renderDay={renderDay}
-              renderInputToolbar={props => renderInputToolbar(props)}
-            />
-          ) : (
-            <View style={styles.centeredContainer}>
-              <Card style={styles.cardReason}>
-                <Text style={styles.cardText}>{textReason}</Text>{" "}
-              </Card>
-            </View>
-          )}
-        </KeyboardAvoidingView>
-      </ImageBackground>
+    <SafeAreaProvider style={styles.container}>
+      <Stack.Screen
+        options={{
+          title: `Chatroom day/night (à changer)`,
+          headerRight: () => null,
+        }}
+      />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.keyboard}
+      >
+        {data.read === true ? (
+          <GiftedChat
+            messages={messagesList}
+            onSend={messages => onSend(messages)}
+            user={{ _id: String(userId) }}
+            renderUsernameOnMessage={true}
+            renderDay={renderDay}
+            renderInputToolbar={props => renderInputToolbar(props)}
+          />
+        ) : (
+          <View style={styles.centeredContainer}>
+            <Card style={styles.cardReason}>
+              <Text style={styles.cardText}>{textReason}</Text>{" "}
+            </Card>
+          </View>
+        )}
+      </KeyboardAvoidingView>
     </SafeAreaProvider>
   );
 };
 
 const styles = StyleSheet.create({
-  imageBackground: {
+  container: {
     flex: 1,
-    resizeMode: "cover",
+    backgroundColor: "#141313",
   },
   title: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "black",
+    color: "white",
   },
   centeredContainer: {
     flex: 1,

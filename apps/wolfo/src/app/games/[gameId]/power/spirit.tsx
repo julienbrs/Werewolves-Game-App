@@ -13,9 +13,12 @@ import { getPlayer, updatePlayer } from "../../../../utils/api/player";
 
 import dayIcon from "../../../../../assets/UI/day.png";
 import nightIcon from "../../../../../assets/UI/night.png";
+import useFont from "../../../../utils/hooks/useFont";
 
 const SpiritView = () => {
   const router = useRouter();
+  const fontsLoaded = useFont();
+
   const { gameId } = useSearchParams();
   const { id: userId } = useContext(AuthContext);
   const queryClient = useQueryClient();
@@ -62,6 +65,10 @@ const SpiritView = () => {
   useEffect(() => {
     setUsedPower(currentPlayer!.usedPower);
   }, [currentPlayer]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   const handlePlayerClick = async (player: Player) => {
     setSelectedDeadPlayer(player);

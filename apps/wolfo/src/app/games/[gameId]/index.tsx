@@ -12,6 +12,8 @@ import { getGame } from "../../../utils/api/game";
 import { getPlayer } from "../../../utils/api/player";
 import useFont from "../../../utils/hooks/useFont";
 
+import villagerIcon from "../../../../assets/Player/villager.png";
+import wolfIcon from "../../../../assets/Player/wolf.png";
 import contaminatorIcon from "../../../../assets/Powers/contaminator.png";
 import eyeIcon from "../../../../assets/Powers/eye.png";
 import seerIcon from "../../../../assets/Powers/seer.png";
@@ -136,14 +138,20 @@ const GameView = () => {
           style={styles.icon}
           resizeMode="contain"
         />
+        <Text style={styles.text}> {player.state === "ALIVE" ? "Alive" : "Dead"}</Text>
+        <Image
+          source={player.role === Role.VILLAGER ? villagerIcon : wolfIcon}
+          style={styles.icon}
+          resizeMode="contain"
+        />
         <Text style={styles.text}>{`You are a ${player.role}`}</Text>
         {player.power !== null && (
           <Image source={powerIcons[player.power!]} style={styles.icon} resizeMode="contain" />
         )}
 
-        {player.power !== null && (
+        {(player.power !== null && (
           <Text style={styles.text}>{`Your power is ${player.power}`}</Text>
-        )}
+        )) || <Text style={styles.text}>{`You don't have any power`}</Text>}
       </View>
       {/* display all informations on the game after fetching data from backend*/}
       <View style={styles.mainWrapper}>
