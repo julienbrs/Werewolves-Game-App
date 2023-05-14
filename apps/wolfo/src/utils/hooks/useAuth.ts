@@ -11,7 +11,6 @@ const useAuth = async (): Promise<string | null> => {
       token = await SecureStore.getItemAsync("token");
     }
   }
-  console.log("token", token);
   if (token !== null) {
     setTokenApi(token);
   }

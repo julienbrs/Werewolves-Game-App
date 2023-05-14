@@ -18,7 +18,7 @@ export const GameItemLobby = ({ game, handleFunction }: GameItemProps) => {
   return (
     <ListItem
       title={game.name}
-      description={"Début : " + parseDeadline(game.deadline, game.startDay)}
+      description={"Start : " + parseDeadline(game.deadline, game.startDay)}
       accessoryLeft={() => <FontAwesome name="hourglass-o" size={24} color="black" />}
       accessoryRight={() => {
         return (

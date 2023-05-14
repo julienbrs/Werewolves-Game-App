@@ -35,8 +35,7 @@ export const ListGamesLobby: React.FC<ListProps> = ({ search }) => {
   });
   const { mutate } = useMutation<any, Error, number>({
     mutationFn: (gameId: number) => joinGame(gameId),
-    onSuccess: data => {
-      console.log(data);
+    onSuccess: () => {
       refetch();
       queryClient.invalidateQueries(["mygames"]);
     },
@@ -59,6 +58,7 @@ export const ListGamesLobby: React.FC<ListProps> = ({ search }) => {
     <SafeAreaView>
       {games ? (
         <List
+          nestedScrollEnabled
           data={filteredGames}
           renderItem={listGame}
           ItemSeparatorComponent={Divider}
@@ -91,7 +91,6 @@ export const ListMyGames: React.FC<ListProps> = ({ search }) => {
 
   const toggleVisible = () => setVisible(!visible);
   const router = useRouter();
-  console.log(token);
   const {
     data: games,
     isLoading,
@@ -106,8 +105,7 @@ export const ListMyGames: React.FC<ListProps> = ({ search }) => {
   });
   const { mutate } = useMutation<any, Error, number>({
     mutationFn: (gameId: number) => leaveGame(gameId),
-    onSuccess: data => {
-      console.log(data);
+    onSuccess: () => {
       refetch();
       queryClient.invalidateQueries(["games"]);
     },
@@ -130,9 +128,10 @@ export const ListMyGames: React.FC<ListProps> = ({ search }) => {
     );
   };
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.listContainer}>
       {!isError && games.length !== 0 ? (
         <List
+          nestedScrollEnabled
           data={filteredGames}
           renderItem={listGame}
           ItemSeparatorComponent={Divider}
@@ -161,6 +160,10 @@ export const ListMyGames: React.FC<ListProps> = ({ search }) => {
 };
 
 const styles = StyleSheet.create({
+  scrollview: {},
+  listContainer: {
+    width: "100%",
+  },
   view: {
     borderRadius: 16,
   },

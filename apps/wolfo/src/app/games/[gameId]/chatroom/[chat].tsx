@@ -107,7 +107,6 @@ const ChatRoomView = () => {
         }
       } else {
         console.error("You don't have permission to view this chatroom");
-        router.back();
       }
     };
     setUpAssets();

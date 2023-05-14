@@ -139,7 +139,7 @@ describe("POST /api/users/login", () => {
   });
 });
 
-describe("POST /api/users/login", () => {
+describe("POST /api/users/login 1", () => {
   test("login wrong password", async () => {
     const response = await request
       .post("/api/users/login")
@@ -150,7 +150,7 @@ describe("POST /api/users/login", () => {
   });
 });
 
-describe("POST /api/users/login", () => {
+describe("POST /api/users/login 2", () => {
   test("We reset the token to the right one (userone)", async () => {
     const response = await request
       .post("/api/users/login")

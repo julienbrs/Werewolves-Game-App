@@ -1,10 +1,11 @@
 import { Button, Input, Tab, TabView, Text } from "@ui-kitten/components";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Image, ScrollView, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { ListGamesLobby, ListMyGames } from "../components/game/gameList";
 import useFont from "../utils/hooks/useFont";
 
+import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import imageHome from "../../assets/images/menu_home.png";
 
@@ -50,7 +51,7 @@ const Home = () => {
             )}
           </Button>
           <Input
-            placeholder="Rechercher une partie"
+            placeholder="Search a game"
             onChangeText={setSearch}
             value={search}
             style={styles.searchInput}
@@ -67,12 +68,12 @@ const Home = () => {
               }}
               style={styles.tabView}
             >
-              <Tab title="Mes parties">
+              <Tab title="Games joined">
                 <View style={styles.tab}>
                   <ListMyGames search={search} />
                 </View>
               </Tab>
-              <Tab title="Parties à rejoindre">
+              <Tab title="Games not joined">
                 <View style={styles.tab}>
                   <ListGamesLobby search={search} />
                 </View>
