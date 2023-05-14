@@ -54,9 +54,10 @@ const newPeriod = async (day: boolean, gameId: number) => {
       });
 
       // vire les gens de la spirit
-      if (game.spiritChatRoomId && day) {
+      if (game.spiritChatRoomId !== null && day) {
+        const spiritId = game.spiritChatRoomId;
         const spiritChat = await transaction.chatRoom.findUnique({
-          where: { id: game.spiritChatRoomId },
+          where: { id: spiritId },
           include: {
             writers: {
               select: {
@@ -71,19 +72,20 @@ const newPeriod = async (day: boolean, gameId: number) => {
             readers: true,
           },
         });
+        if (!spiritChat) throw new Error("Spirit chat not found");
         spiritChat?.writers
           .filter(writer => writer.player.power !== Power.SPIRIT)
           .map(writer => writer.playerId)
           .forEach(async playerId => {
             await transaction.chatRoom.update({
-              where: { id: game.spiritChatRoomId! },
+              where: { id: spiritId },
               data: {
                 writers: {
                   disconnect: {
                     playerId_gameId_chatRoomId: {
                       playerId,
                       gameId,
-                      chatRoomId: game.spiritChatRoomId!,
+                      chatRoomId: spiritId,
                     },
                   },
                 },
@@ -92,7 +94,7 @@ const newPeriod = async (day: boolean, gameId: number) => {
                     playerId_gameId_chatRoomId: {
                       playerId,
                       gameId,
-                      chatRoomId: game.spiritChatRoomId!,
+                      chatRoomId: spiritId,
                     },
                   },
                 },
