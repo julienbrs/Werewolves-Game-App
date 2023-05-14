@@ -120,7 +120,7 @@ const Settings = () => {
       </View>
       <ModalConfirmChoice
         title="Confirm modification"
-        description="Voulez vous modifier vos informations?"
+        description="Do you want to modify your information?"
         visible={visibleModify}
         setVisible={setVisibleModify}
         confirmFunction={handleModify}
@@ -128,7 +128,7 @@ const Settings = () => {
 
       <ModalConfirmChoice
         title="Delete your account"
-        description="Voulez vous supprimer votre compte?"
+        description="Do you wish to delete your account?"
         visible={visibleDelete}
         setVisible={setVisibleDelete}
         confirmFunction={deleteQuery}

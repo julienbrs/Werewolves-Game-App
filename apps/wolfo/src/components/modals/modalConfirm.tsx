@@ -21,18 +21,12 @@ export const ModalConfirmChoice = ({
       backdropStyle={styles.backdrop}
       visible={visible}
       onBackdropPress={() => setVisible(false)}
-      animationType="fade"
+      animationType="slide"
     >
-      <Card>
-        <Text>{title}</Text>
-        <Text>{description}</Text>
+      <Card style={styles.modalView}>
+        <Text style={styles.modalTitle}>{title}</Text>
+        <Text style={styles.modalText}>{description}</Text>
         <View style={styles.buttonContainer}>
-          <Button
-            onPress={() => setVisible(false)}
-            style={{ ...styles.button, ...styles.cancelButton }}
-          >
-            Cancel
-          </Button>
           <Button
             onPress={() => {
               setVisible(false);
@@ -40,7 +34,21 @@ export const ModalConfirmChoice = ({
             }}
             style={styles.button}
           >
-            Confirm
+            {evaProps => (
+              <Text {...evaProps} style={[styles.buttonText, styles.confirmText]}>
+                Confirm
+              </Text>
+            )}
+          </Button>
+          <Button
+            onPress={() => setVisible(false)}
+            style={{ ...styles.button, ...styles.cancelButton }}
+          >
+            {evaProps => (
+              <Text {...evaProps} style={[styles.buttonText, styles.cancelText]}>
+                Cancel
+              </Text>
+            )}
           </Button>
         </View>
       </Card>
@@ -52,19 +60,63 @@ const styles = StyleSheet.create({
   backdrop: {
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
+  modalView: {
+    margin: 20,
+    backgroundColor: "#141313",
+    borderColor: "#C38100",
+    borderWidth: 2,
+    borderRadius: 24,
+    paddingHorizontal: 35,
+    paddingVertical: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontFamily: "MontserratBold",
+    marginBottom: 15,
+    textAlign: "center",
+    color: "#C38100",
+  },
+  modalText: {
+    paddingHorizontal: 15,
+    marginBottom: 15,
+    textAlign: "center",
+    color: "#C38100",
+    fontSize: 18,
+    fontFamily: "Montserrat",
+  },
   button: {
-    flex: 1,
-    marginLeft: 5,
-    marginRight: 5,
-    width: "20%",
+    justifyContent: "center",
+    marginTop: 10,
+    alignItems: "center",
+    borderRadius: 24,
+    boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.15)",
   },
   cancelButton: {
-    backgroundColor: "red",
-    borderColor: "red",
+    backgroundColor: "#141313",
+    borderColor: "#C38100",
+  },
+  buttonText: {
+    paddingHorizontal: 15,
+    fontWeight: "bold",
+  },
+  cancelText: {
+    color: "#C38100",
+  },
+  confirmText: {
+    color: "#141313",
   },
   buttonContainer: {
     marginTop: 10,
     flexDirection: "row",
-    justifyContent: "flex-end",
+    justifyContent: "space-between",
   },
 });
