@@ -160,7 +160,6 @@ export const ListMyGames: React.FC<ListProps> = ({ search }) => {
 };
 
 const styles = StyleSheet.create({
-  scrollview: {},
   listContainer: {
     width: "100%",
   },

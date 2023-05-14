@@ -150,8 +150,8 @@ const userController = {
     const token = req.headers.authorization?.split(" ")[1];
     const decodedToken = jwt.verify(token, SECRET);
     const id = decodedToken.id;
-
-    await prisma
+    const name = decodedToken.name;
+    prisma
       .$transaction(async transaction => {
         const players = await transaction.player.findMany({
           where: {
@@ -170,14 +170,15 @@ const userController = {
               },
             });
           });
-        await Promise.all(playersTransaction);
+        if (playersTransaction.length > 0) await Promise.all(playersTransaction);
+        const salt = bcrypt.genSaltSync(10);
         await transaction.user.update({
           where: {
             id,
           },
           data: {
-            name: "deleted user",
-            password: "deleted user",
+            name: "deletedUser-" + bcrypt.hashSync(name, salt),
+            password: bcrypt.hashSync(id, salt),
           },
         });
       })
