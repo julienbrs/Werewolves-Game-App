@@ -32,7 +32,7 @@ const Home = () => {
           testID="rule-button"
         >
           {evaProps => (
-            <Text {...evaProps} style={styles.buttonText}>
+            <Text {...evaProps} style={(styles.buttonText, styles.ruleText)}>
               Rules
             </Text>
           )}
@@ -113,6 +113,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 24,
     overflow: "hidden",
+    paddingBottom: 40,
   },
   tabView: {
     borderRadius: 0,
@@ -135,9 +136,9 @@ const styles = StyleSheet.create({
     boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.15)",
   },
   rules: {
-    backgroundColor: "#FFBCB5",
-    borderColor: "#FFBCB5",
-    marginBottom: 60,
+    backgroundColor: "#141313",
+    borderColor: "#C38100",
+    marginBottom: 40,
   },
   buttonText: {
     fontFamily: "MontserratBold",
@@ -146,6 +147,11 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: "Montserrat",
+    color: "#C38100",
+  },
+  ruleText: {
+    fontFamily: "MontserratBold",
+    fontSize: 16,
     color: "#C38100",
   },
   h2: {
@@ -162,6 +168,7 @@ const styles = StyleSheet.create({
     borderColor: "#C38100",
     width: "80%",
     borderWidth: 1,
+    height: 1,
   },
   image: {
     width: 300,

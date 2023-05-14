@@ -59,9 +59,7 @@ const Settings = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.centeredView}>
         <View style={styles.wrapperTitle}>
-          <View style={styles.line}>
-            <Text> </Text>
-          </View>
+          <View style={styles.line} />
           <Text style={styles.h2}>Settings</Text>
           <Text style={styles.textName}>{name}</Text>
         </View>
@@ -122,7 +120,7 @@ const Settings = () => {
       </View>
       <ModalConfirmChoice
         title="Confirm modification"
-        description="Voulez vous modifier vos informations?"
+        description="Do you want to modify your information?"
         visible={visibleModify}
         setVisible={setVisibleModify}
         confirmFunction={handleModify}
@@ -130,7 +128,7 @@ const Settings = () => {
 
       <ModalConfirmChoice
         title="Delete your account"
-        description="Voulez vous supprimer votre compte?"
+        description="Do you wish to delete your account?"
         visible={visibleDelete}
         setVisible={setVisibleDelete}
         confirmFunction={deleteQuery}
@@ -177,13 +175,16 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    width: "100%",
     marginTop: "10%",
     marginBottom: 40,
   },
   line: {
+    position: "relative",
     borderColor: "#C38100",
-    borderWidth: 1,
-    width: "150%",
+    height: 0,
+    borderBottomWidth: 2,
+    width: "100%",
   },
   image: {
     width: 200,

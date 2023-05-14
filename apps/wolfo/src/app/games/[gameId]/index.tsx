@@ -4,7 +4,7 @@ import { Stack, useRouter, useSearchParams } from "expo-router";
 import { useContext, useState } from "react";
 import React, { Image, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Game, Player, Power, Role, StateGame } from "types";
+import { Game, Player, Power, Role, StateGame, StatePlayer } from "types";
 import { AuthContext } from "../../../components/context/tokenContext";
 import Loading from "../../../components/loading";
 import { getPermissions } from "../../../utils/api/chat";
@@ -158,7 +158,15 @@ const GameView = () => {
         <View style={styles.mainWrapper}>
           <Text style={styles.h2}>What to do?</Text>
           <View style={styles.wrapper}>
-            <Button onPress={redirectVote} style={styles.button} disabled={!game.curElecId}>
+            <Button
+              onPress={redirectVote}
+              style={styles.button}
+              disabled={
+                !game.curElecId ||
+                (game.state === StateGame.NIGHT && player.role !== Role.WOLF) ||
+                player.state === StatePlayer.DEAD
+              }
+            >
               {evaProps => (
                 <Text {...evaProps} style={styles.buttonText}>
                   Vote
