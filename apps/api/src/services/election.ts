@@ -17,16 +17,6 @@ export const finishElection = async (transaction: TransactionType, electionId: n
   });
   const nbPlayers = players.length;
 
-  // const voteArray: number[] = new Array(nbPlayers);
-  // let killedPlayerId = null;
-  // let nbVictims = 0;
-  // votes.forEach((vote: Vote) => {
-  //   voteArray[+vote.targetId] += 1;
-  //   if (voteArray[+vote.targetId] >= nbPlayers / 2) {
-  //     killedPlayerId = vote.targetId;
-  //     nbVictims++;
-  //   }
-  // });
   const voteArray: Vote[][] = await Promise.all(
     Array.from(players).map(async p => {
       return await transaction.vote.findMany({
@@ -88,13 +78,11 @@ export const finishElection = async (transaction: TransactionType, electionId: n
     await notificationService.isDead(transaction, highestVote.targetId, game.id, game.name);
     // vire le mort des chat rooms
 
-    await transaction.writer.delete({
+    await transaction.writer.deleteMany({
       where: {
-        playerId_gameId_chatRoomId: {
-          playerId: highestVote.targetId,
-          gameId,
-          chatRoomId: game.dayChatRoomId,
-        },
+        playerId: highestVote.targetId,
+        gameId,
+        chatRoomId: game.dayChatRoomId,
       },
     });
     await transaction.writer.deleteMany({
