@@ -1,4 +1,4 @@
-import { Power, Role, StateGame } from "database";
+import { Power, Role, StateGame, StatePlayer } from "database";
 import prisma from "../../prisma";
 import { finishElection } from "../election";
 import notificationService from "../notification";
@@ -7,7 +7,7 @@ import { JobType, deleteJob } from "../scheduler";
 const newPeriod = async (day: boolean, gameId: number) => {
   return await prisma
     .$transaction(async transaction => {
-      const game = await transaction.game.findUniqueOrThrow({
+      let game = await transaction.game.findUniqueOrThrow({
         where: { id: gameId },
         select: {
           name: true,
@@ -38,9 +38,35 @@ const newPeriod = async (day: boolean, gameId: number) => {
           },
         },
       });
+      /* fetch changes */
+      game = await transaction.game.findUniqueOrThrow({
+        where: { id: gameId },
+        select: {
+          name: true,
+          curElecId: true,
+          state: true,
+          spiritChatRoomId: true,
+          players: {
+            select: {
+              userId: true,
+              gameId: true,
+              state: true,
+              role: true,
+              power: true,
+              usedPower: true,
+              createdAt: true,
+              updatedAt: true,
+            },
+          },
+        },
+      });
       const state: StateGame =
-        !game.players.some(player => player.role === Role.WOLF) ||
-        !game.players.some(player => player.role === Role.VILLAGER)
+        !game.players.some(
+          player => player.state === StatePlayer.ALIVE && player.role === Role.WOLF
+        ) ||
+        !game.players.some(
+          player => player.state === StatePlayer.ALIVE && player.role === Role.VILLAGER
+        )
           ? StateGame.END
           : day
           ? StateGame.DAY
@@ -52,7 +78,14 @@ const newPeriod = async (day: boolean, gameId: number) => {
           curElecId: newElec.id,
         },
       });
-
+      console.log(
+        !game.players.some(
+          player => player.state === StatePlayer.ALIVE && player.role === Role.WOLF
+        ) ||
+          !game.players.some(
+            player => player.state === StatePlayer.ALIVE && player.role === Role.VILLAGER
+          )
+      );
       // vire l'invité de la spirit chat room
       if (game.spiritChatRoomId !== null && day) {
         const spiritId = game.spiritChatRoomId;
