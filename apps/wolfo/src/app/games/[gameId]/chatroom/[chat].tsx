@@ -15,7 +15,7 @@ import useFont from "../../../../utils/hooks/useFont";
 
 // à changer en fonction du dev + changer le port de scalingo car il change à chaque déploiement
 //const socketEndpoint = `http://localhost:3000`;
-const socketEndpoint = "https://wolfo-backend.osc-fr1.scalingo.io:22769";
+const socketEndpoint = "ws://wolfo-backend.osc-fr1.scalingo.io:22672";
 
 const ChatRoomView = () => {
   //console.log(usePathname());

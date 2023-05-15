@@ -63,7 +63,12 @@ const GameView = () => {
     queryKey: ["player", userId],
     queryFn: () => getPlayer(game?.id!, userId),
     cacheTime: 0,
-    refetchInterval: 200,
+    staleTime: 0,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    onSettled: () => {
+      console.log("player settled");
+    },
   });
 
   // get permissions

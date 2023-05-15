@@ -55,7 +55,7 @@ const SpiritView = () => {
     },
     onSuccess: async () => {
       setUsedPower(true);
-      await queryClient.invalidateQueries(["role", "power", "usedPower"]);
+      await queryClient.invalidateQueries(["player", userId]);
     },
     onError: (error: Error) => {
       console.error("Error while updating power of user", error);
