@@ -24,6 +24,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerFile from "../swagger_output.json";
 app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
+// pour accéder au port dynamique de scalingo depuis le frontend
 app.get("/port", (req, res) => {
   res.json({ port: PORT });
 });
