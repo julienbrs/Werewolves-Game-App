@@ -9,6 +9,7 @@ import { Image } from "react-native";
 import DayIcon from "../../../assets/UI/day.png";
 import HourglassIcon from "../../../assets/UI/hourglass.png";
 import NightIcon from "../../../assets/UI/night.png";
+import EndIcon from "../../../assets/UI/name.png";
 
 interface GameItemProps {
   game: Game;
@@ -45,9 +46,11 @@ export const GameItemInGame = ({ game, handleFunction }: GameItemProps) => {
     <ListItem
       onPress={() => handleFunction(game.id)}
       title={game.name}
-      description={"In game"}
+      description={game.state === StateGame.END ? "Check the results!" : "In game"}
       accessoryLeft={() =>
-        game.state === StateGame.DAY ? (
+        game.state === StateGame.END ? (
+          <Image source={EndIcon} style={styles.icon} />
+        ) : game.state === StateGame.DAY ? (
           <Image source={DayIcon} style={styles.icon} />
         ) : (
           <Image source={NightIcon} style={styles.icon} />
@@ -61,7 +64,7 @@ export const GameItemNotJoined = ({ game, handleFunction }: GameItemProps) => {
   return (
     <ListItem
       title={game.name}
-      description={"Début : " + parseDeadline(game.deadline, game.startDay)}
+      description={"Start: " + parseDeadline(game.deadline, game.startDay)}
       accessoryLeft={() => <Image source={HourglassIcon} style={styles.icon} />}
       accessoryRight={() => {
         return (
@@ -93,6 +96,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   icon: {
+    resizeMode: "contain",
     width: 19,
     height: 24,
   },
