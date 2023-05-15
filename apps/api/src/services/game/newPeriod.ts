@@ -77,26 +77,21 @@ const newPeriod = async (day: boolean, gameId: number) => {
           .filter(writer => writer.player.power !== Power.SPIRIT)
           .map(writer => writer.playerId)
           .forEach(async playerId => {
-            await transaction.chatRoom.update({
-              where: { id: spiritId },
-              data: {
-                writers: {
-                  disconnect: {
-                    playerId_gameId_chatRoomId: {
-                      playerId,
-                      gameId,
-                      chatRoomId: spiritId,
-                    },
-                  },
+            await transaction.writer.delete({
+              where: {
+                playerId_gameId_chatRoomId: {
+                  playerId,
+                  gameId,
+                  chatRoomId: spiritId,
                 },
-                readers: {
-                  disconnect: {
-                    playerId_gameId_chatRoomId: {
-                      playerId,
-                      gameId,
-                      chatRoomId: spiritId,
-                    },
-                  },
+              },
+            });
+            await transaction.reader.delete({
+              where: {
+                playerId_gameId_chatRoomId: {
+                  playerId,
+                  gameId,
+                  chatRoomId: spiritId,
                 },
               },
             });
