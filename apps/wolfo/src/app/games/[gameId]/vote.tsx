@@ -2,7 +2,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Stack, useRouter, useSearchParams } from "expo-router";
 import React, { useContext, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { FlatList, ScrollView } from "react-native-gesture-handler";
+import { FlatList } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Game, Player, Role, StateGame, StatePlayer, Vote as VoteType } from "types";
 import { AuthContext } from "../../../components/context/tokenContext";
