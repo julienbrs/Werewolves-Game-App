@@ -100,7 +100,10 @@ const GameView = () => {
         router.push({ pathname: `/games/${gameId}/power/spirit`, params: { userId } });
         break;
       case Power.INSOMNIAC:
-        router.push({ pathname: `/games/${gameId}/power/insomniac`, params: { userId } });
+        router.push({
+          pathname: `/games/${gameId}/chatroom/${game.nightChatRoomId}`,
+          params: { userId },
+        });
         break;
       case Power.CONTAMINATOR:
         router.push({
