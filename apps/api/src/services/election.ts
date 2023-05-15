@@ -77,17 +77,15 @@ export const finishElection = async (transaction: TransactionType, electionId: n
     const game = await transaction.game.findUnique({
       where: { id: gameId },
       select: {
+        id: true,
         name: true,
         dayChatRoomId: true,
         nightChatRoomId: true,
       },
     });
     if (!game) throw Error;
-    notificationService.isDead(
-      transaction,
-      players.filter(p => p.userId === highestVote.targetId)[0],
-      game.name
-    );
+
+    await notificationService.isDead(transaction, highestVote.targetId, game.id, game.name);
     // vire le mort des chat rooms
     await transaction.chatRoom.update({
       where: { id: game.dayChatRoomId },
