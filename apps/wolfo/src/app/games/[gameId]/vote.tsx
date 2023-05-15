@@ -207,7 +207,6 @@ const Vote = () => {
       )}
       <View style={styles.mainView}>
         <FlatList
-          contentContainerStyle={styles.contentContainerStyle}
           ItemSeparatorComponent={() => <></>}
           data={game?.players}
           renderItem={({ item: player, index: i }) => {
