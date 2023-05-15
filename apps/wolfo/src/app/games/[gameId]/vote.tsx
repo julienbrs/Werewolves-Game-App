@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "expo-router";
+import { Stack, useRouter, useSearchParams } from "expo-router";
 import React, { useContext, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -190,6 +190,12 @@ const Vote = () => {
   }
   return (
     <SafeAreaView style={styles.background}>
+      <Stack.Screen
+        options={{
+          title: (game.state === StateGame.DAY ? "Villager" : "Werewolf") + " vote",
+          headerRight: () => null,
+        }}
+      />
       <ScrollView>
         {game.state === StateGame.NIGHT && currentPlayer.role !== Role.WOLF ? (
           <Text style={[styles.text, styles.title]}>
