@@ -12,7 +12,7 @@ export const finishElection = async (transaction: TransactionType, electionId: n
   ).length;
 
   const voteArray: number[] = new Array(nbPlayers);
-  let killedPlayerId = null;
+  let killedPlayerId: string | null = null;
   let nbVictims = 0;
   votes.forEach((vote: Vote) => {
     voteArray[+vote.targetId] += 1;
@@ -39,13 +39,14 @@ export const finishElection = async (transaction: TransactionType, electionId: n
     const game = await transaction.game.findUnique({
       where: { id: gameId },
       select: {
+        id: true,
         name: true,
         dayChatRoomId: true,
         nightChatRoomId: true,
       },
     });
     if (!game) throw Error;
-    notificationService.isDead(transaction, killedPlayerId, game.name);
+    await notificationService.isDead(transaction, killedPlayerId, game.id, game.name);
     // vire le mort des chat rooms
     await transaction.chatRoom.update({
       where: { id: game.dayChatRoomId },

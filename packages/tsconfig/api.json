@@ -5,6 +5,7 @@
   "compilerOptions": {
     "outDir": "./dist",
     "target":"ESNext",
+    "baseUrl": "./src",
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
