@@ -1,5 +1,4 @@
 import { StatePlayer, TransactionType, Vote } from "database";
-import { pl } from "date-fns/locale";
 import notificationService from "./notification";
 
 export const finishElection = async (transaction: TransactionType, electionId: number) => {
@@ -13,9 +12,6 @@ export const finishElection = async (transaction: TransactionType, electionId: n
   if (!gameId) {
     throw new Error("game id undefined");
   }
-  const votes = await transaction.vote.findMany({
-    where: { electionId },
-  });
   const players = await transaction.player.findMany({
     where: { state: StatePlayer.ALIVE, gameId },
   });
