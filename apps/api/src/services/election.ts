@@ -48,33 +48,32 @@ export const finishElection = async (transaction: TransactionType, electionId: n
     notificationService.isDead(transaction, killedPlayerId, game.name);
     // vire le mort des chat rooms
     await transaction.chatRoom.update({
-      where: { id: chatsId?.dayChatRoomId },
+      where: { id: game.dayChatRoomId },
       data: {
         writers: {
           disconnect: {
             playerId_gameId_chatRoomId: {
               playerId: killedPlayerId,
               gameId,
-              chatRoomId: chatsId?.dayChatRoomId,
+              chatRoomId: game.dayChatRoomId,
             },
           },
         },
       },
     });
     await transaction.chatRoom.update({
-      where: { id: chatsId?.nightChatRoomId },
+      where: { id: game.nightChatRoomId },
       data: {
         writers: {
           disconnect: {
             playerId_gameId_chatRoomId: {
               playerId: killedPlayerId,
               gameId,
-              chatRoomId: chatsId?.nightChatRoomId,
+              chatRoomId: game.nightChatRoomId,
             },
           },
         },
       },
     });
-    
   }
 };
