@@ -13,7 +13,7 @@ const Loading: React.FC<LoadingProps> = ({ title, message }) => {
       <SafeAreaView style={styles.content}>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.message}>{message}</Text>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#C38100" />
       </SafeAreaView>
     </SafeAreaView>
   );
@@ -24,18 +24,20 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#141313",
   },
   content: {
     alignItems: "center",
     justifyContent: "center",
+    color: "#C38100",
   },
   title: {
-    fontSize: 24,
+    fontSize: 30,
+    color: "#C38100",
     fontWeight: "bold",
-    marginTop: 16,
   },
   message: {
+    color: "#C38100",
     fontSize: 16,
     marginTop: 8,
   },
