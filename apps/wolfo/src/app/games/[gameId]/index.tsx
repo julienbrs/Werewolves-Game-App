@@ -78,10 +78,10 @@ const GameView = () => {
   }
 
   if (isLoading || isLoadingPlayer) {
-    return <Loading title="Game loading" message={"Game " + String(gameId) + "is loading"} />;
+    return <Loading title="Game loading" message={"Game " + String(gameId) + " is loading"} />;
   }
   if (isError || isErrorPlayer || !game || !player) {
-    return <Loading title="Game error" message="oui" />;
+    return <Loading title="Game error" message="Try again in a little!" />;
   }
   const redirectChat = () => {
     const chatId = game.state === StateGame.DAY ? game.dayChatRoomId : game.nightChatRoomId;

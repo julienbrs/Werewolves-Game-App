@@ -129,7 +129,7 @@ export const ListMyGames: React.FC<ListProps> = ({ search }) => {
     },
   });
   if (isLoading) {
-    return <Loading title="Loading mygames" message="loading list of games" />;
+    return <Loading title="Loading your games" message="loading list of games" />;
   }
   const handleLeave = (gameId: number) => {
     setSelectedGame(gameId);

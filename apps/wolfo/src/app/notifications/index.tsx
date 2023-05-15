@@ -17,7 +17,7 @@ const Auth = () => {
   });
 
   if (isLoading) {
-    return <Loading title="Loading notifications" message="oui" />;
+    return <Loading title="Loading notifications" message="Stay in tune!" />;
   }
   if (isError) {
     return router.back();

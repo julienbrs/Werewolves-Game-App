@@ -166,7 +166,7 @@ const Vote = () => {
 
   const activeVote = useRef<VoteType | undefined>(undefined);
   if (isLoading || areVotesLoading || isLoadingPlayer || isLoadingVote) {
-    return <Loading title="Vote Loading" message={"Loading..."} />;
+    return <Loading title="Vote loading" message={"Loading..."} />;
   }
   if (isSuccessVote) {
     activeVote.current = currentVote;

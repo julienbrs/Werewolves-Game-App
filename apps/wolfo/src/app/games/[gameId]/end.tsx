@@ -43,7 +43,7 @@ const End = () => {
     queryFn: () => getPlayer(game?.id!, Array.isArray(userId) ? userId[0] : userId!),
   });
   if (isLoading || isLoadingPlayer) {
-    return <Loading title="Vote Loading" message={"Loading..."} />;
+    return <Loading title="Results loading" message={"Loading..."} />;
   }
   if (isErrorPlayer || isError || !game || !currentPlayer) {
     return (
