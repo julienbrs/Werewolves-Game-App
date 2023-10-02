@@ -37,17 +37,76 @@
     }
   ],
   "paths": {
-    "/api/users/": {
+    "/api/users/me": {
       "get": {
         "tags": [
           "User"
         ],
-        "summary": "Create user",
+        "summary": "Login from token",
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "User found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User not found"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User not found"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ],
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -55,7 +114,9 @@
             "bearerAuth": []
           }
         ]
-      },
+      }
+    },
+    "/api/users/": {
       "post": {
         "tags": [
           "User"
@@ -424,85 +485,6 @@
         ]
       }
     },
-    "/api/users/me": {
-      "get": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Login from token",
-        "description": "",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "User found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
-                }
-              },
-              "application/xml": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "User not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "User not found"
-                    }
-                  },
-                  "required": [
-                    "message"
-                  ],
-                  "xml": {
-                    "name": "main"
-                  }
-                }
-              },
-              "application/xml": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "User not found"
-                    }
-                  },
-                  "required": [
-                    "message"
-                  ],
-                  "xml": {
-                    "name": "main"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
     "/api/users/login": {
       "post": {
         "tags": [
@@ -782,7 +764,7 @@
                   "properties": {
                     "message": {
                       "type": "string",
-                      "example": "Error"
+                      "example": "Name too long"
                     }
                   },
                   "required": [
@@ -799,7 +781,7 @@
                   "properties": {
                     "message": {
                       "type": "string",
-                      "example": "Error"
+                      "example": "Name too long"
                     }
                   },
                   "required": [
@@ -810,6 +792,21 @@
                   }
                 }
               }
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Error"
+                }
+              },
+              "required": [
+                "message"
+              ],
+              "xml": {
+                "name": "main"
+              }
             }
           }
         },
@@ -817,7 +814,21 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/games/mygames": {
@@ -1265,36 +1276,6 @@
             "bearerAuth": []
           }
         ]
-      },
-      "patch": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {}
-      }
-    },
-    "/api/games/{id}/delete": {
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {}
       }
     },
     "/api/chatrooms/{id}/messages": {
