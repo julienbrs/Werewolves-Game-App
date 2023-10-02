@@ -134,8 +134,6 @@
 Players use the app's interface to participate in discussions, cast votes, use powers, and follow the game's progression.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 <!-- CONTACT -->
 
 ## Contact
