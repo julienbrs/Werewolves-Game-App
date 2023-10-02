@@ -5,8 +5,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/your-username/wolfo">
-    <img src="assets/logo_wolfo.png" alt="Logo Wolfo" width="80" height="80">
+  <a href="https://github.com/julienbrs/Werewolves-Game-App">
+    <img src="assets/logo_wolfo.png" alt="Wolfo Logo" width="80" height="80">
   </a>
 
 <h3 align="center">Wolfo - Werewolves of Miller's Hollow App</h3>
